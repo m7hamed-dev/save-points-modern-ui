@@ -28,6 +28,7 @@ All components feature automatic dark mode support, extensive customization opti
 - **🎯 Flexible Actions** - Single or dual button configurations
 - **📳 Haptic Feedback** - Enhanced user experience with tactile responses
 - **🔄 Async Support** - Handle asynchronous confirm callbacks with loading states
+- **⭕ Circular Reveal Animation** - Optional circular reveal/hide effect for dramatic transitions
 
 ### 🍞 SavePointsSnackbar
 
@@ -40,6 +41,7 @@ All components feature automatic dark mode support, extensive customization opti
 - **🎯 Customizable Styling** - Borders, border radius, margins, colors, and more
 - **📳 Haptic Feedback** - Configurable haptic responses
 - **⚡ Performance Optimized** - Efficient animations with clamped values
+- **⭕ Circular Reveal Animation** - Optional circular reveal/hide effect for stunning transitions
 
 ### 📱 SavePointsBottomsheet
 
@@ -51,6 +53,7 @@ All components feature automatic dark mode support, extensive customization opti
 - **📏 Flexible Sizing** - Customizable max height and constraints
 - **🌓 Dark Mode Support** - Automatic theme adaptation
 - **🎯 Dismissible & Draggable** - Full control over user interactions
+- **⭕ Circular Reveal Animation** - Optional circular reveal/hide effect for dramatic transitions
 
 ## 📦 Installation
 
@@ -140,6 +143,7 @@ static Future<bool?> show(
   DialogAnimationDirection? endAnimation,
   bool isLoading = false,
   ValueNotifier<bool>? loadingNotifier,
+  bool hideLikeCircle = false,
 })
 ```
 
@@ -166,6 +170,7 @@ static Future<bool?> show(
 | `endAnimation` | `DialogAnimationDirection?` | No | `null` | Exit animation direction |
 | `isLoading` | `bool` | No | `false` | Initial loading state |
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading state control |
+| `hideLikeCircle` | `bool` | No | `false` | Enable circular reveal/hide animation |
 
 #### Examples
 
@@ -226,6 +231,18 @@ SavePointsDialog.show(
 );
 ```
 
+**Circular Reveal Dialog**
+
+```dart
+SavePointsDialog.show(
+  context,
+  title: 'Circular Reveal',
+  message: 'This dialog reveals/hides like a circle expanding!',
+  hideLikeCircle: true,
+  icon: Icons.radio_button_checked,
+);
+```
+
 ### 🍞 SavePointsSnackbar
 
 #### Method Signature
@@ -256,6 +273,7 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
   BorderRadius? borderRadius,
   Color? borderColor,
   double? borderWidth,
+  bool hideLikeCircle = false,
   VoidCallback? onDismissed,
   VoidCallback? onTap,
 })
@@ -284,6 +302,7 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 | `borderColor` | `Color?` | No | `null` | Border color |
 | `borderWidth` | `double?` | No | `0` | Border width |
 | `dismissOnTap` | `bool?` | No | `false` | Dismiss when tapped |
+| `hideLikeCircle` | `bool` | No | `false` | Enable circular reveal/hide animation |
 | `onTap` | `VoidCallback?` | No | `null` | Custom tap handler |
 | `onDismissed` | `VoidCallback?` | No | `null` | Callback when dismissed |
 
@@ -331,6 +350,19 @@ SavePointsSnackbar.showError(
 );
 ```
 
+**Circular Reveal Snackbar**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Circular Reveal',
+  subtitle: 'Reveals like a circle expanding',
+  hideLikeCircle: true,
+  type: SnackbarType.info,
+  showProgressIndicator: true,
+);
+```
+
 ### 📱 SavePointsBottomsheet
 
 #### Method Signature
@@ -352,6 +384,7 @@ static Future<T?> show<T>({
   BottomsheetAnimationDirection? endAnimation,
   bool isLoading = false,
   ValueNotifier<bool>? loadingNotifier,
+  bool hideLikeCircle = false,
 })
 ```
 
@@ -373,6 +406,7 @@ static Future<T?> show<T>({
 | `endAnimation` | `BottomsheetAnimationDirection?` | No | `null` | Exit animation |
 | `isLoading` | `bool` | No | `false` | Initial loading state |
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading control |
+| `hideLikeCircle` | `bool` | No | `false` | Enable circular reveal/hide animation |
 
 #### Examples
 
@@ -437,6 +471,20 @@ SavePointsBottomsheet.show(
 );
 ```
 
+**Circular Reveal Bottom Sheet**
+
+```dart
+SavePointsBottomsheet.show(
+  context: context,
+  title: 'Circular Reveal',
+  hideLikeCircle: true,
+  child: Padding(
+    padding: EdgeInsets.all(24.0),
+    child: Text('This bottom sheet reveals/hides like a circle expanding!'),
+  ),
+);
+```
+
 ## 🎨 Animation Types
 
 ### Dialog Animations
@@ -492,6 +540,15 @@ SavePointsBottomsheet.show(
 - `fade` - Fade in/out
 - `scale` - Scale animation
 - `none` - No animation
+
+### Circular Reveal Animation
+
+All three components (Dialogs, Snackbars, and Bottom Sheets) support a special **Circular Reveal** animation through the `hideLikeCircle` parameter:
+
+- **Circular Reveal** - When `hideLikeCircle: true`, the widget reveals/hides by expanding/contracting like a circle from the center
+- Creates a dramatic circular reveal effect that's perfect for special moments
+- Works independently of other animation types
+- The circle expands from the center point to reveal the widget, and contracts back when hiding
 
 ## ⚙️ Configuration
 
@@ -601,6 +658,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [⭐ Star us on GitHub](https://github.com/yourusername/savepoints_modern_ui) • [📦 Pub.dev](https://pub.dev/packages/savepoints_modern_ui) • [📚 Documentation](https://pub.dev/documentation/savepoints_modern_ui/latest/)
 
 </div>
-# savepoints_modern_ui
-# save-points-modern-ui
-# save-points-modern-ui
