@@ -23,6 +23,9 @@ SIMPLE_STRUCTURE.md
 WHAT_YOU_NEED.md
 fix_withOpacity.sh
 
+# Exclude example app files from lib/ (should be in example/ folder)
+lib/main.dart
+
 # Exclude test files (optional, but can be included)
 # test/
 
