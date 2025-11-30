@@ -21,10 +21,8 @@ class AnimatedWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     // Clamp all animations to prevent values outside [0, 1] range
     final clampedAnimation = ClampedAnimation(animation);
-    
-    return RepaintBoundary(
-      child: _buildAnimation(clampedAnimation),
-    );
+
+    return RepaintBoundary(child: _buildAnimation(clampedAnimation));
   }
 
   Widget _buildAnimation(Animation<double> clampedAnimation) {
@@ -34,10 +32,7 @@ class AnimatedWrapper extends StatelessWidget {
           opacity: clampedAnimation,
           child: SlideTransition(
             position: Tween<Offset>(
-              begin: Offset(
-                0,
-                position == SnackbarPosition.top ? -0.3 : 0.3,
-              ),
+              begin: Offset(0, position == SnackbarPosition.top ? -0.3 : 0.3),
               end: Offset.zero,
             ).animate(clampedAnimation),
             child: child,
@@ -46,10 +41,7 @@ class AnimatedWrapper extends StatelessWidget {
       case SnackbarAnimation.scale:
         return FadeTransition(
           opacity: clampedAnimation,
-          child: ScaleTransition(
-            scale: clampedAnimation,
-            child: child,
-          ),
+          child: ScaleTransition(scale: clampedAnimation, child: child),
         );
       case SnackbarAnimation.slide:
         return SlideTransition(
@@ -63,50 +55,41 @@ class AnimatedWrapper extends StatelessWidget {
         return FadeTransition(
           opacity: clampedAnimation,
           child: ScaleTransition(
-            scale: ClampedAnimation(CurvedAnimation(
-              parent: animation,
-              curve: Curves.bounceOut,
-            )),
+            scale: ClampedAnimation(
+              CurvedAnimation(parent: animation, curve: Curves.bounceOut),
+            ),
             child: child,
           ),
         );
       case SnackbarAnimation.rotate:
-        final rotationAnimation = Tween<double>(
-          begin: -0.1,
-          end: 0.0,
-        ).animate(ClampedAnimation(CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutBack,
-        )));
+        final rotationAnimation = Tween<double>(begin: -0.1, end: 0.0).animate(
+          ClampedAnimation(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          ),
+        );
         return FadeTransition(
           opacity: clampedAnimation,
           child: RotationTransition(
             turns: rotationAnimation,
-            child: ScaleTransition(
-              scale: clampedAnimation,
-              child: child,
-            ),
+            child: ScaleTransition(scale: clampedAnimation, child: child),
           ),
         );
       case SnackbarAnimation.elastic:
         return FadeTransition(
           opacity: clampedAnimation,
           child: ScaleTransition(
-            scale: ClampedAnimation(CurvedAnimation(
-              parent: animation,
-              curve: Curves.elasticOut,
-            )),
+            scale: ClampedAnimation(
+              CurvedAnimation(parent: animation, curve: Curves.elasticOut),
+            ),
             child: child,
           ),
         );
       case SnackbarAnimation.slideRotate:
-        final rotationAnimation = Tween<double>(
-          begin: 0.1,
-          end: 0.0,
-        ).animate(ClampedAnimation(CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
-        )));
+        final rotationAnimation = Tween<double>(begin: 0.1, end: 0.0).animate(
+          ClampedAnimation(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+          ),
+        );
         return FadeTransition(
           opacity: clampedAnimation,
           child: SlideTransition(
@@ -117,10 +100,7 @@ class AnimatedWrapper extends StatelessWidget {
               ),
               end: Offset.zero,
             ).animate(clampedAnimation),
-            child: RotationTransition(
-              turns: rotationAnimation,
-              child: child,
-            ),
+            child: RotationTransition(turns: rotationAnimation, child: child),
           ),
         );
       case SnackbarAnimation.none:
@@ -128,4 +108,3 @@ class AnimatedWrapper extends StatelessWidget {
     }
   }
 }
-

@@ -76,4 +76,3 @@ class AnimatedIconState extends State<AnimatedIcon>
     return ScaleTransition(scale: _scaleAnimation, child: iconWidget);
   }
 }
-

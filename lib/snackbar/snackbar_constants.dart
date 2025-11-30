@@ -10,4 +10,3 @@ class SnackbarConstants {
   static const double verticalPadding = 16.0;
   static const double maxWidth = 500.0;
 }
-

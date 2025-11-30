@@ -27,4 +27,3 @@ class ProgressIndicatorBar extends StatelessWidget {
     );
   }
 }
-

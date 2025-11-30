@@ -14,14 +14,16 @@ class DialogColorConfig {
     Color? backgroundColor,
     Color? confirmButtonColor,
     Color? cancelButtonColor,
-  })  : iconColor = iconColor ??
-            (isDark ? Colors.blueAccent : theme.colorScheme.primary),
-        backgroundColor = backgroundColor ??
-            (isDark
-                ? Colors.grey[900]!.withValues(alpha: 0.95)
-                : Colors.white.withValues(alpha: 0.95)),
-        confirmColor = confirmButtonColor ??
-            (isDark ? Colors.blueAccent : theme.colorScheme.primary),
-        cancelColor = cancelButtonColor ?? Colors.grey;
+  }) : iconColor =
+           iconColor ??
+           (isDark ? Colors.blueAccent : theme.colorScheme.primary),
+       backgroundColor =
+           backgroundColor ??
+           (isDark
+               ? Colors.grey[900]!.withValues(alpha: 0.95)
+               : Colors.white.withValues(alpha: 0.95)),
+       confirmColor =
+           confirmButtonColor ??
+           (isDark ? Colors.blueAccent : theme.colorScheme.primary),
+       cancelColor = cancelButtonColor ?? Colors.grey;
 }
-

@@ -29,4 +29,3 @@ class ClampedAnimation extends Animation<double>
   @override
   String toString() => 'ClampedAnimation(parent: $parent)';
 }
-

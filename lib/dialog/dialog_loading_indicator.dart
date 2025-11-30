@@ -5,17 +5,12 @@ class DialogLoadingIndicator extends StatelessWidget {
   final Color? color;
   final double size;
 
-  const DialogLoadingIndicator({
-    super.key,
-    this.color,
-    this.size = 24.0,
-  });
+  const DialogLoadingIndicator({super.key, this.color, this.size = 24.0});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final indicatorColor = color ?? 
-        (isDark ? Colors.white70 : Colors.black54);
+    final indicatorColor = color ?? (isDark ? Colors.white70 : Colors.black54);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -30,4 +25,3 @@ class DialogLoadingIndicator extends StatelessWidget {
     );
   }
 }
-

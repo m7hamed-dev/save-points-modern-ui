@@ -1,16 +1,8 @@
 /// Snackbar type enum
-enum SnackbarType {
-  info,
-  success,
-  error,
-  warning,
-}
+enum SnackbarType { info, success, error, warning }
 
 /// Snackbar position enum
-enum SnackbarPosition {
-  top,
-  bottom,
-}
+enum SnackbarPosition { top, bottom }
 
 /// Snackbar animation style enum
 enum SnackbarAnimation {
@@ -23,4 +15,3 @@ enum SnackbarAnimation {
   slideRotate,
   none,
 }
-

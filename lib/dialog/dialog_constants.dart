@@ -21,4 +21,3 @@ class DialogConstants {
   static const double contentSpacingAfterMessage = 32.0;
   static const double maxDialogWidth = 400.0;
 }
-

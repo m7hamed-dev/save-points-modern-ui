@@ -5,11 +5,7 @@ class DialogMessage extends StatelessWidget {
   final String message;
   final bool isDark;
 
-  const DialogMessage({
-    super.key,
-    required this.message,
-    required this.isDark,
-  });
+  const DialogMessage({super.key, required this.message, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -26,4 +22,3 @@ class DialogMessage extends StatelessWidget {
     );
   }
 }
-

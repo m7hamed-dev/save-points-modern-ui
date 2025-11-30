@@ -3,7 +3,7 @@ import 'package:savepoints_modern_ui/savepoints_config.dart';
 import 'package:savepoints_modern_ui/savepoints_snackbar.dart';
 
 /// Example usage of SavePointsConfig
-/// 
+///
 /// This demonstrates how to configure and customize the default
 /// behavior of snackbars and dialogs globally.
 void configureSavePoints() {
@@ -61,7 +61,7 @@ void showConfiguredSnackbar(BuildContext context) {
 void applyThemeConfiguration(BuildContext context) {
   final config = SavePointsConfig();
   final brightness = Theme.of(context).brightness;
-  
+
   // Apply theme-aware settings
   config.applyTheme(brightness);
 
@@ -73,4 +73,3 @@ void resetConfiguration() {
   final config = SavePointsConfig();
   config.reset(); // Restores all defaults
 }
-

@@ -1,5 +1,5 @@
 /// Barrel file for bottom sheet widgets and classes
-/// 
+///
 /// This file exports all bottom sheet-related widgets and classes
 /// for convenient importing.
 library;
@@ -13,4 +13,3 @@ export 'bottomsheet_container.dart';
 export 'bottomsheet_loading_indicator.dart';
 export 'bottomsheet_transition_builder.dart';
 export 'modern_bottomsheet.dart';
-

@@ -6,11 +6,7 @@ class DialogIcon extends StatelessWidget {
   final IconData icon;
   final Color color;
 
-  const DialogIcon({
-    super.key,
-    required this.icon,
-    required this.color,
-  });
+  const DialogIcon({super.key, required this.icon, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +18,10 @@ class DialogIcon extends StatelessWidget {
             color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            icon,
-            size: DialogConstants.iconSize,
-            color: color,
-          ),
+          child: Icon(icon, size: DialogConstants.iconSize, color: color),
         ),
         const SizedBox(height: DialogConstants.contentSpacingAfterIcon),
       ],
     );
   }
 }
-

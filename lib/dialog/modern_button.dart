@@ -97,4 +97,3 @@ class ModernButtonState extends State<ModernButton>
     _controller.reverse();
   }
 }
-

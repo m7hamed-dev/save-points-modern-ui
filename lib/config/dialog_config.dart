@@ -45,4 +45,3 @@ class DialogConfig {
     // Can be extended for theme-specific overrides
   }
 }
-

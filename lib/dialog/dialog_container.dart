@@ -35,4 +35,3 @@ class DialogContainer extends StatelessWidget {
     );
   }
 }
-

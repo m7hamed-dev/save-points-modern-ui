@@ -15,4 +15,3 @@ class BottomsheetConstants {
   static const double titleSpacing = 16.0;
   static const double contentSpacing = 20.0;
 }
-

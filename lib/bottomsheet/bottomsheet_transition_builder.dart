@@ -24,35 +24,29 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use circular reveal if enabled
     if (hideLikeCircle) {
-      return RepaintBoundary(
-        child: _buildCircularReveal(context),
-      );
+      return RepaintBoundary(child: _buildCircularReveal(context));
     }
-    
+
     final clampedAnimation = ClampedAnimation(animation);
-    
+
     // Use new animation system if startAnimation or endAnimation is provided
     if (startAnimation != null || endAnimation != null) {
-      return RepaintBoundary(
-        child: _buildDirectionalAnimation(),
-      );
+      return RepaintBoundary(child: _buildDirectionalAnimation());
     }
-    
+
     // Default: slide from bottom
-    return RepaintBoundary(
-      child: _buildSlideFromBottom(clampedAnimation),
-    );
+    return RepaintBoundary(child: _buildSlideFromBottom(clampedAnimation));
   }
 
   Widget _buildCircularReveal(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final maxRadius = _calculateMaxRadius(screenSize);
-    
+
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
         final radius = animation.value * maxRadius;
-        
+
         return ClipPath(
           clipper: _BottomsheetCircularRevealClipper(
             radius: radius,
@@ -67,8 +61,8 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
 
   double _calculateMaxRadius(Size screenSize) {
     final diagonal = math.sqrt(
-      screenSize.width * screenSize.width + 
-      screenSize.height * screenSize.height
+      screenSize.width * screenSize.width +
+          screenSize.height * screenSize.height,
     );
     return diagonal / 2;
   }
@@ -76,10 +70,11 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
   Widget _buildDirectionalAnimation() {
     final startDir = startAnimation ?? BottomsheetAnimationDirection.fromBottom;
     final endDir = endAnimation ?? BottomsheetAnimationDirection.fromBottom;
-    
-    final isForward = animation.status == AnimationStatus.forward || 
-                     animation.status == AnimationStatus.completed;
-    
+
+    final isForward =
+        animation.status == AnimationStatus.forward ||
+        animation.status == AnimationStatus.completed;
+
     if (isForward) {
       return _buildFromDirection(animation, startDir);
     } else {
@@ -87,9 +82,12 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
     }
   }
 
-  Widget _buildFromDirection(Animation<double> anim, BottomsheetAnimationDirection dir) {
+  Widget _buildFromDirection(
+    Animation<double> anim,
+    BottomsheetAnimationDirection dir,
+  ) {
     final clampedAnim = ClampedAnimation(anim);
-    
+
     switch (dir) {
       case BottomsheetAnimationDirection.fromBottom:
         return _buildSlideFromBottom(clampedAnim);
@@ -106,9 +104,12 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
     }
   }
 
-  Widget _buildToDirection(Animation<double> anim, BottomsheetAnimationDirection dir) {
+  Widget _buildToDirection(
+    Animation<double> anim,
+    BottomsheetAnimationDirection dir,
+  ) {
     final clampedAnim = ClampedAnimation(anim);
-    
+
     switch (dir) {
       case BottomsheetAnimationDirection.fromBottom: // Exit to bottom
         return _buildSlideReverse(clampedAnim, const Offset(0, 1));
@@ -186,10 +187,7 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
       reverseCurve: Curves.easeIn,
     );
 
-    return FadeTransition(
-      opacity: curvedAnimation,
-      child: bottomsheet,
-    );
+    return FadeTransition(opacity: curvedAnimation, child: bottomsheet);
   }
 
   Widget _buildScale(Animation<double> anim) {
@@ -223,18 +221,10 @@ class _BottomsheetCircularRevealClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final align = alignment.resolve(TextDirection.ltr);
-    final center = align.inscribe(
-      Size.zero,
-      Offset.zero & size,
-    ).center;
-    
+    final center = align.inscribe(Size.zero, Offset.zero & size).center;
+
     final path = Path();
-    path.addOval(
-      Rect.fromCircle(
-        center: center,
-        radius: radius,
-      ),
-    );
+    path.addOval(Rect.fromCircle(center: center, radius: radius));
     return path;
   }
 

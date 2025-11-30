@@ -1,5 +1,5 @@
 /// Barrel file for snackbar widgets and classes
-/// 
+///
 /// This file exports all snackbar-related widgets and classes
 /// for convenient importing.
 library;
@@ -14,4 +14,3 @@ export 'animated_icon.dart';
 export 'progress_indicator_bar.dart';
 export 'animated_wrapper.dart';
 export 'modern_snackbar_content.dart';
-

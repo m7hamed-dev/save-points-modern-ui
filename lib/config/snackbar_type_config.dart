@@ -12,4 +12,3 @@ class SnackbarTypeConfig {
     required this.defaultIcon,
   });
 }
-

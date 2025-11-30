@@ -240,8 +240,11 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                   Text(
                                     widget.subtitle!,
                                     style: TextStyle(
-                                      fontSize: SnackbarConstants.subtitleFontSize,
-                                      color: Colors.white.withValues(alpha: 0.8),
+                                      fontSize:
+                                          SnackbarConstants.subtitleFontSize,
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
                                       fontWeight: FontWeight.w400,
                                       decoration: TextDecoration.none,
                                     ),
@@ -277,4 +280,3 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     );
   }
 }
-

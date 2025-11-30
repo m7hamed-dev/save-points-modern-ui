@@ -5,11 +5,7 @@ class DialogTitle extends StatelessWidget {
   final String title;
   final bool isDark;
 
-  const DialogTitle({
-    super.key,
-    required this.title,
-    required this.isDark,
-  });
+  const DialogTitle({super.key, required this.title, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -26,4 +22,3 @@ class DialogTitle extends StatelessWidget {
     );
   }
 }
-

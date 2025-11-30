@@ -104,4 +104,3 @@ class SnackbarConfig {
     typeConfigs[type] = config;
   }
 }
-

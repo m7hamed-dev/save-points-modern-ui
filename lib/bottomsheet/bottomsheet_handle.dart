@@ -5,15 +5,13 @@ import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_constants.dart';
 class BottomsheetHandle extends StatelessWidget {
   final Color? color;
 
-  const BottomsheetHandle({
-    super.key,
-    this.color,
-  });
+  const BottomsheetHandle({super.key, this.color});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final handleColor = color ??
+    final handleColor =
+        color ??
         (isDark
             ? Colors.white.withValues(alpha: 0.3)
             : Colors.black.withValues(alpha: 0.2));
@@ -32,4 +30,3 @@ class BottomsheetHandle extends StatelessWidget {
     );
   }
 }
-

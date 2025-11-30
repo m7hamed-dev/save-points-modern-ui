@@ -60,7 +60,8 @@ class SavePointsDialog {
       transitionDuration: config.transitionDuration,
       pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final finalAnimationType = (startAnimation == null && endAnimation == null)
+        final finalAnimationType =
+            (startAnimation == null && endAnimation == null)
             ? (animationType ?? config.defaultAnimation)
             : null;
         return DialogTransitionBuilder(

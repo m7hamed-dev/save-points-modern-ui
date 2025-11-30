@@ -5,17 +5,12 @@ class BottomsheetLoadingIndicator extends StatelessWidget {
   final Color? color;
   final double size;
 
-  const BottomsheetLoadingIndicator({
-    super.key,
-    this.color,
-    this.size = 32.0,
-  });
+  const BottomsheetLoadingIndicator({super.key, this.color, this.size = 32.0});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final indicatorColor = color ?? 
-        (isDark ? Colors.white70 : Colors.black54);
+    final indicatorColor = color ?? (isDark ? Colors.white70 : Colors.black54);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24.0),
@@ -32,4 +27,3 @@ class BottomsheetLoadingIndicator extends StatelessWidget {
     );
   }
 }
-

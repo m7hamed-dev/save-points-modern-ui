@@ -54,7 +54,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     super.initState();
     _isLoading = widget.isLoading;
     _loadingNotifier = widget.loadingNotifier;
-    
+
     if (_loadingNotifier != null) {
       _loadingNotifier!.addListener(_onLoadingChanged);
     }
@@ -71,7 +71,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
       background: widget.backgroundColor,
       icon: widget.iconColor,
     );
-    
+
     if (widget.maxHeight == null) {
       final screenHeight = MediaQuery.of(context).size.height;
       _cachedMaxHeight = screenHeight * BottomsheetConstants.maxHeight;
@@ -98,15 +98,20 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colorConfig = _cachedColorConfig ?? BottomsheetColorConfig(
-      theme: Theme.of(context),
-      isDark: widget.isDark,
-      background: widget.backgroundColor,
-      icon: widget.iconColor,
-    );
+    final colorConfig =
+        _cachedColorConfig ??
+        BottomsheetColorConfig(
+          theme: Theme.of(context),
+          isDark: widget.isDark,
+          background: widget.backgroundColor,
+          icon: widget.iconColor,
+        );
 
-    final maxHeight = _cachedMaxHeight ?? 
-        (widget.maxHeight ?? MediaQuery.of(context).size.height * BottomsheetConstants.maxHeight);
+    final maxHeight =
+        _cachedMaxHeight ??
+        (widget.maxHeight ??
+            MediaQuery.of(context).size.height *
+                BottomsheetConstants.maxHeight);
 
     return RepaintBoundary(
       child: Material(
@@ -174,9 +179,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                     else if (widget.child != null)
                       Expanded(
                         child: RepaintBoundary(
-                          child: SingleChildScrollView(
-                            child: widget.child!,
-                          ),
+                          child: SingleChildScrollView(child: widget.child!),
                         ),
                       ),
                   ],
@@ -189,4 +192,3 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     );
   }
 }
-

@@ -1,5 +1,5 @@
 /// Barrel file for dialog widgets and classes
-/// 
+///
 /// This file exports all dialog-related widgets and classes
 /// for convenient importing.
 library;
@@ -19,4 +19,3 @@ export 'dialog_buttons.dart';
 export 'modern_button.dart';
 export 'button_shadows.dart';
 export 'modern_dialog.dart';
-
