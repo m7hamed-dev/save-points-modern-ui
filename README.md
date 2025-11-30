@@ -1,8 +1,16 @@
 # SavePoints Modern UI 🎨
 
+<div align="center">
+  <img src="https://raw.githubusercontent.com/yourusername/savepoints_modern_ui/main/banner.jpeg" alt="SavePoints Modern UI Banner" width="100%">
+</div>
+
+<div align="center">
+
 [![pub package](https://img.shields.io/pub/v/savepoints_modern_ui.svg)](https://pub.dev/packages/savepoints_modern_ui)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?logo=Flutter&logoColor=white)](https://flutter.dev)
+
+</div>
 
 > A comprehensive Flutter package providing elegant, customizable UI components with stunning glassmorphism effects, smooth animations, and extensive customization options. Perfect for building modern, professional user interfaces.
 

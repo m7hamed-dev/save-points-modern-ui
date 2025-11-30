@@ -22,6 +22,11 @@ example/.flutter-plugins-dependencies
 SIMPLE_STRUCTURE.md
 WHAT_YOU_NEED.md
 fix_withOpacity.sh
+PUBLISHING_GUIDE.md
+QUICK_PUBLISH.md
+
+# Exclude banner image (referenced via GitHub URL in README)
+banner.jpeg
 
 # Exclude example app files from lib/ (should be in example/ folder)
 lib/main.dart
