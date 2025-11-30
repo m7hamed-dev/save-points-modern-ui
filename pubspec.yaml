@@ -1,6 +1,6 @@
 name: save_points_modern_ui
 description: A package providing modern, customizable UI components including dialogs, snackbars, and bottom sheets with glassmorphism effects, animations, and extensive customization options.
-version: 1.0.0+3
+version: 1.0.0+1
 homepage: https://github.com/yourusername/save_points_modern_ui
 repository: https://github.com/yourusername/save_points_modern_ui
 issue_tracker: https://github.com/yourusername/save_points_modern_ui/issues
