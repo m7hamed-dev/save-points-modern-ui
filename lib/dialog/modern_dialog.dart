@@ -64,7 +64,7 @@ class _ModernDialogState extends State<ModernDialog> {
     super.initState();
     _isLoading = widget.isLoading;
     _loadingNotifier = widget.loadingNotifier;
-    
+
     // Listen to external loading updates
     if (_loadingNotifier != null) {
       _loadingNotifier!.addListener(_onLoadingChanged);
@@ -104,14 +104,16 @@ class _ModernDialogState extends State<ModernDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final colorConfig = _cachedColorConfig ?? DialogColorConfig(
-      theme: Theme.of(context),
-      isDark: widget.isDark,
-      iconColor: widget.iconColor,
-      backgroundColor: widget.backgroundColor,
-      confirmButtonColor: widget.confirmButtonColor,
-      cancelButtonColor: widget.cancelButtonColor,
-    );
+    final colorConfig =
+        _cachedColorConfig ??
+        DialogColorConfig(
+          theme: Theme.of(context),
+          isDark: widget.isDark,
+          iconColor: widget.iconColor,
+          backgroundColor: widget.backgroundColor,
+          confirmButtonColor: widget.confirmButtonColor,
+          cancelButtonColor: widget.cancelButtonColor,
+        );
 
     return RepaintBoundary(
       child: Material(
@@ -188,21 +190,23 @@ class _ModernDialogState extends State<ModernDialog> {
 
   Future<void> _handleConfirm(BuildContext context) async {
     if (_isLoading) return;
-    
+
     HapticFeedback.lightImpact();
-    
+
     // Handle async confirm callback
     if (widget.onConfirmAsync != null) {
       setState(() {
         _isLoading = true;
       });
-      
+
       try {
         final onConfirmAsync = widget.onConfirmAsync;
         if (onConfirmAsync != null) {
           final shouldClose = await onConfirmAsync();
           if (shouldClose == true && mounted) {
-            Navigator.of(context).pop(true);
+            if (context.mounted) {
+              Navigator.of(context).pop(true);
+            }
           } else if (mounted) {
             setState(() {
               _isLoading = false;
@@ -226,10 +230,9 @@ class _ModernDialogState extends State<ModernDialog> {
 
   void _handleCancel(BuildContext context) {
     if (_isLoading) return;
-    
+
     HapticFeedback.lightImpact();
     Navigator.of(context).pop(false);
     widget.onCancel?.call();
   }
 }
-

@@ -188,7 +188,6 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -203,7 +202,14 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
               ],
             ),
             const SizedBox(height: 20),
-            Wrap(spacing: 12, runSpacing: 12, children: children),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: .center,
+              runAlignment: .center,
+              crossAxisAlignment: .center,
+              children: children,
+            ),
           ],
         ),
       ),
