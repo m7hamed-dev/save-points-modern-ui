@@ -174,31 +174,82 @@ static Future<bool?> show(
 
 #### Examples
 
-**Confirmation Dialog with Async Operation**
+**1. Info Dialog**
 
 ```dart
 SavePointsDialog.show(
   context,
-  title: 'Delete Item',
-  message: 'Are you sure you want to delete this item? This action cannot be undone.',
-  icon: Icons.warning,
-  iconColor: Colors.orange,
-  confirmText: 'Delete',
-  cancelText: 'Cancel',
-  showCancelButton: true,
-  onConfirmAsync: () async {
-    // Simulate async operation
-    await Future.delayed(Duration(seconds: 2));
-    // Return true to close dialog, false to keep it open
-    return true;
-  },
-  onCancel: () {
-    print('Deletion cancelled');
+  title: 'Information',
+  message: 'This is an informational dialog with a custom icon and message.',
+  icon: Icons.info,
+  iconColor: Colors.blue,
+  onConfirm: () {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Dialog confirmed!')),
+    );
   },
 );
 ```
 
-**Dialog with Loading State**
+**2. Success Dialog**
+
+```dart
+SavePointsDialog.show(
+  context,
+  title: 'Success!',
+  message: 'Your action has been completed successfully.',
+  icon: Icons.check_circle,
+  iconColor: Colors.green,
+  confirmText: 'Great!',
+  onConfirm: () {},
+);
+```
+
+**3. Confirmation Dialog**
+
+```dart
+SavePointsDialog.show(
+  context,
+  title: 'Confirm Action',
+  message: 'Are you sure you want to proceed? This action cannot be undone.',
+  icon: Icons.warning,
+  iconColor: Colors.orange,
+  confirmText: 'Yes, Continue',
+  cancelText: 'Cancel',
+  showCancelButton: true,
+  onConfirm: () {
+    SavePointsSnackbar.showSuccess(
+      context,
+      title: 'Confirmed!',
+      subtitle: 'Action has been completed',
+    );
+  },
+  onCancel: () {
+    SavePointsSnackbar.show(
+      context,
+      title: 'Cancelled',
+      subtitle: 'Action was cancelled',
+      type: SnackbarType.info,
+    );
+  },
+);
+```
+
+**4. Error Dialog**
+
+```dart
+SavePointsDialog.show(
+  context,
+  title: 'Error',
+  message: 'Something went wrong. Please try again later.',
+  icon: Icons.error,
+  iconColor: Colors.red,
+  confirmText: 'OK',
+  onConfirm: () {},
+);
+```
+
+**5. Dialog with Async Loading State**
 
 ```dart
 final loadingNotifier = ValueNotifier<bool>(false);
@@ -211,27 +262,27 @@ SavePointsDialog.show(
   loadingNotifier: loadingNotifier,
   onConfirmAsync: () async {
     loadingNotifier.value = true;
-    await performOperation();
+    await Future.delayed(const Duration(seconds: 3));
     loadingNotifier.value = false;
-    return true;
+    return true; // Close dialog on success
   },
 );
 ```
 
-**Custom Animation Dialog**
+**6. Custom Animation Dialog**
 
 ```dart
 SavePointsDialog.show(
   context,
-  title: 'Welcome',
-  message: 'Thanks for using SavePoints Modern UI!',
+  title: 'Animated Dialog',
+  message: 'This dialog has custom enter and exit animations!',
   startAnimation: DialogAnimationDirection.fromLeft,
-  endAnimation: DialogAnimationDirection.toRight,
+  endAnimation: DialogAnimationDirection.fromRight,
   icon: Icons.celebration,
 );
 ```
 
-**Circular Reveal Dialog**
+**7. Circular Reveal Dialog**
 
 ```dart
 SavePointsDialog.show(
@@ -308,49 +359,155 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 
 #### Examples
 
-**Gradient Snackbar with Progress**
+**1. Basic Snackbar**
 
 ```dart
 SavePointsSnackbar.show(
   context,
-  title: 'Upload Complete',
-  subtitle: 'Your file has been uploaded successfully',
-  gradient: const LinearGradient(
-    colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-  ),
-  showProgressIndicator: true,
-  duration: Duration(seconds: 5),
+  title: 'Basic Snackbar',
+  subtitle: 'Simple notification example',
+  type: SnackbarType.info,
 );
 ```
 
-**Top Position with Custom Animation**
+**2. Success Snackbar**
 
 ```dart
-SavePointsSnackbar.show(
+SavePointsSnackbar.showSuccess(
   context,
-  title: 'New Message',
-  subtitle: 'You have a new notification',
-  position: SnackbarPosition.top,
-  startAnimation: SnackbarAnimationDirection.fromTop,
-  endAnimation: SnackbarAnimationDirection.toLeft,
+  title: 'Success!',
+  subtitle: 'Operation completed successfully',
   showProgressIndicator: true,
 );
 ```
 
-**Bordered Error Snackbar**
+**3. Error Snackbar**
 
 ```dart
 SavePointsSnackbar.showError(
   context,
   title: 'Error',
-  subtitle: 'Something went wrong. Please try again.',
-  borderColor: Colors.red,
-  borderWidth: 2.0,
-  borderRadius: BorderRadius.circular(12),
+  subtitle: 'Failed to complete operation',
+  showProgressIndicator: true,
 );
 ```
 
-**Circular Reveal Snackbar**
+**4. Warning Snackbar**
+
+```dart
+SavePointsSnackbar.showWarning(
+  context,
+  title: 'Warning',
+  subtitle: 'Low balance remaining',
+  showProgressIndicator: true,
+);
+```
+
+**5. Top Position Snackbar**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Top Snackbar',
+  subtitle: 'Displayed at the top of the screen',
+  position: SnackbarPosition.top,
+  showProgressIndicator: true,
+  startAnimation: SnackbarAnimationDirection.fromTop,
+);
+```
+
+**6. Gradient Snackbar with Progress**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Gradient Snackbar',
+  subtitle: 'Beautiful gradient background',
+  gradient: const LinearGradient(
+    colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+  ),
+  showProgressIndicator: true,
+);
+```
+
+**7. Bounce Animation Snackbar**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Bounce Animation',
+  subtitle: 'Custom bounce effect',
+  animation: SnackbarAnimation.bounce,
+  type: SnackbarType.success,
+);
+```
+
+**8. Slide Rotate Animation Snackbar**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Slide Rotate',
+  subtitle: 'Combined animation effect',
+  animation: SnackbarAnimation.slideRotate,
+  type: SnackbarType.info,
+  showProgressIndicator: true,
+);
+```
+
+**9. Tap to Dismiss Snackbar**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Tap to Dismiss',
+  subtitle: 'Touch anywhere to close',
+  dismissOnTap: true,
+  type: SnackbarType.info,
+);
+```
+
+**10. Bordered Snackbar**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Bordered Snackbar',
+  subtitle: 'With custom border styling',
+  borderColor: Colors.orange,
+  borderWidth: 2,
+  borderRadius: BorderRadius.circular(12),
+  type: SnackbarType.warning,
+);
+```
+
+**11. Elastic Animation Snackbar**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Elastic Animation',
+  subtitle: 'Smooth elastic effect',
+  animation: SnackbarAnimation.elastic,
+  type: SnackbarType.success,
+);
+```
+
+**12. Custom Direction Animation Snackbar**
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Custom Animation',
+  subtitle: 'Slides in from left',
+  startAnimation: SnackbarAnimationDirection.fromLeft,
+  endAnimation: SnackbarAnimationDirection.fromRight,
+  type: SnackbarType.info,
+  showProgressIndicator: true,
+);
+```
+
+**13. Circular Reveal Snackbar**
 
 ```dart
 SavePointsSnackbar.show(
@@ -410,29 +567,51 @@ static Future<T?> show<T>({
 
 #### Examples
 
-**Simple List Bottom Sheet**
+**1. Basic Bottom Sheet**
 
 ```dart
 SavePointsBottomsheet.show(
   context: context,
-  title: 'Select Option',
-  icon: Icons.menu,
+  title: 'Bottom Sheet',
+  child: const Padding(
+    padding: EdgeInsets.all(24.0),
+    child: Text(
+      'This is a modern bottom sheet with glassmorphism design. '
+      'It features beautiful backdrop blur effects and smooth animations.',
+      style: TextStyle(fontSize: 16),
+    ),
+  ),
+);
+```
+
+**2. Options Menu Bottom Sheet**
+
+```dart
+SavePointsBottomsheet.show(
+  context: context,
+  title: 'Options',
+  icon: Icons.more_vert,
   child: Column(
     mainAxisSize: MainAxisSize.min,
     children: [
       ListTile(
-        leading: Icon(Icons.edit),
-        title: Text('Edit'),
+        leading: const Icon(Icons.edit),
+        title: const Text('Edit'),
+        subtitle: const Text('Modify this item'),
         onTap: () => Navigator.pop(context),
       ),
+      const Divider(),
       ListTile(
-        leading: Icon(Icons.delete),
-        title: Text('Delete'),
+        leading: const Icon(Icons.share),
+        title: const Text('Share'),
+        subtitle: const Text('Share with others'),
         onTap: () => Navigator.pop(context),
       ),
+      const Divider(),
       ListTile(
-        leading: Icon(Icons.share),
-        title: Text('Share'),
+        leading: const Icon(Icons.delete, color: Colors.red),
+        title: const Text('Delete', style: TextStyle(color: Colors.red)),
+        subtitle: const Text('Remove this item permanently'),
         onTap: () => Navigator.pop(context),
       ),
     ],
@@ -440,7 +619,25 @@ SavePointsBottomsheet.show(
 );
 ```
 
-**Bottom Sheet with Loading State**
+**3. Animated Bottom Sheet**
+
+```dart
+SavePointsBottomsheet.show(
+  context: context,
+  title: 'Animated Bottom Sheet',
+  startAnimation: BottomsheetAnimationDirection.fromLeft,
+  endAnimation: BottomsheetAnimationDirection.fromRight,
+  child: const Padding(
+    padding: EdgeInsets.all(24.0),
+    child: Text(
+      'This bottom sheet slides in from the left and exits to the right.',
+      style: TextStyle(fontSize: 16),
+    ),
+  ),
+);
+```
+
+**4. Bottom Sheet with Loading State**
 
 ```dart
 final loadingNotifier = ValueNotifier<bool>(false);
@@ -450,37 +647,100 @@ SavePointsBottomsheet.show(
   title: 'Loading Data',
   isLoading: false,
   loadingNotifier: loadingNotifier,
-  child: YourContentWidget(),
+  child: const SizedBox(),
 );
 
-// Later, update loading state
-loadingNotifier.value = true;
-await loadData();
-loadingNotifier.value = false;
+// Simulate loading
+Future.delayed(const Duration(milliseconds: 500), () {
+  loadingNotifier.value = true;
+  Future.delayed(const Duration(seconds: 2), () {
+    loadingNotifier.value = false;
+    if (context.mounted) {
+      Navigator.pop(context);
+      SavePointsSnackbar.showSuccess(
+        context,
+        title: 'Loaded!',
+        subtitle: 'Data loaded successfully',
+      );
+    }
+  });
+});
 ```
 
-**Animated Bottom Sheet**
+**5. Scrollable Bottom Sheet**
+
+```dart
+SavePointsBottomsheet.show(
+  context: context,
+  title: 'Scrollable Content',
+  icon: Icons.swap_vert,
+  isScrollControlled: true,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: List.generate(
+      15,
+      (index) => ListTile(
+        leading: CircleAvatar(
+          child: Text('${index + 1}'),
+        ),
+        title: Text('Item ${index + 1}'),
+        subtitle: Text('This is item number ${index + 1}'),
+        onTap: () => Navigator.pop(context),
+      ),
+    ),
+  ),
+);
+```
+
+**6. Settings Bottom Sheet**
 
 ```dart
 SavePointsBottomsheet.show(
   context: context,
   title: 'Settings',
-  startAnimation: BottomsheetAnimationDirection.fromLeft,
-  endAnimation: BottomsheetAnimationDirection.toRight,
-  child: SettingsWidget(),
+  icon: Icons.settings,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      SwitchListTile(
+        title: const Text('Enable Notifications'),
+        subtitle: const Text('Receive push notifications'),
+        value: true,
+        onChanged: (_) {},
+      ),
+      const Divider(),
+      SwitchListTile(
+        title: const Text('Dark Mode'),
+        subtitle: const Text('Use dark theme'),
+        value: false,
+        onChanged: (_) {},
+      ),
+      const Divider(),
+      ListTile(
+        leading: const Icon(Icons.language),
+        title: const Text('Language'),
+        subtitle: const Text('English'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => Navigator.pop(context),
+      ),
+    ],
+  ),
 );
 ```
 
-**Circular Reveal Bottom Sheet**
+**7. Circular Reveal Bottom Sheet**
 
 ```dart
 SavePointsBottomsheet.show(
   context: context,
   title: 'Circular Reveal',
   hideLikeCircle: true,
-  child: Padding(
+  child: const Padding(
     padding: EdgeInsets.all(24.0),
-    child: Text('This bottom sheet reveals/hides like a circle expanding!'),
+    child: Text(
+      'This bottom sheet reveals/hides like a circle expanding!',
+      style: TextStyle(fontSize: 16),
+    ),
   ),
 );
 ```
