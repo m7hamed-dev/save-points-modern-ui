@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:savepoints_modern_ui/snackbar/snackbar_constants.dart';
+import 'package:save_points_modern_ui/snackbar/snackbar_constants.dart';
 
 /// Progress indicator bar at the bottom
 class ProgressIndicatorBar extends StatelessWidget {

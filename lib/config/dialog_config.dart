@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:savepoints_modern_ui/snackbar/snackbar_enums.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_animation_type.dart';
+import 'package:save_points_modern_ui/snackbar/snackbar_enums.dart';
+import 'package:save_points_modern_ui/dialog/dialog_animation_type.dart';
 
 /// Configuration for dialog appearance and behavior
 class DialogConfig {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:savepoints_modern_ui/savepoints_modern_ui.dart';
+import 'package:save_points_modern_ui/savepoints_bottomsheet.dart';
+import 'package:save_points_modern_ui/savepoints_dialog.dart';
+import 'package:save_points_modern_ui/savepoints_snackbar.dart';
 
 void main() {
   runApp(const MyApp());

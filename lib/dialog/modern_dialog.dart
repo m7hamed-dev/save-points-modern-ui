@@ -1,14 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_color_config.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_container.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_icon.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_title.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_message.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_buttons.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_loading_indicator.dart';
-import 'package:savepoints_modern_ui/dialog/dialog_constants.dart';
+import 'package:save_points_modern_ui/dialog/dialog_color_config.dart';
+import 'package:save_points_modern_ui/dialog/dialog_container.dart';
+import 'package:save_points_modern_ui/dialog/dialog_icon.dart';
+import 'package:save_points_modern_ui/dialog/dialog_title.dart';
+import 'package:save_points_modern_ui/dialog/dialog_message.dart';
+import 'package:save_points_modern_ui/dialog/dialog_buttons.dart';
+import 'package:save_points_modern_ui/dialog/dialog_loading_indicator.dart';
+import 'package:save_points_modern_ui/dialog/dialog_constants.dart';
 
 /// Modern dialog widget with loading support
 class ModernDialog extends StatefulWidget {

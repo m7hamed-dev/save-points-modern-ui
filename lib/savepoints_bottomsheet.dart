@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:savepoints_modern_ui/bottomsheet/modern_bottomsheet.dart';
-import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_transition_builder.dart';
-import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_animation_direction.dart';
+import 'package:save_points_modern_ui/bottomsheet/modern_bottomsheet.dart';
+import 'package:save_points_modern_ui/bottomsheet/bottomsheet_transition_builder.dart';
+import 'package:save_points_modern_ui/bottomsheet/bottomsheet_animation_direction.dart';
 
 // Export animation direction for public use
 export 'bottomsheet/bottomsheet_animation_direction.dart';

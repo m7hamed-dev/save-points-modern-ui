@@ -1,6 +1,6 @@
 {
-    "name": "savepoints_modern_ui",
-    "short_name": "savepoints_modern_ui",
+    "name": "save_points_modern_ui",
+    "short_name": "save_points_modern_ui",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

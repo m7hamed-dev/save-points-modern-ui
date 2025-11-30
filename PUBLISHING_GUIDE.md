@@ -7,7 +7,7 @@ Before publishing, ensure you have:
 1. ✅ **pub.dev Account**: Create an account at [pub.dev](https://pub.dev)
 2. ✅ **Google Account**: Link your Google account to pub.dev
 3. ✅ **Verified Email**: Verify your email address on pub.dev
-4. ✅ **Package Name**: Ensure your package name is available (already set: `savepoints_modern_ui`)
+4. ✅ **Package Name**: Ensure your package name is available (already set: `save_points_modern_ui`)
 
 ## 🔍 Pre-Publishing Checklist
 
@@ -16,9 +16,9 @@ Before publishing, ensure you have:
 Update the repository URLs in `pubspec.yaml`:
 
 ```yaml
-homepage: https://github.com/YOUR_USERNAME/savepoints_modern_ui
-repository: https://github.com/YOUR_USERNAME/savepoints_modern_ui
-issue_tracker: https://github.com/YOUR_USERNAME/savepoints_modern_ui/issues
+homepage: https://github.com/YOUR_USERNAME/save_points_modern_ui
+repository: https://github.com/YOUR_USERNAME/save_points_modern_ui
+issue_tracker: https://github.com/YOUR_USERNAME/save_points_modern_ui/issues
 ```
 
 Replace `YOUR_USERNAME` with your actual GitHub username.
@@ -110,10 +110,10 @@ This will:
 
 ### Step 4: Verify Publication
 
-1. Visit: https://pub.dev/packages/savepoints_modern_ui
+1. Visit: https://pub.dev/packages/save_points_modern_ui
 2. Check that your package appears
 3. Verify all files are correct
-4. Test installation: `flutter pub add savepoints_modern_ui`
+4. Test installation: `flutter pub add save_points_modern_ui`
 
 ## 📝 Post-Publishing
 
