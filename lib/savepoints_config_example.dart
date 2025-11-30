@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/savepoints_config.dart';
-import 'package:save_points_modern_ui/savepoints_snackbar.dart';
+import 'package:savepoints_modern_ui/savepoints_config.dart';
+import 'package:savepoints_modern_ui/savepoints_snackbar.dart';
 
 /// Example usage of SavePointsConfig
 ///

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/snackbar/snackbar_enums.dart';
-import 'package:save_points_modern_ui/config/snackbar_type_config.dart';
+import 'package:savepoints_modern_ui/snackbar/snackbar_enums.dart';
+import 'package:savepoints_modern_ui/config/snackbar_type_config.dart';
 
 /// Configuration for snackbar appearance and behavior
 class SnackbarConfig {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/savepoints_modern_ui.dart';
+import 'package:savepoints_modern_ui/savepoints_modern_ui.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/dialog/modern_button.dart';
-import 'package:save_points_modern_ui/dialog/dialog_constants.dart';
+import 'package:savepoints_modern_ui/dialog/modern_button.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_constants.dart';
 
 /// Dialog buttons row
 class DialogButtons extends StatelessWidget {

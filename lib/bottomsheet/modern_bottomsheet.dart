@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_color_config.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_container.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_handle.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_constants.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_loading_indicator.dart';
+import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_color_config.dart';
+import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_container.dart';
+import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_handle.dart';
+import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_constants.dart';
+import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_loading_indicator.dart';
 
 /// Modern bottom sheet widget
 class ModernBottomsheet extends StatefulWidget {

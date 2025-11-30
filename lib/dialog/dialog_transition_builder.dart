@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/dialog/dialog_animation_type.dart';
-import 'package:save_points_modern_ui/dialog/dialog_animation_direction.dart';
-import 'package:save_points_modern_ui/snackbar/clamped_animation.dart';
-import 'package:save_points_modern_ui/dialog/circular_reveal_clip.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_animation_type.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_animation_direction.dart';
+import 'package:savepoints_modern_ui/snackbar/clamped_animation.dart';
+import 'package:savepoints_modern_ui/dialog/circular_reveal_clip.dart';
 
 /// Dialog transition builder with separate start and end animations
 class DialogTransitionBuilder extends StatelessWidget {

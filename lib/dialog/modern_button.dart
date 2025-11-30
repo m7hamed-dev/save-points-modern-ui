@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/dialog/button_shadows.dart';
-import 'package:save_points_modern_ui/dialog/dialog_constants.dart';
+import 'package:savepoints_modern_ui/dialog/button_shadows.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_constants.dart';
 
 /// Modern animated button widget
 class ModernButton extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/dialog/dialog_color_config.dart';
-import 'package:save_points_modern_ui/dialog/dialog_constants.dart';
-import 'package:save_points_modern_ui/dialog/dialog_shadows.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_color_config.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_constants.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_shadows.dart';
 
 /// Dialog container with decoration
 class DialogContainer extends StatelessWidget {

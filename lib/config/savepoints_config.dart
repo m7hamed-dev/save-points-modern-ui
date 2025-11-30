@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/config/snackbar_config.dart';
-import 'package:save_points_modern_ui/config/dialog_config.dart';
+import 'package:savepoints_modern_ui/config/snackbar_config.dart';
+import 'package:savepoints_modern_ui/config/dialog_config.dart';
 
 /// Global configuration for SavePoints snackbars and dialogs
 class SavePointsConfig {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/savepoints_config.dart';
-import 'package:save_points_modern_ui/dialog/modern_dialog.dart';
-import 'package:save_points_modern_ui/dialog/dialog_transition_builder.dart';
-import 'package:save_points_modern_ui/dialog/dialog_animation_type.dart';
-import 'package:save_points_modern_ui/dialog/dialog_animation_direction.dart';
+import 'package:savepoints_modern_ui/savepoints_config.dart';
+import 'package:savepoints_modern_ui/dialog/modern_dialog.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_transition_builder.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_animation_type.dart';
+import 'package:savepoints_modern_ui/dialog/dialog_animation_direction.dart';
 
 // Export animation types for public use
 export 'dialog/dialog_animation_type.dart';

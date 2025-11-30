@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_animation_direction.dart';
-import 'package:save_points_modern_ui/snackbar/clamped_animation.dart';
+import 'package:savepoints_modern_ui/bottomsheet/bottomsheet_animation_direction.dart';
+import 'package:savepoints_modern_ui/snackbar/clamped_animation.dart';
 
 /// Bottom sheet transition builder with animation support
 class BottomsheetTransitionBuilder extends StatelessWidget {
