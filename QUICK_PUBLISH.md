@@ -18,9 +18,9 @@ Your package is **READY TO PUBLISH**!
 Edit `pubspec.yaml` and replace `yourusername` with your actual GitHub username:
 
 ```yaml
-homepage: https://github.com/YOUR_USERNAME/savepoints_modern_ui
-repository: https://github.com/YOUR_USERNAME/savepoints_modern_ui
-issue_tracker: https://github.com/YOUR_USERNAME/savepoints_modern_ui/issues
+homepage: https://github.com/YOUR_USERNAME/save_points_modern_ui
+repository: https://github.com/YOUR_USERNAME/save_points_modern_ui
+issue_tracker: https://github.com/YOUR_USERNAME/save_points_modern_ui/issues
 ```
 
 ## 🎯 Publish Commands
@@ -49,16 +49,16 @@ The tool will show you what will be published. Type `y` to confirm.
 
 - **Once published, you CANNOT unpublish** or change the version
 - Make sure repository URLs are correct
-- Package name `savepoints_modern_ui` must be available on pub.dev
+- Package name `save_points_modern_ui` must be available on pub.dev
 
 ## 📍 After Publishing
 
 Your package will be available at:
-**https://pub.dev/packages/savepoints_modern_ui**
+**https://pub.dev/packages/save_points_modern_ui**
 
 Test installation:
 ```bash
-flutter pub add savepoints_modern_ui
+flutter pub add save_points_modern_ui
 ```
 
 ---

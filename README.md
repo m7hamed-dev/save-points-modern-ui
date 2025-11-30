@@ -6,11 +6,11 @@
 
 <div align="center">
 
-[![pub package](https://img.shields.io/pub/v/savepoints_modern_ui.svg)](https://pub.dev/packages/savepoints_modern_ui)
+[![pub package](https://img.shields.io/pub/v/save_points_modern_ui.svg)](https://pub.dev/packages/save_points_modern_ui)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?logo=Flutter&logoColor=white)](https://flutter.dev)
 
-**[🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/)** • [📦 Pub.dev](https://pub.dev/packages/savepoints_modern_ui) • [📚 Documentation](https://pub.dev/documentation/savepoints_modern_ui/latest/)
+**[🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/)** • [📦 Pub.dev](https://pub.dev/packages/save_points_modern_ui) • [📚 Documentation](https://pub.dev/documentation/save_points_modern_ui/latest/)
 
 </div>
 
@@ -67,11 +67,11 @@ All components feature automatic dark mode support, extensive customization opti
 
 ## 📦 Installation
 
-Add `savepoints_modern_ui` to your `pubspec.yaml`:
+Add `save_points_modern_ui` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  savepoints_modern_ui: ^1.0.0
+  save_points_modern_ui: ^1.0.0
 ```
 
 Install the package:
@@ -83,7 +83,7 @@ flutter pub get
 Import the package:
 
 ```dart
-import 'package:savepoints_modern_ui/savepoints_modern_ui.dart';
+import 'package:save_points_modern_ui/save_points_modern_ui.dart';
 ```
 
 ## 🚀 Quick Start
@@ -836,7 +836,7 @@ SavePointsConfig.instance.dialog
   ..defaultShowCancelButton = true;
 ```
 
-See the [Configuration Guide](https://github.com/yourusername/savepoints_modern_ui/wiki/Configuration) for more details.
+See the [Configuration Guide](https://github.com/yourusername/save_points_modern_ui/wiki/Configuration) for more details.
 
 ## 📱 Platform Support
 
@@ -860,8 +860,8 @@ See the [Configuration Guide](https://github.com/yourusername/savepoints_modern_
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/savepoints_modern_ui.git
-   cd savepoints_modern_ui
+   git clone https://github.com/yourusername/save_points_modern_ui.git
+   cd save_points_modern_ui
    ```
 
 2. Navigate to the example directory:
@@ -882,9 +882,9 @@ See the [Configuration Guide](https://github.com/yourusername/savepoints_modern_
 ## 📖 Additional Resources
 
 - [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) - Try the components in your browser
-- [Full API Documentation](https://pub.dev/documentation/savepoints_modern_ui/latest/)
-- [Example App](https://github.com/yourusername/savepoints_modern_ui/tree/main/example)
-- [Issue Tracker](https://github.com/yourusername/savepoints_modern_ui/issues)
+- [Full API Documentation](https://pub.dev/documentation/save_points_modern_ui/latest/)
+- [Example App](https://github.com/yourusername/save_points_modern_ui/tree/main/example)
+- [Issue Tracker](https://github.com/yourusername/save_points_modern_ui/issues)
 
 ## 🤝 Contributing
 
@@ -916,8 +916,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 💬 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/savepoints_modern_ui/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/savepoints_modern_ui/discussions)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/save_points_modern_ui/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/save_points_modern_ui/discussions)
 - **Email**: support@savepoints.dev
 
 ---
@@ -926,6 +926,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by the SavePoints team**
 
-[⭐ Star us on GitHub](https://github.com/yourusername/savepoints_modern_ui) • [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) • [📦 Pub.dev](https://pub.dev/packages/savepoints_modern_ui) • [📚 Documentation](https://pub.dev/documentation/savepoints_modern_ui/latest/)
+[⭐ Star us on GitHub](https://github.com/yourusername/save_points_modern_ui) • [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) • [📦 Pub.dev](https://pub.dev/packages/save_points_modern_ui) • [📚 Documentation](https://pub.dev/documentation/save_points_modern_ui/latest/)
 
 </div>

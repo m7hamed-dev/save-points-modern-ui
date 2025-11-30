@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:savepoints_modern_ui/snackbar/snackbar_enums.dart';
-import 'package:savepoints_modern_ui/snackbar/snackbar_constants.dart';
+import 'package:save_points_modern_ui/snackbar/snackbar_enums.dart';
+import 'package:save_points_modern_ui/snackbar/snackbar_constants.dart';
 
 /// Animated icon with scale animation
 class AnimatedIcon extends StatefulWidget {
