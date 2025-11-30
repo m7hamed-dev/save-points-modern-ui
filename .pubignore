@@ -25,8 +25,8 @@ fix_withOpacity.sh
 PUBLISHING_GUIDE.md
 QUICK_PUBLISH.md
 
-# Exclude banner image (referenced via GitHub URL in README)
-banner.jpeg
+# Banner image is included in package for README display
+# banner.jpeg
 
 # Exclude example app files from lib/ (should be in example/ folder)
 lib/main.dart

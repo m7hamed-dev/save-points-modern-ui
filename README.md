@@ -1,7 +1,7 @@
 # SavePoints Modern UI 🎨
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/yourusername/savepoints_modern_ui/main/banner.jpeg" alt="SavePoints Modern UI Banner" width="100%">
+  <img src="banner.webp" alt="SavePoints Modern UI Banner" width="100%">
 </div>
 
 <div align="center">
