@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:save_points_modern_ui/savepoints_config.dart';
-import 'package:save_points_modern_ui/snackbar/snackbar.dart';
-import 'package:save_points_modern_ui/snackbar/top_snackbar_overlay.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/top_snackbar_overlay.dart';
 
 // Export enums for public use
 export 'snackbar/snackbar_enums.dart';

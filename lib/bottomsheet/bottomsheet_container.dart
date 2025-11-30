@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_color_config.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_constants.dart';
-import 'package:save_points_modern_ui/bottomsheet/bottomsheet_shadows.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_color_config.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_constants.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
 
 /// Bottom sheet container with decoration
 class BottomsheetContainer extends StatelessWidget {

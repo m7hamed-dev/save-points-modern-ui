@@ -1,9 +1,9 @@
-name: save_points_modern_ui
+name: save_points_snackbar_dialog_bottomsheet
 description: A package providing modern, customizable UI components including dialogs, snackbars, and bottom sheets with glassmorphism effects, animations, and extensive customization options.
 version: 1.0.0+1
-homepage: https://github.com/yourusername/save_points_modern_ui
-repository: https://github.com/yourusername/save_points_modern_ui
-issue_tracker: https://github.com/yourusername/save_points_modern_ui/issues
+homepage: https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet
+repository: https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet
+issue_tracker: https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet/issues
 
 environment:
   sdk: ^3.10.0

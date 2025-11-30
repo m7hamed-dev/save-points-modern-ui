@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_modern_ui/snackbar/snackbar_enums.dart';
-import 'package:save_points_modern_ui/snackbar/clamped_animation.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animation.dart';
 
 /// Wrapper for entrance animations
 class AnimatedWrapper extends StatelessWidget {

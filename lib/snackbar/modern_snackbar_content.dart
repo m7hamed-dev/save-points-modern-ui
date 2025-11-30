@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart' hide AnimatedIcon;
-import 'package:save_points_modern_ui/snackbar/snackbar_enums.dart';
-import 'package:save_points_modern_ui/snackbar/snackbar_constants.dart';
-import 'package:save_points_modern_ui/snackbar/snackbar_shadows.dart';
-import 'package:save_points_modern_ui/snackbar/animated_icon.dart';
-import 'package:save_points_modern_ui/snackbar/progress_indicator_bar.dart';
-import 'package:save_points_modern_ui/snackbar/animated_wrapper.dart';
-import 'package:save_points_modern_ui/snackbar/clamped_animation.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_shadows.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/progress_indicator_bar.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animation.dart';
 
 /// Modern snackbar content with enhanced features
 class ModernSnackbarContent extends StatefulWidget {
