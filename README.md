@@ -10,6 +10,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?logo=Flutter&logoColor=white)](https://flutter.dev)
 
+**[🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/)** • [📦 Pub.dev](https://pub.dev/packages/savepoints_modern_ui) • [📚 Documentation](https://pub.dev/documentation/savepoints_modern_ui/latest/)
+
 </div>
 
 > A comprehensive Flutter package providing elegant, customizable UI components with stunning glassmorphism effects, smooth animations, and extensive customization options. Perfect for building modern, professional user interfaces.
@@ -879,6 +881,7 @@ See the [Configuration Guide](https://github.com/yourusername/savepoints_modern_
 
 ## 📖 Additional Resources
 
+- [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) - Try the components in your browser
 - [Full API Documentation](https://pub.dev/documentation/savepoints_modern_ui/latest/)
 - [Example App](https://github.com/yourusername/savepoints_modern_ui/tree/main/example)
 - [Issue Tracker](https://github.com/yourusername/savepoints_modern_ui/issues)
@@ -923,6 +926,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by the SavePoints team**
 
-[⭐ Star us on GitHub](https://github.com/yourusername/savepoints_modern_ui) • [📦 Pub.dev](https://pub.dev/packages/savepoints_modern_ui) • [📚 Documentation](https://pub.dev/documentation/savepoints_modern_ui/latest/)
+[⭐ Star us on GitHub](https://github.com/yourusername/savepoints_modern_ui) • [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) • [📦 Pub.dev](https://pub.dev/packages/savepoints_modern_ui) • [📚 Documentation](https://pub.dev/documentation/savepoints_modern_ui/latest/)
 
 </div>
