@@ -2,13 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
 
-/// Animated icon with scale animation
+/// Animated icon widget with scale animation for snackbars.
+///
+/// This widget displays an icon with an optional scale animation effect
+/// based on the specified [SnackbarAnimation] type.
 class AnimatedIcon extends StatefulWidget {
+  /// The icon data to display.
   final IconData icon;
+
+  /// The color of the icon.
   final Color iconColor;
+
+  /// The snackbar type (affects styling).
   final SnackbarType type;
+
+  /// The animation type to apply to the icon.
   final SnackbarAnimation animation;
 
+  /// Creates an animated icon widget.
+  ///
+  /// The [icon], [iconColor], [type], and [animation] parameters are required.
   const AnimatedIcon({
     super.key,
     required this.icon,

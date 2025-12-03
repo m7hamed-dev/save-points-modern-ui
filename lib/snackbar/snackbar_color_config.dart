@@ -13,12 +13,11 @@ class SnackbarColorConfig {
     required ThemeData theme,
     required bool isDark,
     Color? background,
-    Gradient? gradient,
+    this.gradient,
     Color? iconColor,
     required SnackbarType type,
     required SnackbarConfig config,
-  }) : gradient = gradient,
-       backgroundColor =
+  }) : backgroundColor =
            background ??
            (gradient == null
                ? config.getBackgroundColor(
