@@ -157,8 +157,12 @@ class SavePointsSnackbar {
       );
     }
 
+    // Remove any existing snackbar before showing a new one
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    scaffoldMessenger.hideCurrentSnackBar();
+
     // Use standard SnackBar for bottom position
-    final controller = ScaffoldMessenger.of(context).showSnackBar(
+    final controller = scaffoldMessenger.showSnackBar(
       SnackBar(
         behavior: .floating,
         duration: finalDuration,
