@@ -9,9 +9,46 @@ import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_
 export 'dialog/dialog_animation_type.dart';
 export 'dialog/dialog_animation_direction.dart';
 
-/// A modern, customizable dialog with glassmorphism design
+/// A modern, customizable dialog with glassmorphism design.
+///
+/// This class provides a static method to display beautiful dialogs with:
+/// - Glassmorphism effects with backdrop blur
+/// - Multiple animation types
+/// - Customizable colors, icons, and buttons
+/// - Loading states for async operations
+/// - Dark mode support
+///
+/// Example:
+/// ```dart
+/// SavePointsDialog.show(
+///   context,
+///   title: 'Success',
+///   message: 'Your changes have been saved!',
+///   icon: Icons.check_circle,
+///   iconColor: Colors.green,
+///   onConfirm: () => print('Confirmed'),
+/// );
+/// ```
 class SavePointsDialog {
-  /// Shows a modern dialog with optional icon and buttons
+  /// Shows a modern dialog with optional icon and buttons.
+  ///
+  /// Returns `true` if the dialog was confirmed, `false` if cancelled,
+  /// or `null` if dismissed without action.
+  ///
+  /// Throws an [AssertionError] if [title] or [message] is empty.
+  ///
+  /// Example:
+  /// ```dart
+  /// final result = await SavePointsDialog.show(
+  ///   context,
+  ///   title: 'Confirm',
+  ///   message: 'Are you sure?',
+  ///   showCancelButton: true,
+  /// );
+  /// if (result == true) {
+  ///   // User confirmed
+  /// }
+  /// ```
   static Future<bool?> show(
     BuildContext context, {
     required String title,
@@ -35,6 +72,10 @@ class SavePointsDialog {
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
   }) {
+    // Validate required parameters
+    assert(title.isNotEmpty, 'Title cannot be empty');
+    assert(message.isNotEmpty, 'Message cannot be empty');
+
     final config = SavePointsConfig().dialog;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;

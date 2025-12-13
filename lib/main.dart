@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/example/widgets/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -148,35 +149,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
   }
 
   Widget _buildHeader() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            Icon(
-              Icons.auto_awesome,
-              size: 48,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'SavePoints Modern UI',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Beautiful, customizable UI components with glassmorphism effects',
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-            ),
-          ],
-        ),
-      ),
-    );
+    return const ExampleHeader();
   }
 
   Widget _buildSection(
@@ -185,35 +158,10 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
     required IconData icon,
     required List<Widget> children,
   }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              alignment: .center,
-              runAlignment: .center,
-              crossAxisAlignment: .center,
-              children: children,
-            ),
-          ],
-        ),
-      ),
+    return ExampleSection(
+      title: title,
+      icon: icon,
+      children: children,
     );
   }
 
@@ -777,36 +725,11 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
     required Color color,
     required VoidCallback onPressed,
   }) {
-    return SizedBox(
-      width: 140,
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, size: 32, color: color),
-                const SizedBox(height: 8),
-                Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return ExampleActionButton(
+      icon: icon,
+      label: label,
+      color: color,
+      onPressed: onPressed,
     );
   }
 }

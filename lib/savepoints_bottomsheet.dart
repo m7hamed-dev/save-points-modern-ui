@@ -6,9 +6,38 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 // Export animation direction for public use
 export 'bottomsheet/bottomsheet_animation_direction.dart';
 
-/// A modern, customizable bottom sheet
+/// A modern, customizable bottom sheet with glassmorphism design.
+///
+/// This class provides a static method to display beautiful bottom sheets with:
+/// - Glassmorphism effects with backdrop blur
+/// - Drag handles and gestures
+/// - Scrollable content support
+/// - Loading states
+/// - Custom animations
+/// - Dark mode support
+///
+/// Example:
+/// ```dart
+/// SavePointsBottomsheet.show(
+///   context: context,
+///   title: 'Options',
+///   child: YourContentWidget(),
+/// );
+/// ```
 class SavePointsBottomsheet {
-  /// Shows a modern bottom sheet
+  /// Shows a modern bottom sheet.
+  ///
+  /// Returns the result value when the bottom sheet is dismissed,
+  /// or `null` if dismissed without a result.
+  ///
+  /// Example:
+  /// ```dart
+  /// final result = await SavePointsBottomsheet.show<String>(
+  ///   context: context,
+  ///   title: 'Select Option',
+  ///   child: OptionsList(),
+  /// );
+  /// ```
   static Future<T?> show<T>({
     required BuildContext context,
     String? title,

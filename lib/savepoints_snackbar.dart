@@ -8,9 +8,41 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/top_snackbar_ov
 export 'snackbar/snackbar_enums.dart';
 export 'snackbar/snackbar_animation_direction.dart';
 
-/// Modern, customizable snackbar widget with enhanced UI/UX
+/// Modern, customizable snackbar widget with enhanced UI/UX.
+///
+/// This class provides methods to display beautiful snackbars with:
+/// - Multiple types (success, error, warning, info)
+/// - Rich animations
+/// - Progress indicators
+/// - Gradient backgrounds
+/// - Top or bottom positioning
+/// - Dark mode support
+///
+/// Example:
+/// ```dart
+/// SavePointsSnackbar.showSuccess(
+///   context,
+///   title: 'Success!',
+///   subtitle: 'Operation completed',
+/// );
+/// ```
 class SavePointsSnackbar {
-  /// Shows a modern floating snackbar with enhanced features
+  /// Shows a modern floating snackbar with enhanced features.
+  ///
+  /// Returns a [ScaffoldFeatureController] that can be used to programmatically
+  /// dismiss the snackbar.
+  ///
+  /// Throws an [AssertionError] if [title] is empty.
+  ///
+  /// Example:
+  /// ```dart
+  /// final controller = SavePointsSnackbar.show(
+  ///   context,
+  ///   title: 'Notification',
+  ///   subtitle: 'This is a snackbar',
+  ///   type: SnackbarType.info,
+  /// );
+  /// ```
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
     BuildContext context, {
     required String title,
@@ -40,6 +72,9 @@ class SavePointsSnackbar {
     VoidCallback? onDismissed,
     VoidCallback? onTap,
   }) {
+    // Validate required parameters
+    assert(title.isNotEmpty, 'Title cannot be empty');
+
     final config = SavePointsConfig().snackbar;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
