@@ -68,7 +68,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.0.0
+  save_points_snackbar_dialog_bottomsheet: ^1.0.2
 ```
 
 Install the package:
@@ -798,26 +798,31 @@ See the [Configuration Guide](https://github.com/yourusername/save_points_snackb
 
 ## 🔧 Running the Example
 
+The example app is located in the `lib/main.dart` file and demonstrates all features of the package.
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet.git
    cd save_points_snackbar_dialog_bottomsheet
    ```
 
-2. Navigate to the example directory:
-   ```bash
-   cd example
-   ```
-
-3. Install dependencies:
+2. Install dependencies:
    ```bash
    flutter pub get
    ```
 
-4. Run the example:
+3. Run the example:
    ```bash
    flutter run
    ```
+
+The example app includes:
+- **Animated UI** - Beautiful gradient backgrounds, staggered animations, and smooth transitions
+- **Interactive Buttons** - Scale, hover, and ripple effects on all action buttons
+- **Bottom Navigation** - Navigate between sections with snackbar feedback
+- **Comprehensive Examples** - Over 40+ examples showcasing all features
+- **Dialog Presets** - Examples using predefined dialog configurations
+- **Advanced Flows** - Multi-step interactions and combined component usage
 
 ## 📖 Additional Resources
 

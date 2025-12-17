@@ -5,6 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2+1] - 2024-12-17
+
+### Added
+- Enhanced example app with beautiful animations and effects
+- Animated gradient background with smooth transitions
+- Staggered section animations for improved visual appeal
+- Interactive button animations with scale, hover, and ripple effects
+- Bottom navigation bar with snackbar feedback
+- New "More Examples" section showcasing advanced use cases:
+  - Dialog chains and sequential flows
+  - Snackbar queuing examples
+  - Combined dialog → snackbar flows
+  - Bottom sheet → dialog interactions
+  - Success and error flow demonstrations
+  - Story flow with multiple steps
+  - Quick actions bottom sheet
+- Additional dialog examples using DialogPresets:
+  - Delete confirmation dialogs
+  - Logout confirmation dialogs
+  - Update available dialogs
+  - Feature not available dialogs
+  - Discard changes confirmations
+- Additional snackbar examples:
+  - Long duration snackbars
+  - Custom color schemes
+  - Scale, fade, and rotate-scale animations
+  - Persistent snackbars with tap to dismiss
+  - Rainbow gradient snackbars
+
+### Changed
+- Updated example app UI with modern design patterns
+- Improved code organization and structure
+- Enhanced user experience with smooth animations throughout
+
+### Fixed
+- Fixed deprecated `withOpacity` method usage (replaced with `withValues`)
+- Fixed deprecated `Matrix4.scale` method (replaced with `scaleByDouble`)
+- Fixed async context usage issues (added proper `context.mounted` checks)
+- Fixed linter warnings for `prefer_final_in_for_each`
+- Improved code quality and static analysis compliance
+- Removed circular reveal examples from example app (feature still available in API)
+
+### Improved
+- Better error handling in async operations
+- Enhanced code maintainability
+- Improved example app performance with optimized animations
+
 ## [1.0.1+1] - 2024-12-03
 
 ### Added
