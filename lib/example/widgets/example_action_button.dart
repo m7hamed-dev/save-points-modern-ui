@@ -79,7 +79,12 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
             duration: const Duration(milliseconds: 150),
             curve: Curves.easeInOut,
             transform: Matrix4.identity()
-              ..scale(_isPressed ? 0.95 : (_isHovered ? 1.05 : 1.0)),
+              ..scaleByDouble(
+                _isPressed ? 0.95 : (_isHovered ? 1.05 : 1.0),
+                _isPressed ? 0.95 : (_isHovered ? 1.05 : 1.0),
+                _isPressed ? 0.95 : (_isHovered ? 1.05 : 1.0),
+                1.0,
+              ),
             child: Card(
               elevation: _isHovered ? 6 : 2,
               shape: RoundedRectangleBorder(
@@ -93,8 +98,8 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            widget.color.withOpacity(0.1),
-                            widget.color.withOpacity(0.05),
+                            widget.color.withValues(alpha: 0.1),
+                            widget.color.withValues(alpha: 0.05),
                           ],
                         )
                       : null,
@@ -107,7 +112,7 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                         return CustomPaint(
                           painter: RipplePainter(
                             progress: _rippleController.value,
-                            color: widget.color.withOpacity(0.3),
+                            color: widget.color.withValues(alpha: 0.3),
                           ),
                           child: Container(),
                         );

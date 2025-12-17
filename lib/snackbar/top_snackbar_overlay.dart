@@ -43,7 +43,7 @@ class TopSnackbarOverlay {
 
     final mediaQuery = MediaQuery.of(context);
     final topPadding = mediaQuery.padding.top;
-    final appBarHeight = 56.0; // Standard AppBar height
+    const appBarHeight = 56.0; // Standard AppBar height
     final topMargin = topPadding + appBarHeight + 12.0;
 
     _overlayEntry = OverlayEntry(

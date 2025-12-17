@@ -41,8 +41,8 @@ class _ExampleSectionState extends State<ExampleSection> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Theme.of(context).colorScheme.primary.withOpacity(0.05),
-                        Theme.of(context).colorScheme.secondary.withOpacity(0.02),
+                        Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+                        Theme.of(context).colorScheme.secondary.withValues(alpha: 0.02),
                       ],
                     )
                   : null,
@@ -58,7 +58,7 @@ class _ExampleSectionState extends State<ExampleSection> {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: _isHovered
-                              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(8),
                         ),

@@ -305,7 +305,7 @@ class SavePointsSnackbar {
         // Calculate margin to position snackbar just below AppBar
         // Standard AppBar height is 56px (kToolbarHeight)
         // Add extra padding to ensure visibility
-        final appBarHeight = 56.0;
+        const appBarHeight = 56.0;
         final topMargin = topPadding + appBarHeight + 12.0;
 
         // Ensure minimum top margin of 70px for visibility

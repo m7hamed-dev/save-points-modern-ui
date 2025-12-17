@@ -114,7 +114,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     _loadingNotifier.dispose();
     _gradientController.dispose();
     _headerController.dispose();
-    for (var controller in _sectionControllers) {
+    for (final controller in _sectionControllers) {
       controller.dispose();
     }
     super.dispose();
@@ -1091,13 +1091,15 @@ class _ExampleHomePageState extends State<ExampleHomePage>
           );
           if (result == true && context.mounted) {
             await Future.delayed(const Duration(milliseconds: 500));
-            SavePointsDialog.show(
-              context,
-              title: 'Second Dialog',
-              message: 'This is the second dialog!',
-              icon: Icons.check_circle,
-              iconColor: Colors.green,
-            );
+            if (context.mounted) {
+              SavePointsDialog.show(
+                context,
+                title: 'Second Dialog',
+                message: 'This is the second dialog!',
+                icon: Icons.check_circle,
+                iconColor: Colors.green,
+              );
+            }
           }
         },
       ),
@@ -1185,9 +1187,12 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                   leading: const Icon(Icons.delete),
                   title: const Text('Delete Item'),
                   onTap: () {
-                    Navigator.pop(context);
+                    final navigatorContext = context;
+                    Navigator.pop(navigatorContext);
                     Future.delayed(const Duration(milliseconds: 300), () {
-                      DialogPresets.showDeleteConfirmation(context);
+                      if (navigatorContext.mounted) {
+                        DialogPresets.showDeleteConfirmation(navigatorContext);
+                      }
                     });
                   },
                 ),
@@ -1196,14 +1201,17 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                   leading: const Icon(Icons.edit),
                   title: const Text('Edit Item'),
                   onTap: () {
-                    Navigator.pop(context);
+                    final navigatorContext = context;
+                    Navigator.pop(navigatorContext);
                     Future.delayed(const Duration(milliseconds: 300), () {
-                      SavePointsDialog.show(
-                        context,
-                        title: 'Edit Item',
-                        message: 'Edit dialog would appear here',
-                        icon: Icons.edit,
-                      );
+                      if (navigatorContext.mounted) {
+                        SavePointsDialog.show(
+                          navigatorContext,
+                          title: 'Edit Item',
+                          message: 'Edit dialog would appear here',
+                          icon: Icons.edit,
+                        );
+                      }
                     });
                   },
                 ),
@@ -1289,12 +1297,14 @@ class _ExampleHomePageState extends State<ExampleHomePage>
 
           await Future.delayed(const Duration(milliseconds: 500));
           // Step 2: Success snackbar
-          SavePointsSnackbar.showSuccess(
-            context,
-            title: 'Great!',
-            subtitle: 'Moving to next step',
-            duration: const Duration(seconds: 2),
-          );
+          if (context.mounted) {
+            SavePointsSnackbar.showSuccess(
+              context,
+              title: 'Great!',
+              subtitle: 'Moving to next step',
+              duration: const Duration(seconds: 2),
+            );
+          }
 
           await Future.delayed(const Duration(milliseconds: 2500));
           if (!context.mounted) return;
