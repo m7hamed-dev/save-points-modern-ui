@@ -76,6 +76,12 @@ class SavePointsDialog {
     assert(title.isNotEmpty, 'Title cannot be empty');
     assert(message.isNotEmpty, 'Message cannot be empty');
 
+    // Dismiss keyboard when showing dialog
+    final focusNode = FocusScope.of(context);
+    if (focusNode.hasFocus) {
+      focusNode.unfocus();
+    }
+
     final config = SavePointsConfig().dialog;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;

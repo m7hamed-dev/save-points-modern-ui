@@ -56,6 +56,12 @@ class SavePointsBottomsheet {
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
   }) {
+    // Dismiss keyboard when showing bottom sheet
+    final focusNode = FocusScope.of(context);
+    if (focusNode.hasFocus) {
+      focusNode.unfocus();
+    }
+
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
