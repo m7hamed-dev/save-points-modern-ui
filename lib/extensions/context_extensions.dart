@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
 /// Extension methods on [BuildContext] for easier access to SavePoints components
 extension SavePointsContextExtension on BuildContext {

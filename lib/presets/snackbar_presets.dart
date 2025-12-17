@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
 /// Predefined snackbar configurations for common use cases
 class SnackbarPresets {

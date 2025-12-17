@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 
 /// Utility functions for accessibility features
 class AccessibilityUtils {

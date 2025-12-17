@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/presets/dialog_presets.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/example/widgets/widgets.dart';
+import 'dart:math' as math;
 
 void main() {
   runApp(const MyApp());
@@ -30,9 +32,7 @@ class _MyAppState extends State<MyApp> {
       title: 'SavePoints Modern UI',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6366F1),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6366F1)),
         useMaterial3: true,
         cardTheme: CardThemeData(
           elevation: 2,
@@ -69,12 +69,54 @@ class ExampleHomePage extends StatefulWidget {
   State<ExampleHomePage> createState() => _ExampleHomePageState();
 }
 
-class _ExampleHomePageState extends State<ExampleHomePage> {
+class _ExampleHomePageState extends State<ExampleHomePage>
+    with TickerProviderStateMixin {
   final ValueNotifier<bool> _loadingNotifier = ValueNotifier<bool>(false);
+  late AnimationController _gradientController;
+  late AnimationController _headerController;
+  late List<AnimationController> _sectionControllers;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _gradientController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 10),
+    )..repeat();
+
+    _headerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    )..forward();
+
+    // Create controllers for each section with staggered delays
+    _sectionControllers = List.generate(
+      4,
+      (index) => AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 600),
+      ),
+    );
+
+    // Start section animations with stagger
+    for (int i = 0; i < _sectionControllers.length; i++) {
+      Future.delayed(Duration(milliseconds: 300 + (i * 150)), () {
+        if (mounted) {
+          _sectionControllers[i].forward();
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
     _loadingNotifier.dispose();
+    _gradientController.dispose();
+    _headerController.dispose();
+    for (var controller in _sectionControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -92,76 +134,202 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
         centerTitle: true,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-            tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-            onPressed: () {
-              widget.onThemeChanged(isDark ? ThemeMode.light : ThemeMode.dark);
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) {
+              return RotationTransition(
+                turns: animation,
+                child: ScaleTransition(scale: animation, child: child),
+              );
             },
+            child: IconButton(
+              key: ValueKey(isDark),
+              icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+              tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+              onPressed: () {
+                widget.onThemeChanged(
+                  isDark ? ThemeMode.light : ThemeMode.dark,
+                );
+              },
+            ),
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [Colors.grey[900]!, Colors.grey[850]!]
-                : [Colors.blue[50]!, Colors.indigo[50]!],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 32),
-                _buildSection(
-                  context,
-                  title: '🎭 Dialogs',
-                  icon: Icons.chat_bubble_outline,
-                  children: _buildDialogExamples(context),
-                ),
-                const SizedBox(height: 24),
-                _buildSection(
-                  context,
-                  title: '🍞 Snackbars',
-                  icon: Icons.notifications_outlined,
-                  children: _buildSnackbarExamples(context),
-                ),
-                const SizedBox(height: 24),
-                _buildSection(
-                  context,
-                  title: '📱 Bottom Sheets',
-                  icon: Icons.call_to_action_outlined,
-                  children: _buildBottomSheetExamples(context),
-                ),
-                const SizedBox(height: 32),
-              ],
+      body: AnimatedBuilder(
+        animation: _gradientController,
+        builder: (context, child) {
+          final angle = _gradientController.value * 2 * math.pi;
+          return Container(
+            decoration: BoxDecoration(
+              gradient: SweepGradient(
+                startAngle: angle,
+                endAngle: angle + math.pi * 2,
+                colors: isDark
+                    ? [
+                        Colors.grey[900]!,
+                        Colors.grey[800]!,
+                        Colors.grey[900]!,
+                        Colors.grey[800]!,
+                      ]
+                    : [
+                        Colors.blue[50]!,
+                        Colors.indigo[50]!,
+                        Colors.purple[50]!,
+                        Colors.blue[50]!,
+                      ],
+              ),
             ),
-          ),
-        ),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 32),
+                    _buildSection(
+                      context,
+                      index: 0,
+                      title: '🎭 Dialogs',
+                      icon: Icons.chat_bubble_outline,
+                      children: _buildDialogExamples(context),
+                    ),
+                    const SizedBox(height: 24),
+                    _buildSection(
+                      context,
+                      index: 1,
+                      title: '🍞 Snackbars',
+                      icon: Icons.notifications_outlined,
+                      children: _buildSnackbarExamples(context),
+                    ),
+                    const SizedBox(height: 24),
+                    _buildSection(
+                      context,
+                      index: 2,
+                      title: '📱 Bottom Sheets',
+                      icon: Icons.call_to_action_outlined,
+                      children: _buildBottomSheetExamples(context),
+                    ),
+                    const SizedBox(height: 24),
+                    _buildSection(
+                      context,
+                      index: 3,
+                      title: '🎨 More Examples',
+                      icon: Icons.auto_awesome,
+                      children: _buildMoreExamples(context),
+                    ),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return NavigationBar(
+      selectedIndex: _currentIndex,
+      onDestinationSelected: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+        // Show snackbar based on selection
+        switch (index) {
+          case 0:
+            SavePointsSnackbar.show(
+              context,
+              title: 'Home',
+              subtitle: 'Welcome to SavePoints UI',
+              type: SnackbarType.info,
+            );
+            break;
+          case 1:
+            SavePointsSnackbar.showSuccess(
+              context,
+              title: 'Dialogs',
+              subtitle: 'Explore dialog examples',
+            );
+            break;
+          case 2:
+            SavePointsSnackbar.show(
+              context,
+              title: 'Snackbars',
+              subtitle: 'Check out snackbar examples',
+              type: SnackbarType.warning,
+            );
+            break;
+          case 3:
+            SavePointsSnackbar.show(
+              context,
+              title: 'Bottom Sheets',
+              subtitle: 'View bottom sheet examples',
+              type: SnackbarType.info,
+            );
+            break;
+        }
+      },
+      destinations: const [
+        NavigationDestination(
+          icon: Icon(Icons.home_outlined),
+          selectedIcon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.chat_bubble_outline),
+          selectedIcon: Icon(Icons.chat_bubble),
+          label: 'Dialogs',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.notifications_outlined),
+          selectedIcon: Icon(Icons.notifications),
+          label: 'Snackbars',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.call_to_action_outlined),
+          selectedIcon: Icon(Icons.call_to_action),
+          label: 'Sheets',
+        ),
+      ],
     );
   }
 
   Widget _buildHeader() {
-    return const ExampleHeader();
+    return FadeTransition(
+      opacity: _headerController,
+      child: SlideTransition(
+        position: Tween<Offset>(begin: const Offset(0, -0.3), end: Offset.zero)
+            .animate(
+              CurvedAnimation(
+                parent: _headerController,
+                curve: Curves.easeOutCubic,
+              ),
+            ),
+        child: const ExampleHeader(),
+      ),
+    );
   }
 
   Widget _buildSection(
     BuildContext context, {
+    required int index,
     required String title,
     required IconData icon,
     required List<Widget> children,
   }) {
-    return ExampleSection(
-      title: title,
-      icon: icon,
-      children: children,
+    final controller = _sectionControllers[index];
+    return FadeTransition(
+      opacity: controller,
+      child: SlideTransition(
+        position: Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
+            .animate(
+              CurvedAnimation(parent: controller, curve: Curves.easeOutCubic),
+            ),
+        child: ExampleSection(title: title, icon: icon, children: children),
+      ),
     );
   }
 
@@ -294,16 +462,118 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
       ),
       _buildActionButton(
         context,
-        icon: Icons.radio_button_unchecked,
-        label: 'Circle Reveal',
-        color: Colors.deepPurple,
+        icon: Icons.delete_outline,
+        label: 'Delete Confirm',
+        color: Colors.red,
+        onPressed: () async {
+          final result = await DialogPresets.showDeleteConfirmation(
+            context,
+            itemName: 'Document',
+          );
+          if (result == true && context.mounted) {
+            SavePointsSnackbar.showSuccess(
+              context,
+              title: 'Deleted!',
+              subtitle: 'Document has been deleted',
+            );
+          }
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.logout,
+        label: 'Logout',
+        color: Colors.orange,
+        onPressed: () async {
+          final result = await DialogPresets.showLogoutConfirmation(context);
+          if (result == true && context.mounted) {
+            SavePointsSnackbar.show(
+              context,
+              title: 'Logged Out',
+              subtitle: 'You have been logged out successfully',
+              type: SnackbarType.info,
+            );
+          }
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.system_update,
+        label: 'Update',
+        color: Colors.green,
+        onPressed: () async {
+          final result = await DialogPresets.showUpdateAvailable(
+            context,
+            version: '2.0.0',
+          );
+          if (result == true && context.mounted) {
+            SavePointsSnackbar.show(
+              context,
+              title: 'Updating...',
+              subtitle: 'Downloading update version 2.0.0',
+              type: SnackbarType.info,
+              duration: const Duration(seconds: 2),
+            );
+          }
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.construction,
+        label: 'Not Available',
+        color: Colors.amber,
+        onPressed: () {
+          DialogPresets.showFeatureNotAvailable(context);
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.cancel_outlined,
+        label: 'Discard',
+        color: Colors.deepOrange,
+        onPressed: () async {
+          final result = await DialogPresets.showDiscardChangesConfirmation(
+            context,
+          );
+          if (result == true && context.mounted) {
+            SavePointsSnackbar.show(
+              context,
+              title: 'Discarded',
+              subtitle: 'Changes have been discarded',
+              type: SnackbarType.warning,
+            );
+          }
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.scale,
+        label: 'Scale',
+        color: Colors.teal,
         onPressed: () {
           SavePointsDialog.show(
             context,
-            title: 'Circular Reveal',
-            message: 'This dialog reveals/hides like a circle expanding!',
-            hideLikeCircle: true,
-            icon: Icons.radio_button_checked,
+            title: 'Scale Animation',
+            message: 'This dialog uses scale animation!',
+            startAnimation: DialogAnimationDirection.scale,
+            endAnimation: DialogAnimationDirection.scale,
+            icon: Icons.zoom_in,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.sports_volleyball,
+        label: 'Bounce',
+        color: Colors.pink,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Bounce Animation',
+            message: 'This dialog bounces when appearing!',
+            startAnimation: DialogAnimationDirection.bounce,
+            endAnimation: DialogAnimationDirection.bounce,
+            icon: Icons.sports_volleyball,
           );
         },
       ),
@@ -498,16 +768,121 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
       ),
       _buildActionButton(
         context,
-        icon: Icons.radio_button_unchecked,
-        label: 'Circle Reveal',
+        icon: Icons.timer,
+        label: 'Long Duration',
+        color: Colors.blueGrey,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Long Duration',
+            subtitle: 'This snackbar stays for 8 seconds',
+            duration: const Duration(seconds: 8),
+            type: SnackbarType.info,
+            showProgressIndicator: true,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.palette,
+        label: 'Custom Colors',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Custom Colors',
+            subtitle: 'Snackbar with gradient colors',
+            gradient: LinearGradient(
+              colors: [Colors.indigo[900]!, Colors.indigo[700]!],
+            ),
+            type: SnackbarType.info,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.scale,
+        label: 'Scale Anim',
+        color: Colors.teal,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Scale Animation',
+            subtitle: 'Scales in and out smoothly',
+            startAnimation: SnackbarAnimationDirection.scale,
+            endAnimation: SnackbarAnimationDirection.scale,
+            type: SnackbarType.success,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.opacity,
+        label: 'Fade',
+        color: Colors.grey,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Fade Animation',
+            subtitle: 'Smooth fade in and out',
+            startAnimation: SnackbarAnimationDirection.fade,
+            endAnimation: SnackbarAnimationDirection.fade,
+            type: SnackbarType.info,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.rotate_right,
+        label: 'Rotate Scale',
         color: Colors.deepPurple,
         onPressed: () {
           SavePointsSnackbar.show(
             context,
-            title: 'Circular Reveal',
-            subtitle: 'Reveals like a circle expanding',
-            hideLikeCircle: true,
-            type: SnackbarType.info,
+            title: 'Rotate Scale',
+            subtitle: 'Combined rotation and scale',
+            startAnimation: SnackbarAnimationDirection.rotateScale,
+            endAnimation: SnackbarAnimationDirection.rotateScale,
+            type: SnackbarType.success,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.notifications_active,
+        label: 'Persistent',
+        color: Colors.cyan,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Persistent',
+            subtitle: 'Tap to dismiss (10 seconds)',
+            duration: const Duration(seconds: 10),
+            dismissOnTap: true,
+            type: SnackbarType.warning,
+            showProgressIndicator: true,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.color_lens,
+        label: 'Rainbow',
+        color: Colors.purple,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Rainbow Gradient',
+            subtitle: 'Beautiful multi-color gradient',
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFFff6b6b),
+                Color(0xFFfeca57),
+                Color(0xFF48dbfb),
+                Color(0xFFff9ff3),
+                Color(0xFF54a0ff),
+              ],
+            ),
             showProgressIndicator: true,
           );
         },
@@ -695,22 +1070,302 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
           );
         },
       ),
+    ];
+  }
+
+  List<Widget> _buildMoreExamples(BuildContext context) {
+    return [
       _buildActionButton(
         context,
-        icon: Icons.radio_button_unchecked,
-        label: 'Circle Reveal',
-        color: Colors.deepPurple,
+        icon: Icons.auto_awesome,
+        label: 'Dialog Chain',
+        color: Colors.purple,
+        onPressed: () async {
+          final result = await SavePointsDialog.show(
+            context,
+            title: 'First Dialog',
+            message: 'This is the first dialog in a chain',
+            icon: Icons.arrow_forward,
+            confirmText: 'Next',
+            onConfirm: () {},
+          );
+          if (result == true && context.mounted) {
+            await Future.delayed(const Duration(milliseconds: 500));
+            SavePointsDialog.show(
+              context,
+              title: 'Second Dialog',
+              message: 'This is the second dialog!',
+              icon: Icons.check_circle,
+              iconColor: Colors.green,
+            );
+          }
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.queue,
+        label: 'Snackbar Queue',
+        color: Colors.blue,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'First',
+            subtitle: 'First snackbar',
+            type: SnackbarType.info,
+            duration: const Duration(seconds: 2),
+          );
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (context.mounted) {
+              SavePointsSnackbar.showSuccess(
+                context,
+                title: 'Second',
+                subtitle: 'Second snackbar',
+                duration: const Duration(seconds: 2),
+              );
+            }
+          });
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            if (context.mounted) {
+              SavePointsSnackbar.show(
+                context,
+                title: 'Third',
+                subtitle: 'Third snackbar',
+                type: SnackbarType.warning,
+                duration: const Duration(seconds: 2),
+              );
+            }
+          });
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.integration_instructions,
+        label: 'Dialog → Snackbar',
+        color: Colors.teal,
+        onPressed: () async {
+          final result = await SavePointsDialog.show(
+            context,
+            title: 'Confirm Action',
+            message: 'Do you want to proceed?',
+            showCancelButton: true,
+            icon: Icons.question_mark,
+            onConfirm: () {},
+          );
+          if (context.mounted) {
+            if (result == true) {
+              SavePointsSnackbar.showSuccess(
+                context,
+                title: 'Confirmed!',
+                subtitle: 'Action has been completed',
+              );
+            } else {
+              SavePointsSnackbar.show(
+                context,
+                title: 'Cancelled',
+                subtitle: 'Action was cancelled',
+                type: SnackbarType.info,
+              );
+            }
+          }
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.open_in_browser,
+        label: 'Sheet → Dialog',
+        color: Colors.orange,
         onPressed: () {
           SavePointsBottomsheet.show(
             context: context,
-            title: 'Circular Reveal',
-            hideLikeCircle: true,
+            title: 'Choose Action',
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.delete),
+                  title: const Text('Delete Item'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      DialogPresets.showDeleteConfirmation(context);
+                    });
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text('Edit Item'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      SavePointsDialog.show(
+                        context,
+                        title: 'Edit Item',
+                        message: 'Edit dialog would appear here',
+                        icon: Icons.edit,
+                      );
+                    });
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.celebration,
+        label: 'Success Flow',
+        color: Colors.green,
+        onPressed: () async {
+          final loadingNotifier = ValueNotifier<bool>(false);
+          SavePointsDialog.show(
+            context,
+            title: 'Processing',
+            message: 'Please wait...',
+            loadingNotifier: loadingNotifier,
+            onConfirmAsync: () async {
+              loadingNotifier.value = true;
+              await Future.delayed(const Duration(seconds: 2));
+              loadingNotifier.value = false;
+              return true;
+            },
+          );
+          await Future.delayed(const Duration(milliseconds: 2500));
+          if (context.mounted) {
+            SavePointsSnackbar.showSuccess(
+              context,
+              title: 'Success!',
+              subtitle: 'Operation completed successfully',
+            );
+          }
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.error_outline,
+        label: 'Error Flow',
+        color: Colors.red,
+        onPressed: () async {
+          final loadingNotifier = ValueNotifier<bool>(false);
+          SavePointsDialog.show(
+            context,
+            title: 'Processing',
+            message: 'Attempting operation...',
+            loadingNotifier: loadingNotifier,
+            onConfirmAsync: () async {
+              loadingNotifier.value = true;
+              await Future.delayed(const Duration(seconds: 2));
+              loadingNotifier.value = false;
+              // Simulate error
+              return false;
+            },
+          );
+          await Future.delayed(const Duration(milliseconds: 2500));
+          if (context.mounted) {
+            SavePointsSnackbar.showError(
+              context,
+              title: 'Error',
+              subtitle: 'Operation failed. Please try again.',
+            );
+          }
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.auto_stories,
+        label: 'Story Flow',
+        color: Colors.pink,
+        onPressed: () async {
+          // Step 1: Info dialog
+          await SavePointsDialog.show(
+            context,
+            title: 'Welcome!',
+            message: 'Let\'s explore the features',
+            icon: Icons.waving_hand,
+            confirmText: 'Continue',
+          );
+          if (!context.mounted) return;
+
+          await Future.delayed(const Duration(milliseconds: 500));
+          // Step 2: Success snackbar
+          SavePointsSnackbar.showSuccess(
+            context,
+            title: 'Great!',
+            subtitle: 'Moving to next step',
+            duration: const Duration(seconds: 2),
+          );
+
+          await Future.delayed(const Duration(milliseconds: 2500));
+          if (!context.mounted) return;
+
+          // Step 3: Bottom sheet
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Final Step',
             child: const Padding(
               padding: EdgeInsets.all(24.0),
               child: Text(
-                'This bottom sheet reveals/hides like a circle expanding!',
+                'This completes the story flow!',
                 style: TextStyle(fontSize: 16),
               ),
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.speed,
+        label: 'Quick Actions',
+        color: Colors.cyan,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Quick Actions',
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.add_circle),
+                  title: const Text('Show Success'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    SavePointsSnackbar.showSuccess(
+                      context,
+                      title: 'Quick Success!',
+                      subtitle: 'Action completed',
+                    );
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.info),
+                  title: const Text('Show Info'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    SavePointsSnackbar.show(
+                      context,
+                      title: 'Quick Info',
+                      subtitle: 'Here is some information',
+                      type: SnackbarType.info,
+                    );
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.chat_bubble),
+                  title: const Text('Show Dialog'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    SavePointsDialog.show(
+                      context,
+                      title: 'Quick Dialog',
+                      message: 'This is a quick dialog example',
+                      icon: Icons.flash_on,
+                    );
+                  },
+                ),
+              ],
             ),
           );
         },
