@@ -1,7 +1,7 @@
 # SavePoints Modern UI 🎨
 
 <div align="center">
-  <img src="banner.webp" alt="SavePoints Modern UI Banner" width="100%">
+  <!-- <img src="banner.webp" alt="SavePoints Modern UI Banner" width="100%"> -->
   
   <h3>📹 Demo</h3>
   <img src="https://raw.githubusercontent.com/m7hamed-dev/save_points_sa_privacy_polices/main/src/save_points_snackbar_dialog_bottomsheet-video.gif" alt="SavePoints Modern UI Demo" width="100%" style="max-width: 600px;">
