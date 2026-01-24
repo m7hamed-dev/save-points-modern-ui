@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Loading indicator for bottom sheet
 class BottomsheetLoadingIndicator extends StatelessWidget {
+  const BottomsheetLoadingIndicator({super.key, this.color, this.size = 32.0});
   final Color? color;
   final double size;
-
-  const BottomsheetLoadingIndicator({super.key, this.color, this.size = 32.0});
 
   @override
   Widget build(BuildContext context) {
