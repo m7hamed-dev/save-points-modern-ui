@@ -8,20 +8,6 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 
 /// Modern bottom sheet widget
 class ModernBottomsheet extends StatefulWidget {
-  final String? title;
-  final Widget? child;
-  final IconData? icon;
-  final Color? iconColor;
-  final Color? backgroundColor;
-  final bool isDark;
-  final bool isLoading;
-  final ValueNotifier<bool>? loadingNotifier;
-  final bool showHandle;
-  final bool isDismissible;
-  final bool enableDrag;
-  final double? maxHeight;
-  final bool isScrollControlled;
-
   const ModernBottomsheet({
     super.key,
     this.title,
@@ -38,6 +24,20 @@ class ModernBottomsheet extends StatefulWidget {
     this.maxHeight,
     this.isScrollControlled = false,
   });
+
+  final String? title;
+  final Widget? child;
+  final IconData? icon;
+  final Color? iconColor;
+  final Color? backgroundColor;
+  final bool isDark;
+  final bool isLoading;
+  final ValueNotifier<bool>? loadingNotifier;
+  final bool showHandle;
+  final bool isDismissible;
+  final bool enableDrag;
+  final double? maxHeight;
+  final bool isScrollControlled;
 
   @override
   State<ModernBottomsheet> createState() => _ModernBottomsheetState();
@@ -177,7 +177,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                         ),
                       )
                     else if (widget.child != null)
-                      Expanded(
+                      Flexible(
                         child: RepaintBoundary(
                           child: SingleChildScrollView(child: widget.child!),
                         ),
