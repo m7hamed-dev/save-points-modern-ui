@@ -73,7 +73,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     );
 
     if (widget.maxHeight == null) {
-      final screenHeight = MediaQuery.of(context).size.height;
+      final screenHeight = MediaQuery.sizeOf(context).height;
       _cachedMaxHeight = screenHeight * BottomsheetConstants.maxHeight;
     } else {
       _cachedMaxHeight = widget.maxHeight;
@@ -110,8 +110,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     final maxHeight =
         _cachedMaxHeight ??
         (widget.maxHeight ??
-            MediaQuery.of(context).size.height *
-                BottomsheetConstants.maxHeight);
+            MediaQuery.sizeOf(context).height * BottomsheetConstants.maxHeight);
 
     return RepaintBoundary(
       child: Material(
@@ -123,8 +122,8 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
           ),
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(BottomsheetConstants.topBorderRadius),
-              topRight: Radius.circular(BottomsheetConstants.topBorderRadius),
+              topLeft: Radius.circular(BottomsheetConstants.borderRadius),
+              topRight: Radius.circular(BottomsheetConstants.borderRadius),
             ),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
