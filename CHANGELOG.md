@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3+1] - 2025-01-24
+
+### Added
+- Improved snackbar position handling in `SavePointsSnackbar` and `SnackbarConfig` for better flexibility
+
+### Changed
+- **ModernBottomsheet**: Use `MediaQuery.sizeOf` for height calculations; updated border radius property for consistency
+- **ModernBottomsheet**: Moved property declarations to constructor for clearer structure
+- **AnimatedWrapper**: Moved property declarations to constructor for clarity
+- **BottomsheetLoadingIndicator**: Refactored constructor by removing redundant declaration
+
 ## [1.0.2+1] - 2025-12-18
 
 ### Added
