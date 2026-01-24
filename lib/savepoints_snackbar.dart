@@ -226,7 +226,7 @@ class SavePointsSnackbar {
     Duration? duration,
     VoidCallback? onActionPressed,
     String? actionLabel,
-    SnackbarPosition position = SnackbarPosition.bottom,
+    SnackbarPosition? position,
     bool showProgressIndicator = false,
   }) {
     return show(
@@ -250,7 +250,7 @@ class SavePointsSnackbar {
     Duration? duration,
     VoidCallback? onActionPressed,
     String? actionLabel,
-    SnackbarPosition position = SnackbarPosition.bottom,
+    SnackbarPosition? position,
     bool showProgressIndicator = false,
   }) {
     return show(
@@ -274,7 +274,7 @@ class SavePointsSnackbar {
     Duration? duration,
     VoidCallback? onActionPressed,
     String? actionLabel,
-    SnackbarPosition position = SnackbarPosition.bottom,
+    SnackbarPosition? position,
     bool showProgressIndicator = false,
   }) {
     return show(

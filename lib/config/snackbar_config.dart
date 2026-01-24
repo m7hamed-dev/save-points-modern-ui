@@ -11,7 +11,7 @@ class SnackbarConfig {
   SnackbarAnimation defaultAnimation = SnackbarAnimation.fadeSlide;
 
   /// Default position
-  SnackbarPosition defaultPosition = SnackbarPosition.bottom;
+  SnackbarPosition defaultPosition = SnackbarPosition.top;
 
   /// Default type
   SnackbarType defaultType = SnackbarType.info;
