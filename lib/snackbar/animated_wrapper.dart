@@ -4,11 +4,6 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animati
 
 /// Wrapper for entrance animations
 class AnimatedWrapper extends StatelessWidget {
-  final Animation<double> animation;
-  final SnackbarAnimation animationType;
-  final SnackbarPosition position;
-  final Widget child;
-
   const AnimatedWrapper({
     super.key,
     required this.animation,
@@ -16,6 +11,10 @@ class AnimatedWrapper extends StatelessWidget {
     required this.position,
     required this.child,
   });
+  final Animation<double> animation;
+  final SnackbarAnimation animationType;
+  final SnackbarPosition position;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
