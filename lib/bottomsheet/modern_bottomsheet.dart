@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_color_config.dart';
@@ -112,13 +113,19 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
         (widget.maxHeight ??
             MediaQuery.sizeOf(context).height * BottomsheetConstants.maxHeight);
 
+    // Ensure minHeight is never greater than maxHeight
+    final minHeight = math.min(
+      BottomsheetConstants.minHeight,
+      maxHeight,
+    );
+
     return RepaintBoundary(
       child: Material(
         color: Colors.transparent,
         child: Container(
           constraints: BoxConstraints(
             maxHeight: maxHeight,
-            minHeight: BottomsheetConstants.minHeight,
+            minHeight: minHeight,
           ),
           child: ClipRRect(
             borderRadius: const BorderRadius.only(

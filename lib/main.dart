@@ -919,6 +919,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
         color: Colors.green,
         onPressed: () {
           SavePointsBottomsheet.show(
+            maxHeight: 1222.8,
             context: context,
             title: 'Options',
             icon: Icons.more_vert,
