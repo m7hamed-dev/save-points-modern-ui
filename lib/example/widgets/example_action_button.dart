@@ -1,11 +1,24 @@
-import 'package:flutter/material.dart';
+/// Example widgets for the SavePoints UI demo application
+library;
+
 import 'dart:math' as math;
 
-/// Action button widget for examples
+import 'package:flutter/material.dart';
+
+/// Animated action button widget for example demonstrations
+///
+/// Features ripple effects, hover animations, and interactive feedback.
 class ExampleActionButton extends StatefulWidget {
+  /// Icon to display on the button
   final IconData icon;
+
+  /// Label text displayed below the icon
   final String label;
+
+  /// Primary color for the button theme
   final Color color;
+
+  /// Callback invoked when the button is pressed
   final VoidCallback onPressed;
 
   const ExampleActionButton({
@@ -167,8 +180,12 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
   }
 }
 
+/// Custom painter for rendering ripple animation effects
 class RipplePainter extends CustomPainter {
+  /// Animation progress value (0.0 to 1.0)
   final double progress;
+
+  /// Color of the ripple effect
   final Color color;
 
   RipplePainter({

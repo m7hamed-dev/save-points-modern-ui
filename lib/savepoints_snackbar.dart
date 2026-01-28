@@ -1,3 +1,8 @@
+/// SavePoints Snackbar Library
+///
+/// Provides modern, customizable snackbar widgets with enhanced UI/UX.
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
@@ -290,7 +295,10 @@ class SavePointsSnackbar {
     );
   }
 
-  /// Helper to get margin based on position
+  /// Calculates appropriate margin based on snackbar position
+  ///
+  /// Takes into account safe areas, AppBar height, and potential FAB placement
+  /// to ensure the snackbar is always visible and properly positioned.
   static EdgeInsets _getMargin(
     BuildContext context,
     SnackbarPosition position,
@@ -301,29 +309,51 @@ class SavePointsSnackbar {
 
     switch (position) {
       case SnackbarPosition.top:
-        // For top position: account for status bar and AppBar
-        // Calculate margin to position snackbar just below AppBar
-        // Standard AppBar height is 56px (kToolbarHeight)
-        // Add extra padding to ensure visibility
-        const appBarHeight = 56.0;
-        final topMargin = topPadding + appBarHeight + 12.0;
-
-        // Ensure minimum top margin of 70px for visibility
-        return EdgeInsets.only(
-          left: 16,
-          top: topMargin.clamp(70.0, double.infinity),
-          right: 16,
-        );
+        return _calculateTopMargin(topPadding);
       case SnackbarPosition.bottom:
-        // Account for safe area and potential FAB
-        // Use conservative margin to avoid off-screen issues
-        final screenHeight = mediaQuery.size.height;
-        final baseMargin = 16.0 + bottomPadding;
-        // Add FAB space only on larger screens
-        final fabSpace = screenHeight > 700 ? 80.0 : 0.0;
-        // Ensure margin doesn't exceed reasonable bounds (max 120px total)
-        final bottomMargin = (baseMargin + fabSpace).clamp(16.0, 120.0);
-        return EdgeInsets.fromLTRB(16, 16, 16, bottomMargin);
+        return _calculateBottomMargin(mediaQuery, bottomPadding);
     }
+  }
+
+  /// Calculates margin for top-positioned snackbars
+  static EdgeInsets _calculateTopMargin(double topPadding) {
+    const appBarHeight = 56.0; // Standard AppBar height (kToolbarHeight)
+    const horizontalPadding = 16.0;
+    const extraPadding = 12.0;
+    const minTopMargin = 70.0;
+
+    final topMargin = topPadding + appBarHeight + extraPadding;
+    return EdgeInsets.only(
+      left: horizontalPadding,
+      top: topMargin.clamp(minTopMargin, double.infinity),
+      right: horizontalPadding,
+    );
+  }
+
+  /// Calculates margin for bottom-positioned snackbars
+  static EdgeInsets _calculateBottomMargin(
+    MediaQueryData mediaQuery,
+    double bottomPadding,
+  ) {
+    const horizontalPadding = 16.0;
+    const baseMargin = 16.0;
+    const fabSpaceThreshold = 700.0;
+    const fabSpace = 80.0;
+    const maxBottomMargin = 120.0;
+
+    final screenHeight = mediaQuery.size.height;
+    final baseBottomMargin = baseMargin + bottomPadding;
+    final fabSpaceToAdd = screenHeight > fabSpaceThreshold ? fabSpace : 0.0;
+    final bottomMargin = (baseBottomMargin + fabSpaceToAdd).clamp(
+      baseMargin,
+      maxBottomMargin,
+    );
+
+    return EdgeInsets.fromLTRB(
+      horizontalPadding,
+      baseMargin,
+      horizontalPadding,
+      bottomMargin,
+    );
   }
 }

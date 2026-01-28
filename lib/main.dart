@@ -1,15 +1,24 @@
+/// SavePoints Modern UI - Example Application
+///
+/// This example app demonstrates the capabilities of the SavePoints UI library,
+/// showcasing dialogs, snackbars, and bottom sheets with various configurations.
+library;
+
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/example/widgets/widgets.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/presets/dialog_presets.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/presets/dialog_presets.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/example/widgets/widgets.dart';
-import 'dart:math' as math;
 
+/// Application entry point
 void main() {
   runApp(const MyApp());
 }
 
+/// Root application widget with theme management
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -20,6 +29,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.system;
 
+  /// Changes the application theme mode
   void _changeTheme(ThemeMode mode) {
     setState(() {
       _themeMode = mode;
@@ -31,39 +41,73 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'SavePoints Modern UI',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6366F1)),
-        useMaterial3: true,
-        cardTheme: CardThemeData(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6366F1),
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-        cardTheme: CardThemeData(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-      ),
+      theme: _buildLightTheme(),
+      darkTheme: _buildDarkTheme(),
       themeMode: _themeMode,
       home: ExampleHomePage(onThemeChanged: _changeTheme),
     );
   }
+
+  /// Builds the light theme configuration
+  ThemeData _buildLightTheme() {
+    return ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF6366F1),
+      ),
+      useMaterial3: true,
+      cardTheme: CardThemeData(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+    );
+  }
+
+  /// Builds the dark theme configuration
+  ThemeData _buildDarkTheme() {
+    return ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF6366F1),
+        brightness: Brightness.dark,
+      ),
+      useMaterial3: true,
+      cardTheme: CardThemeData(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+    );
+  }
 }
 
+/// Constants for animation timings and delays
+class _AnimationConstants {
+  static const Duration gradientDuration = Duration(seconds: 10);
+  static const Duration headerAnimationDuration = Duration(milliseconds: 800);
+  static const Duration sectionAnimationDuration = Duration(milliseconds: 600);
+  static const int sectionCount = 4;
+  static const int initialDelay = 300;
+  static const int staggerDelay = 150;
+}
+
+/// Constants for UI spacing
+class _SpacingConstants {
+  static const double sectionSpacing = 24.0;
+  static const double headerBottomSpacing = 32.0;
+  static const double bottomSpacing = 32.0;
+  static const double contentPadding = 20.0;
+}
+
+/// Home page showcasing all SavePoints UI components
 class ExampleHomePage extends StatefulWidget {
   final Function(ThemeMode) onThemeChanged;
 
-  const ExampleHomePage({super.key, required this.onThemeChanged});
+  const ExampleHomePage({
+    super.key,
+    required this.onThemeChanged,
+  });
 
   @override
   State<ExampleHomePage> createState() => _ExampleHomePageState();
@@ -80,32 +124,45 @@ class _ExampleHomePageState extends State<ExampleHomePage>
   @override
   void initState() {
     super.initState();
+    _initializeAnimationControllers();
+    _startStaggeredAnimations();
+  }
+
+  /// Initializes all animation controllers
+  void _initializeAnimationControllers() {
     _gradientController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: _AnimationConstants.gradientDuration,
     )..repeat();
 
     _headerController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: _AnimationConstants.headerAnimationDuration,
     )..forward();
 
-    // Create controllers for each section with staggered delays
     _sectionControllers = List.generate(
-      4,
+      _AnimationConstants.sectionCount,
       (index) => AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 600),
+        duration: _AnimationConstants.sectionAnimationDuration,
       ),
     );
+  }
 
-    // Start section animations with stagger
+  /// Starts section animations with staggered delays for smooth entrance
+  void _startStaggeredAnimations() {
     for (int i = 0; i < _sectionControllers.length; i++) {
-      Future.delayed(Duration(milliseconds: 300 + (i * 150)), () {
-        if (mounted) {
-          _sectionControllers[i].forward();
-        }
-      });
+      Future.delayed(
+        Duration(
+          milliseconds: _AnimationConstants.initialDelay +
+              (i * _AnimationConstants.staggerDelay),
+        ),
+        () {
+          if (mounted) {
+            _sectionControllers[i].forward();
+          }
+        },
+      );
     }
   }
 
@@ -181,44 +238,14 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             ),
             child: SafeArea(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(_SpacingConstants.contentPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildHeader(),
-                    const SizedBox(height: 32),
-                    _buildSection(
-                      context,
-                      index: 0,
-                      title: '🎭 Dialogs',
-                      icon: Icons.chat_bubble_outline,
-                      children: _buildDialogExamples(context),
-                    ),
-                    const SizedBox(height: 24),
-                    _buildSection(
-                      context,
-                      index: 1,
-                      title: '🍞 Snackbars',
-                      icon: Icons.notifications_outlined,
-                      children: _buildSnackbarExamples(context),
-                    ),
-                    const SizedBox(height: 24),
-                    _buildSection(
-                      context,
-                      index: 2,
-                      title: '📱 Bottom Sheets',
-                      icon: Icons.call_to_action_outlined,
-                      children: _buildBottomSheetExamples(context),
-                    ),
-                    const SizedBox(height: 24),
-                    _buildSection(
-                      context,
-                      index: 3,
-                      title: '🎨 More Examples',
-                      icon: Icons.auto_awesome,
-                      children: _buildMoreExamples(context),
-                    ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: _SpacingConstants.headerBottomSpacing),
+                    ..._buildAllSections(context),
+                    const SizedBox(height: _SpacingConstants.bottomSpacing),
                   ],
                 ),
               ),
@@ -230,48 +257,48 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     );
   }
 
+  /// Builds all sections with proper spacing
+  List<Widget> _buildAllSections(BuildContext context) {
+    return [
+      _buildSection(
+        context,
+        index: 0,
+        title: '🎭 Dialogs',
+        icon: Icons.chat_bubble_outline,
+        children: _buildDialogExamples(context),
+      ),
+      const SizedBox(height: _SpacingConstants.sectionSpacing),
+      _buildSection(
+        context,
+        index: 1,
+        title: '🍞 Snackbars',
+        icon: Icons.notifications_outlined,
+        children: _buildSnackbarExamples(context),
+      ),
+      const SizedBox(height: _SpacingConstants.sectionSpacing),
+      _buildSection(
+        context,
+        index: 2,
+        title: '📱 Bottom Sheets',
+        icon: Icons.call_to_action_outlined,
+        children: _buildBottomSheetExamples(context),
+      ),
+      const SizedBox(height: _SpacingConstants.sectionSpacing),
+      _buildSection(
+        context,
+        index: 3,
+        title: '🎨 More Examples',
+        icon: Icons.auto_awesome,
+        children: _buildMoreExamples(context),
+      ),
+    ];
+  }
+
+  /// Builds the bottom navigation bar with snackbar feedback
   Widget _buildBottomNavigationBar() {
     return NavigationBar(
       selectedIndex: _currentIndex,
-      onDestinationSelected: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-        // Show snackbar based on selection
-        switch (index) {
-          case 0:
-            SavePointsSnackbar.show(
-              context,
-              title: 'Home',
-              subtitle: 'Welcome to SavePoints UI',
-              type: SnackbarType.info,
-            );
-            break;
-          case 1:
-            SavePointsSnackbar.showSuccess(
-              context,
-              title: 'Dialogs',
-              subtitle: 'Explore dialog examples',
-            );
-            break;
-          case 2:
-            SavePointsSnackbar.show(
-              context,
-              title: 'Snackbars',
-              subtitle: 'Check out snackbar examples',
-              type: SnackbarType.warning,
-            );
-            break;
-          case 3:
-            SavePointsSnackbar.show(
-              context,
-              title: 'Bottom Sheets',
-              subtitle: 'View bottom sheet examples',
-              type: SnackbarType.info,
-            );
-            break;
-        }
-      },
+      onDestinationSelected: _handleNavigationSelection,
       destinations: const [
         NavigationDestination(
           icon: Icon(Icons.home_outlined),
@@ -297,22 +324,67 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     );
   }
 
+  /// Handles navigation bar selection and shows appropriate snackbar
+  void _handleNavigationSelection(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        SavePointsSnackbar.show(
+          context,
+          title: 'Home',
+          subtitle: 'Welcome to SavePoints UI',
+          type: SnackbarType.info,
+        );
+        break;
+      case 1:
+        SavePointsSnackbar.showSuccess(
+          context,
+          title: 'Dialogs',
+          subtitle: 'Explore dialog examples',
+        );
+        break;
+      case 2:
+        SavePointsSnackbar.show(
+          context,
+          title: 'Snackbars',
+          subtitle: 'Check out snackbar examples',
+          type: SnackbarType.warning,
+        );
+        break;
+      case 3:
+        SavePointsSnackbar.show(
+          context,
+          title: 'Bottom Sheets',
+          subtitle: 'View bottom sheet examples',
+          type: SnackbarType.info,
+        );
+        break;
+    }
+  }
+
+  /// Builds the animated header widget
   Widget _buildHeader() {
     return FadeTransition(
       opacity: _headerController,
       child: SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, -0.3), end: Offset.zero)
-            .animate(
-              CurvedAnimation(
-                parent: _headerController,
-                curve: Curves.easeOutCubic,
-              ),
-            ),
+        position: Tween<Offset>(
+          begin: const Offset(0, -0.3),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _headerController,
+            curve: Curves.easeOutCubic,
+          ),
+        ),
         child: const ExampleHeader(),
       ),
     );
   }
 
+  /// Builds an animated section with fade and slide transitions
   Widget _buildSection(
     BuildContext context, {
     required int index,
@@ -324,15 +396,25 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     return FadeTransition(
       opacity: controller,
       child: SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
-            .animate(
-              CurvedAnimation(parent: controller, curve: Curves.easeOutCubic),
-            ),
-        child: ExampleSection(title: title, icon: icon, children: children),
+        position: Tween<Offset>(
+          begin: const Offset(0, 0.3),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Curves.easeOutCubic,
+          ),
+        ),
+        child: ExampleSection(
+          title: title,
+          icon: icon,
+          children: children,
+        ),
       ),
     );
   }
 
+  /// Builds all dialog example buttons demonstrating various dialog types
   List<Widget> _buildDialogExamples(BuildContext context) {
     return [
       _buildActionButton(
@@ -580,6 +662,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     ];
   }
 
+  /// Builds all snackbar example buttons demonstrating various snackbar types
   List<Widget> _buildSnackbarExamples(BuildContext context) {
     return [
       _buildActionButton(
@@ -890,6 +973,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     ];
   }
 
+  /// Builds all bottom sheet example buttons demonstrating various bottom sheet types
   List<Widget> _buildBottomSheetExamples(BuildContext context) {
     return [
       _buildActionButton(
@@ -1074,6 +1158,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     ];
   }
 
+  /// Builds advanced example buttons demonstrating component interactions
   List<Widget> _buildMoreExamples(BuildContext context) {
     return [
       _buildActionButton(
@@ -1384,6 +1469,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     ];
   }
 
+  /// Builds a reusable action button for examples
   Widget _buildActionButton(
     BuildContext context, {
     required IconData icon,

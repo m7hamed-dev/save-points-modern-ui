@@ -1,7 +1,12 @@
+/// SavePoints Bottom Sheet Library
+///
+/// Provides modern, customizable bottom sheet widgets with glassmorphism design.
+library;
+
 import 'package:flutter/material.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/modern_bottomsheet.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_builder.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_builder.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/modern_bottomsheet.dart';
 
 // Export animation direction for public use
 export 'bottomsheet/bottomsheet_animation_direction.dart';
@@ -56,11 +61,8 @@ class SavePointsBottomsheet {
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
   }) {
-    // Dismiss keyboard when showing bottom sheet
-    final focusNode = FocusScope.of(context);
-    if (focusNode.hasFocus) {
-      focusNode.unfocus();
-    }
+    // Dismiss keyboard when showing bottom sheet to prevent UI overlap
+    _dismissKeyboard(context);
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -107,5 +109,13 @@ class SavePointsBottomsheet {
         );
       },
     );
+  }
+
+  /// Dismisses the keyboard if currently focused
+  static void _dismissKeyboard(BuildContext context) {
+    final focusNode = FocusScope.of(context);
+    if (focusNode.hasFocus) {
+      focusNode.unfocus();
+    }
   }
 }

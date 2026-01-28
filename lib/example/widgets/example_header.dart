@@ -1,7 +1,13 @@
-import 'package:flutter/material.dart';
+/// Example widgets for the SavePoints UI demo application
+library;
+
 import 'dart:math' as math;
 
-/// Header widget for the example app
+import 'package:flutter/material.dart';
+
+/// Animated header widget displaying the app title and description
+///
+/// Features a rotating and scaling icon animation with gradient background.
 class ExampleHeader extends StatefulWidget {
   const ExampleHeader({super.key});
 

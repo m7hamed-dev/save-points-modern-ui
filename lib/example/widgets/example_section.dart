@@ -1,9 +1,20 @@
+/// Example widgets for the SavePoints UI demo application
+library;
+
 import 'package:flutter/material.dart';
 
-/// Section widget for organizing example buttons
+/// Section container widget for organizing example buttons
+///
+/// Displays a title with icon and wraps child widgets in a card layout
+/// with hover effects and gradient backgrounds.
 class ExampleSection extends StatefulWidget {
+  /// Section title displayed in the header
   final String title;
+
+  /// Icon displayed next to the title
   final IconData icon;
+
+  /// List of child widgets (typically example buttons)
   final List<Widget> children;
 
   const ExampleSection({

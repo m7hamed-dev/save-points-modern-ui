@@ -1,9 +1,14 @@
+/// SavePoints Dialog Library
+///
+/// Provides modern, customizable dialog widgets with glassmorphism design.
+library;
+
 import 'package:flutter/material.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/dialog/modern_dialog.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition_builder.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_type.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_direction.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_type.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition_builder.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/modern_dialog.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 
 // Export animation types for public use
 export 'dialog/dialog_animation_type.dart';
@@ -76,11 +81,8 @@ class SavePointsDialog {
     assert(title.isNotEmpty, 'Title cannot be empty');
     assert(message.isNotEmpty, 'Message cannot be empty');
 
-    // Dismiss keyboard when showing dialog
-    final focusNode = FocusScope.of(context);
-    if (focusNode.hasFocus) {
-      focusNode.unfocus();
-    }
+    // Dismiss keyboard when showing dialog to prevent UI overlap
+    _dismissKeyboard(context);
 
     final config = SavePointsConfig().dialog;
     final theme = Theme.of(context);
@@ -138,5 +140,13 @@ class SavePointsDialog {
         );
       },
     );
+  }
+
+  /// Dismisses the keyboard if currently focused
+  static void _dismissKeyboard(BuildContext context) {
+    final focusNode = FocusScope.of(context);
+    if (focusNode.hasFocus) {
+      focusNode.unfocus();
+    }
   }
 }
