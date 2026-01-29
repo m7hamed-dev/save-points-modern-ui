@@ -160,6 +160,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                 showTopRadius: false,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     if (widget.showHandle)
                       RepaintBoundary(
@@ -197,6 +198,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                       ),
                       const SizedBox(height: BottomsheetConstants.titleSpacing),
                     ],
+                    // Main content: loading indicator or scrollable child
                     if (_isLoading)
                       RepaintBoundary(
                         child: BottomsheetLoadingIndicator(

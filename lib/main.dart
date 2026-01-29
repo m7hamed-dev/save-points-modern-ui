@@ -51,15 +51,11 @@ class _MyAppState extends State<MyApp> {
   /// Builds the light theme configuration
   ThemeData _buildLightTheme() {
     return ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF6366F1),
-      ),
+      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6366F1)),
       useMaterial3: true,
       cardTheme: CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }
@@ -74,9 +70,7 @@ class _MyAppState extends State<MyApp> {
       useMaterial3: true,
       cardTheme: CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }
@@ -104,10 +98,7 @@ class _SpacingConstants {
 class ExampleHomePage extends StatefulWidget {
   final Function(ThemeMode) onThemeChanged;
 
-  const ExampleHomePage({
-    super.key,
-    required this.onThemeChanged,
-  });
+  const ExampleHomePage({super.key, required this.onThemeChanged});
 
   @override
   State<ExampleHomePage> createState() => _ExampleHomePageState();
@@ -154,7 +145,8 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     for (int i = 0; i < _sectionControllers.length; i++) {
       Future.delayed(
         Duration(
-          milliseconds: _AnimationConstants.initialDelay +
+          milliseconds:
+              _AnimationConstants.initialDelay +
               (i * _AnimationConstants.staggerDelay),
         ),
         () {
@@ -243,7 +235,9 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildHeader(),
-                    const SizedBox(height: _SpacingConstants.headerBottomSpacing),
+                    const SizedBox(
+                      height: _SpacingConstants.headerBottomSpacing,
+                    ),
                     ..._buildAllSections(context),
                     const SizedBox(height: _SpacingConstants.bottomSpacing),
                   ],
@@ -370,15 +364,13 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     return FadeTransition(
       opacity: _headerController,
       child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, -0.3),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: _headerController,
-            curve: Curves.easeOutCubic,
-          ),
-        ),
+        position: Tween<Offset>(begin: const Offset(0, -0.3), end: Offset.zero)
+            .animate(
+              CurvedAnimation(
+                parent: _headerController,
+                curve: Curves.easeOutCubic,
+              ),
+            ),
         child: const ExampleHeader(),
       ),
     );
@@ -396,20 +388,11 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     return FadeTransition(
       opacity: controller,
       child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 0.3),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: controller,
-            curve: Curves.easeOutCubic,
-          ),
-        ),
-        child: ExampleSection(
-          title: title,
-          icon: icon,
-          children: children,
-        ),
+        position: Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
+            .animate(
+              CurvedAnimation(parent: controller, curve: Curves.easeOutCubic),
+            ),
+        child: ExampleSection(title: title, icon: icon, children: children),
       ),
     );
   }
@@ -659,6 +642,25 @@ class _ExampleHomePageState extends State<ExampleHomePage>
           );
         },
       ),
+      _buildActionButton(
+        context,
+        icon: Icons.blur_on,
+        label: 'Blur + Animated',
+        color: Colors.cyan,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Glassmorphism',
+            message:
+                'Custom backdrop blur with slide animation. Frosted glass effect!',
+            blur: 24.0,
+            startAnimation: DialogAnimationDirection.fromBottom,
+            endAnimation: DialogAnimationDirection.fromTop,
+            icon: Icons.blur_on,
+            iconColor: Colors.cyan,
+          );
+        },
+      ),
     ];
   }
 
@@ -844,6 +846,23 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             subtitle: 'Slides in from left',
             startAnimation: SnackbarAnimationDirection.fromLeft,
             endAnimation: SnackbarAnimationDirection.fromRight,
+            type: SnackbarType.info,
+            showProgressIndicator: true,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.blur_on,
+        label: 'Blur + Bounce',
+        color: Colors.cyan,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Glassmorphism Snackbar',
+            subtitle: 'Backdrop blur with bounce animation',
+            blur: 12.0,
+            animation: SnackbarAnimation.bounce,
             type: SnackbarType.info,
             showProgressIndicator: true,
           );
@@ -1151,6 +1170,30 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                   onTap: () => Navigator.pop(context),
                 ),
               ],
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.blur_on,
+        label: 'Blur + Animated',
+        color: Colors.cyan,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Glassmorphism',
+            icon: Icons.blur_on,
+            iconColor: Colors.cyan,
+            blur: 16.0,
+            startAnimation: BottomsheetAnimationDirection.fromBottom,
+            endAnimation: BottomsheetAnimationDirection.fade,
+            child: const Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text(
+                'Backdrop blur with slide animation. Frosted glass effect behind the sheet!',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           );
         },

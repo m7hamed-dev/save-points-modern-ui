@@ -150,6 +150,7 @@ class _ModernDialogState extends State<ModernDialog> {
                   colorConfig: colorConfig,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       if (widget.icon != null)
                         RepaintBoundary(
@@ -176,6 +177,7 @@ class _ModernDialogState extends State<ModernDialog> {
                       const SizedBox(
                         height: DialogConstants.contentSpacingAfterMessage,
                       ),
+                      // Main content: loading indicator or action buttons
                       if (_isLoading)
                         RepaintBoundary(
                           child: DialogLoadingIndicator(
