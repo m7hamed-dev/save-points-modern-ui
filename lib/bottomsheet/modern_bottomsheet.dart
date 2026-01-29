@@ -24,6 +24,8 @@ class ModernBottomsheet extends StatefulWidget {
     this.enableDrag = true,
     this.maxHeight,
     this.isScrollControlled = false,
+    this.blur = 20.0,
+    this.backdropFilter,
   });
 
   final String? title;
@@ -39,6 +41,13 @@ class ModernBottomsheet extends StatefulWidget {
   final bool enableDrag;
   final double? maxHeight;
   final bool isScrollControlled;
+
+  /// Optional blur sigma for the glassmorphism backdrop. When null, defaults to 20.
+  /// Set to 0 to disable blur. Ignored when [backdropFilter] is non-null.
+  final double? blur;
+
+  /// Optional custom [ImageFilter] for the [BackdropFilter]. When set, overrides [blur].
+  final ImageFilter? backdropFilter;
 
   @override
   State<ModernBottomsheet> createState() => _ModernBottomsheetState();
@@ -114,10 +123,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
             MediaQuery.sizeOf(context).height * BottomsheetConstants.maxHeight);
 
     // Ensure minHeight is never greater than maxHeight
-    final minHeight = math.min(
-      BottomsheetConstants.minHeight,
-      maxHeight,
-    );
+    final minHeight = math.min(BottomsheetConstants.minHeight, maxHeight);
 
     return RepaintBoundary(
       child: Material(
@@ -132,8 +138,9 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
               topLeft: Radius.circular(BottomsheetConstants.borderRadius),
               topRight: Radius.circular(BottomsheetConstants.borderRadius),
             ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: _buildContent(
+              blur: widget.blur,
+              backdropFilter: widget.backdropFilter,
               child: BottomsheetContainer(
                 colorConfig: colorConfig,
                 showTopRadius: false,
@@ -195,6 +202,24 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildContent({
+    required double? blur,
+    required ImageFilter? backdropFilter,
+    required Widget child,
+  }) {
+    final ImageFilter? filter =
+        backdropFilter ??
+        (blur != null && blur <= 0
+            ? null
+            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+    if (filter == null) {
+      return child;
+    }
+    return ClipRect(
+      child: BackdropFilter(filter: filter, child: child),
     );
   }
 }

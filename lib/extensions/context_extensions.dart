@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
@@ -227,6 +229,8 @@ extension SavePointsContextExtension on BuildContext {
     IconData? icon,
     bool isDismissible = true,
     bool enableDrag = true,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     return SavePointsBottomsheet.show<T>(
       context: this,
@@ -235,6 +239,8 @@ extension SavePointsContextExtension on BuildContext {
       icon: icon,
       isDismissible: isDismissible,
       enableDrag: enableDrag,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -243,4 +249,3 @@ extension SavePointsContextExtension on BuildContext {
     ScaffoldMessenger.of(this).clearSnackBars();
   }
 }
-

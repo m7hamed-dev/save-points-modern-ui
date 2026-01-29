@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/config/snackbar_type_config.dart';
 
 /// Configuration for snackbar appearance and behavior
@@ -10,8 +11,8 @@ class SnackbarConfig {
   /// Default animation style
   SnackbarAnimation defaultAnimation = SnackbarAnimation.fadeSlide;
 
-  /// Default position
-  SnackbarPosition defaultPosition = SnackbarPosition.top;
+  /// Default position (snackbar shows at top by default)
+  SnackbarPosition defaultPosition = SnackbarConstants.defaultPosition;
 
   /// Default type
   SnackbarType defaultType = SnackbarType.info;

@@ -3,6 +3,8 @@
 /// Provides modern, customizable bottom sheet widgets with glassmorphism design.
 library;
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_builder.dart';
@@ -60,6 +62,8 @@ class SavePointsBottomsheet {
     bool isLoading = false,
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     // Dismiss keyboard when showing bottom sheet to prevent UI overlap
     _dismissKeyboard(context);
@@ -71,42 +75,75 @@ class SavePointsBottomsheet {
     final finalEnableDrag = enableDrag ?? true;
     final finalShowHandle = showHandle ?? true;
 
-    // Use showGeneralDialog for full animation control
+    // When using blur/backdropFilter, barrier must be transparent so the route
+    // is visible and can be blurred; we paint the blur in the transition.
+    final ImageFilter? barrierFilter =
+        backdropFilter ??
+        (blur != null && blur <= 0
+            ? null
+            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+    final useBarrierBlur = barrierFilter != null;
+
     return showGeneralDialog<T>(
       context: context,
       barrierDismissible: finalIsDismissible,
       barrierLabel: 'Close bottom sheet',
-      barrierColor: Colors.black.withValues(alpha: 0.5),
+      barrierColor: useBarrierBlur
+          ? Colors.transparent
+          : Colors.black.withValues(alpha: 0.5),
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, _) {
-        return Align(
-          alignment: Alignment.bottomCenter,
-          child: BottomsheetTransitionBuilder(
-            animation: animation,
-            startAnimation: startAnimation,
-            endAnimation: endAnimation,
-            hideLikeCircle: hideLikeCircle,
-            bottomsheet: GestureDetector(
-              onTap: () {}, // Prevent tap from closing
-              child: ModernBottomsheet(
-                title: title,
-                icon: icon,
-                iconColor: iconColor,
-                backgroundColor: backgroundColor,
-                isDark: isDark,
-                isLoading: isLoading,
-                loadingNotifier: loadingNotifier,
-                showHandle: finalShowHandle,
-                isDismissible: finalIsDismissible,
-                enableDrag: finalEnableDrag,
-                maxHeight: maxHeight,
-                isScrollControlled: isScrollControlled,
-                child: child,
-              ),
+        final sheet = BottomsheetTransitionBuilder(
+          animation: animation,
+          startAnimation: startAnimation,
+          endAnimation: endAnimation,
+          hideLikeCircle: hideLikeCircle,
+          bottomsheet: GestureDetector(
+            onTap: () {}, // Prevent tap from closing
+            child: ModernBottomsheet(
+              title: title,
+              icon: icon,
+              iconColor: iconColor,
+              backgroundColor: backgroundColor,
+              isDark: isDark,
+              isLoading: isLoading,
+              loadingNotifier: loadingNotifier,
+              showHandle: finalShowHandle,
+              isDismissible: finalIsDismissible,
+              enableDrag: finalEnableDrag,
+              maxHeight: maxHeight,
+              isScrollControlled: isScrollControlled,
+              blur: blur,
+              backdropFilter: backdropFilter,
+              child: child,
             ),
           ),
         );
+
+        if (useBarrierBlur) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              GestureDetector(
+                onTap: finalIsDismissible
+                    ? () => Navigator.of(context).pop()
+                    : null,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: barrierFilter,
+                    child: Container(
+                      color: Colors.black.withValues(alpha: 0.25),
+                    ),
+                  ),
+                ),
+              ),
+              Align(alignment: Alignment.bottomCenter, child: sheet),
+            ],
+          );
+        }
+
+        return Align(alignment: Alignment.bottomCenter, child: sheet);
       },
     );
   }
