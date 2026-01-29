@@ -28,6 +28,8 @@ class ModernDialog extends StatefulWidget {
   final bool isDark;
   final bool isLoading;
   final ValueNotifier<bool>? loadingNotifier;
+  final double? blur;
+  final ImageFilter? backdropFilter;
 
   const ModernDialog({
     super.key,
@@ -47,6 +49,8 @@ class ModernDialog extends StatefulWidget {
     required this.isDark,
     this.isLoading = false,
     this.loadingNotifier,
+    this.blur,
+    this.backdropFilter,
   });
 
   @override
@@ -126,8 +130,9 @@ class _ModernDialogState extends State<ModernDialog> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: _buildContent(
+                blur: widget.blur,
+                backdropFilter: widget.backdropFilter,
                 child: DialogContainer(
                   colorConfig: colorConfig,
                   child: Column(
@@ -185,6 +190,24 @@ class _ModernDialogState extends State<ModernDialog> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildContent({
+    required double? blur,
+    required ImageFilter? backdropFilter,
+    required Widget child,
+  }) {
+    final ImageFilter? filter =
+        backdropFilter ??
+        (blur != null && blur <= 0
+            ? null
+            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+    if (filter == null) {
+      return child;
+    }
+    return ClipRect(
+      child: BackdropFilter(filter: filter, child: child),
     );
   }
 

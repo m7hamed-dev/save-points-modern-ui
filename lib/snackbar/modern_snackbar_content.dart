@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart' hide AnimatedIcon;
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
@@ -25,6 +26,8 @@ class ModernSnackbarContent extends StatefulWidget {
   final double maxWidth;
   final bool dismissOnTap;
   final VoidCallback? onTap;
+  final double? blur;
+  final ImageFilter? backdropFilter;
 
   const ModernSnackbarContent({
     super.key,
@@ -43,6 +46,8 @@ class ModernSnackbarContent extends StatefulWidget {
     required this.maxWidth,
     this.dismissOnTap = false,
     this.onTap,
+    this.blur,
+    this.backdropFilter,
   });
 
   @override
@@ -179,9 +184,22 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     }
   }
 
+  Widget _wrapWithBackdrop(Widget child) {
+    final b = widget.blur;
+    final ImageFilter? filter =
+        widget.backdropFilter ??
+        (b != null && b <= 0
+            ? null
+            : ImageFilter.blur(sigmaX: b ?? 20.0, sigmaY: b ?? 20.0));
+    if (filter == null) return child;
+    return ClipRect(
+      child: BackdropFilter(filter: filter, child: child),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Widget content = RepaintBoundary(
+    Widget content = RepaintBoundary(
       child: Container(
         constraints: BoxConstraints(maxWidth: widget.maxWidth),
         decoration: BoxDecoration(
@@ -271,6 +289,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         ),
       ),
     );
+    content = _wrapWithBackdrop(content);
 
     return AnimatedWrapper(
       animation: _entranceAnimation,

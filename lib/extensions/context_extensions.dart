@@ -21,6 +21,8 @@ extension SavePointsContextExtension on BuildContext {
     String? subtitle,
     Duration? duration,
     bool showProgressIndicator = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     SavePointsSnackbar.showSuccess(
       this,
@@ -28,6 +30,8 @@ extension SavePointsContextExtension on BuildContext {
       subtitle: subtitle,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -45,6 +49,8 @@ extension SavePointsContextExtension on BuildContext {
     String? subtitle,
     Duration? duration,
     bool showProgressIndicator = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     SavePointsSnackbar.showError(
       this,
@@ -52,6 +58,8 @@ extension SavePointsContextExtension on BuildContext {
       subtitle: subtitle,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -69,6 +77,8 @@ extension SavePointsContextExtension on BuildContext {
     String? subtitle,
     Duration? duration,
     bool showProgressIndicator = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     SavePointsSnackbar.showWarning(
       this,
@@ -76,6 +86,8 @@ extension SavePointsContextExtension on BuildContext {
       subtitle: subtitle,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -93,6 +105,8 @@ extension SavePointsContextExtension on BuildContext {
     String? subtitle,
     Duration? duration,
     bool showProgressIndicator = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     SavePointsSnackbar.show(
       this,
@@ -101,6 +115,8 @@ extension SavePointsContextExtension on BuildContext {
       type: SnackbarType.info,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -123,6 +139,8 @@ extension SavePointsContextExtension on BuildContext {
     String cancelText = 'Cancel',
     IconData? icon,
     Color? iconColor,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     return SavePointsDialog.show(
       this,
@@ -133,6 +151,8 @@ extension SavePointsContextExtension on BuildContext {
       showCancelButton: true,
       icon: icon,
       iconColor: iconColor,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -151,6 +171,8 @@ extension SavePointsContextExtension on BuildContext {
     String confirmText = 'OK',
     IconData icon = Icons.info,
     Color iconColor = Colors.blue,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     return SavePointsDialog.show(
       this,
@@ -159,6 +181,8 @@ extension SavePointsContextExtension on BuildContext {
       confirmText: confirmText,
       icon: icon,
       iconColor: iconColor,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -177,6 +201,8 @@ extension SavePointsContextExtension on BuildContext {
     String confirmText = 'OK',
     IconData icon = Icons.check_circle,
     Color iconColor = Colors.green,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     return SavePointsDialog.show(
       this,
@@ -185,6 +211,8 @@ extension SavePointsContextExtension on BuildContext {
       confirmText: confirmText,
       icon: icon,
       iconColor: iconColor,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -203,6 +231,8 @@ extension SavePointsContextExtension on BuildContext {
     String confirmText = 'OK',
     IconData icon = Icons.error,
     Color iconColor = Colors.red,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     return SavePointsDialog.show(
       this,
@@ -211,6 +241,8 @@ extension SavePointsContextExtension on BuildContext {
       confirmText: confirmText,
       icon: icon,
       iconColor: iconColor,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 

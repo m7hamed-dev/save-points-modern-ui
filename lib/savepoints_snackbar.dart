@@ -3,6 +3,8 @@
 /// Provides modern, customizable snackbar widgets with enhanced UI/UX.
 library;
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
@@ -76,6 +78,8 @@ class SavePointsSnackbar {
     double? borderWidth,
     VoidCallback? onDismissed,
     VoidCallback? onTap,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     // Validate required parameters
     assert(title.isNotEmpty, 'Title cannot be empty');
@@ -151,6 +155,8 @@ class SavePointsSnackbar {
         borderWidth: finalBorderWidth,
         onTap: onTap,
         onDismissed: onDismissed,
+        blur: blur,
+        backdropFilter: backdropFilter,
       );
       // Return a dummy controller for top position (overlay handles display)
       return ScaffoldMessenger.of(context).showSnackBar(
@@ -199,6 +205,8 @@ class SavePointsSnackbar {
           maxWidth: finalMaxWidth,
           dismissOnTap: finalDismissOnTap,
           onTap: onTap,
+          blur: blur,
+          backdropFilter: backdropFilter,
         ),
         action: onActionPressed != null && actionLabel != null
             ? SnackBarAction(
@@ -233,6 +241,8 @@ class SavePointsSnackbar {
     String? actionLabel,
     SnackbarPosition? position,
     bool showProgressIndicator = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     return show(
       context,
@@ -244,6 +254,8 @@ class SavePointsSnackbar {
       actionLabel: actionLabel,
       position: position,
       showProgressIndicator: showProgressIndicator,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -257,6 +269,8 @@ class SavePointsSnackbar {
     String? actionLabel,
     SnackbarPosition? position,
     bool showProgressIndicator = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     return show(
       context,
@@ -268,6 +282,8 @@ class SavePointsSnackbar {
       actionLabel: actionLabel,
       position: position,
       showProgressIndicator: showProgressIndicator,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
@@ -281,6 +297,8 @@ class SavePointsSnackbar {
     String? actionLabel,
     SnackbarPosition? position,
     bool showProgressIndicator = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     return show(
       context,
@@ -292,6 +310,8 @@ class SavePointsSnackbar {
       actionLabel: actionLabel,
       position: position,
       showProgressIndicator: showProgressIndicator,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 

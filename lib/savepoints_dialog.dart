@@ -3,6 +3,8 @@
 /// Provides modern, customizable dialog widgets with glassmorphism design.
 library;
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_type.dart';
@@ -76,6 +78,8 @@ class SavePointsDialog {
     bool isLoading = false,
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     // Validate required parameters
     assert(title.isNotEmpty, 'Title cannot be empty');
@@ -101,11 +105,18 @@ class SavePointsDialog {
     final finalCancelButtonColor =
         cancelButtonColor ?? config.defaultCancelButtonColor;
 
+    final ImageFilter? barrierFilter =
+        backdropFilter ??
+        (blur != null && blur <= 0
+            ? null
+            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+    final useBarrierBlur = barrierFilter != null;
+
     return showGeneralDialog<bool>(
       context: context,
       barrierDismissible: finalBarrierDismissible,
       barrierLabel: config.barrierLabel,
-      barrierColor: config.barrierColor,
+      barrierColor: useBarrierBlur ? Colors.transparent : config.barrierColor,
       transitionDuration: config.transitionDuration,
       pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
@@ -113,7 +124,7 @@ class SavePointsDialog {
             (startAnimation == null && endAnimation == null)
             ? (animationType ?? config.defaultAnimation)
             : null;
-        return DialogTransitionBuilder(
+        final dialogWidget = DialogTransitionBuilder(
           animation: animation,
           animationType: finalAnimationType,
           startAnimation: startAnimation,
@@ -136,8 +147,34 @@ class SavePointsDialog {
             isDark: isDark,
             isLoading: isLoading,
             loadingNotifier: loadingNotifier,
+            blur: blur,
+            backdropFilter: backdropFilter,
           ),
         );
+
+        if (useBarrierBlur) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              GestureDetector(
+                onTap: finalBarrierDismissible
+                    ? () => Navigator.of(context).pop()
+                    : null,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: barrierFilter,
+                    child: Container(
+                      color: Colors.black.withValues(alpha: 0.25),
+                    ),
+                  ),
+                ),
+              ),
+              Center(child: dialogWidget),
+            ],
+          );
+        }
+
+        return Center(child: dialogWidget);
       },
     );
   }

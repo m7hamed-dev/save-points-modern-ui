@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_animation_direction.dart';
@@ -35,6 +36,8 @@ class TopSnackbarOverlay {
     bool hideLikeCircle = false,
     VoidCallback? onTap,
     VoidCallback? onDismissed,
+    double? blur,
+    ImageFilter? backdropFilter,
   }) {
     // Hide any existing overlay
     hide();
@@ -75,6 +78,8 @@ class TopSnackbarOverlay {
           hide();
           onDismissed?.call();
         },
+        blur: blur,
+        backdropFilter: backdropFilter,
       ),
     );
 
@@ -119,6 +124,8 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
   final bool hideLikeCircle;
   final VoidCallback? onTap;
   final VoidCallback onDismissed;
+  final double? blur;
+  final ImageFilter? backdropFilter;
 
   const _TopSnackbarOverlayWidget({
     required this.title,
@@ -143,6 +150,8 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
     this.hideLikeCircle = false,
     this.onTap,
     required this.onDismissed,
+    this.blur,
+    this.backdropFilter,
   });
 
   @override
@@ -444,6 +453,8 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
               maxWidth: widget.maxWidth,
               dismissOnTap: widget.dismissOnTap,
               onTap: widget.onTap,
+              blur: widget.blur,
+              backdropFilter: widget.backdropFilter,
             ),
           ),
         ),
