@@ -58,6 +58,9 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
   late ValueNotifier<bool>? _loadingNotifier;
   BottomsheetColorConfig? _cachedColorConfig;
   double? _cachedMaxHeight;
+  ImageFilter? _cachedBackdropFilter;
+  double? _lastBlur;
+  ImageFilter? _lastBackdropFilterParam;
 
   @override
   void initState() {
@@ -68,6 +71,17 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     if (_loadingNotifier != null) {
       _loadingNotifier!.addListener(_onLoadingChanged);
     }
+  }
+
+  @override
+  void didUpdateWidget(ModernBottomsheet oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.loadingNotifier != widget.loadingNotifier) {
+      oldWidget.loadingNotifier?.removeListener(_onLoadingChanged);
+      _loadingNotifier = widget.loadingNotifier;
+      _loadingNotifier?.addListener(_onLoadingChanged);
+    }
+    _isLoading = widget.isLoading;
   }
 
   @override
@@ -192,7 +206,10 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                     else if (widget.child != null)
                       Flexible(
                         child: RepaintBoundary(
-                          child: SingleChildScrollView(child: widget.child!),
+                          child: SingleChildScrollView(
+                            physics: const ClampingScrollPhysics(),
+                            child: widget.child!,
+                          ),
                         ),
                       ),
                   ],
@@ -205,16 +222,26 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     );
   }
 
+  ImageFilter? _getBackdropFilter(double? blur, ImageFilter? backdropFilter) {
+    if (blur == _lastBlur && backdropFilter == _lastBackdropFilterParam) {
+      return _cachedBackdropFilter;
+    }
+    _lastBlur = blur;
+    _lastBackdropFilterParam = backdropFilter;
+    _cachedBackdropFilter =
+        backdropFilter ??
+        (blur != null && blur <= 0
+            ? null
+            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+    return _cachedBackdropFilter;
+  }
+
   Widget _buildContent({
     required double? blur,
     required ImageFilter? backdropFilter,
     required Widget child,
   }) {
-    final ImageFilter? filter =
-        backdropFilter ??
-        (blur != null && blur <= 0
-            ? null
-            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+    final filter = _getBackdropFilter(blur, backdropFilter);
     if (filter == null) {
       return child;
     }

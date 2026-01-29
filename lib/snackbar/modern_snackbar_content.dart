@@ -60,6 +60,9 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   late AnimationController _entranceController;
   late Animation<double> _entranceAnimation;
   Timer? _timer;
+  ImageFilter? _cachedBackdropFilter;
+  double? _lastBlur;
+  ImageFilter? _lastBackdropFilterParam;
 
   @override
   void initState() {
@@ -184,13 +187,24 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     }
   }
 
-  Widget _wrapWithBackdrop(Widget child) {
+  ImageFilter? _getBackdropFilter() {
     final b = widget.blur;
-    final ImageFilter? filter =
-        widget.backdropFilter ??
+    final backdropFilter = widget.backdropFilter;
+    if (b == _lastBlur && backdropFilter == _lastBackdropFilterParam) {
+      return _cachedBackdropFilter;
+    }
+    _lastBlur = b;
+    _lastBackdropFilterParam = backdropFilter;
+    _cachedBackdropFilter =
+        backdropFilter ??
         (b != null && b <= 0
             ? null
             : ImageFilter.blur(sigmaX: b ?? 20.0, sigmaY: b ?? 20.0));
+    return _cachedBackdropFilter;
+  }
+
+  Widget _wrapWithBackdrop(Widget child) {
+    final filter = _getBackdropFilter();
     if (filter == null) return child;
     return ClipRect(
       child: BackdropFilter(filter: filter, child: child),

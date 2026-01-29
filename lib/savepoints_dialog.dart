@@ -120,61 +120,36 @@ class SavePointsDialog {
       transitionDuration: config.transitionDuration,
       pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final finalAnimationType =
-            (startAnimation == null && endAnimation == null)
-            ? (animationType ?? config.defaultAnimation)
-            : null;
-        final dialogWidget = DialogTransitionBuilder(
+        return _DialogTransitionScope(
           animation: animation,
-          animationType: finalAnimationType,
+          animationType: (startAnimation == null && endAnimation == null)
+              ? (animationType ?? config.defaultAnimation)
+              : null,
           startAnimation: startAnimation,
           endAnimation: endAnimation,
           hideLikeCircle: hideLikeCircle,
-          dialog: ModernDialog(
-            title: title,
-            message: message,
-            confirmText: finalConfirmText,
-            cancelText: finalCancelText,
-            icon: icon,
-            iconColor: iconColor,
-            backgroundColor: finalBackgroundColor,
-            confirmButtonColor: finalConfirmButtonColor,
-            cancelButtonColor: finalCancelButtonColor,
-            showCancelButton: finalShowCancelButton,
-            onConfirm: onConfirm,
-            onConfirmAsync: onConfirmAsync,
-            onCancel: onCancel,
-            isDark: isDark,
-            isLoading: isLoading,
-            loadingNotifier: loadingNotifier,
-            blur: blur,
-            backdropFilter: backdropFilter,
-          ),
+          useBarrierBlur: useBarrierBlur,
+          barrierFilter: barrierFilter,
+          barrierDismissible: finalBarrierDismissible,
+          title: title,
+          message: message,
+          confirmText: finalConfirmText,
+          cancelText: finalCancelText,
+          icon: icon,
+          iconColor: iconColor,
+          backgroundColor: finalBackgroundColor,
+          confirmButtonColor: finalConfirmButtonColor,
+          cancelButtonColor: finalCancelButtonColor,
+          showCancelButton: finalShowCancelButton,
+          onConfirm: onConfirm,
+          onConfirmAsync: onConfirmAsync,
+          onCancel: onCancel,
+          isDark: isDark,
+          isLoading: isLoading,
+          loadingNotifier: loadingNotifier,
+          blur: blur,
+          backdropFilter: backdropFilter,
         );
-
-        if (useBarrierBlur) {
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              GestureDetector(
-                onTap: finalBarrierDismissible
-                    ? () => Navigator.of(context).pop()
-                    : null,
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: barrierFilter,
-                    child: Container(
-                      color: Colors.black.withValues(alpha: 0.25),
-                    ),
-                  ),
-                ),
-              ),
-              Center(child: dialogWidget),
-            ],
-          );
-        }
-
-        return Center(child: dialogWidget);
       },
     );
   }
@@ -185,5 +160,129 @@ class SavePointsDialog {
     if (focusNode.hasFocus) {
       focusNode.unfocus();
     }
+  }
+}
+
+/// Caches dialog content so it is built once per show, reducing rebuilds during animation.
+class _DialogTransitionScope extends StatefulWidget {
+  const _DialogTransitionScope({
+    required this.animation,
+    this.animationType,
+    this.startAnimation,
+    this.endAnimation,
+    this.hideLikeCircle = false,
+    required this.useBarrierBlur,
+    this.barrierFilter,
+    required this.barrierDismissible,
+    required this.title,
+    required this.message,
+    required this.confirmText,
+    required this.cancelText,
+    this.icon,
+    this.iconColor,
+    this.backgroundColor,
+    this.confirmButtonColor,
+    this.cancelButtonColor,
+    required this.showCancelButton,
+    this.onConfirm,
+    this.onConfirmAsync,
+    this.onCancel,
+    required this.isDark,
+    required this.isLoading,
+    this.loadingNotifier,
+    this.blur,
+    this.backdropFilter,
+  });
+
+  final Animation<double> animation;
+  final DialogAnimationType? animationType;
+  final DialogAnimationDirection? startAnimation;
+  final DialogAnimationDirection? endAnimation;
+  final bool hideLikeCircle;
+  final bool useBarrierBlur;
+  final ImageFilter? barrierFilter;
+  final bool barrierDismissible;
+  final String title;
+  final String message;
+  final String confirmText;
+  final String cancelText;
+  final IconData? icon;
+  final Color? iconColor;
+  final Color? backgroundColor;
+  final Color? confirmButtonColor;
+  final Color? cancelButtonColor;
+  final bool showCancelButton;
+  final VoidCallback? onConfirm;
+  final Future<bool> Function()? onConfirmAsync;
+  final VoidCallback? onCancel;
+  final bool isDark;
+  final bool isLoading;
+  final ValueNotifier<bool>? loadingNotifier;
+  final double? blur;
+  final ImageFilter? backdropFilter;
+
+  @override
+  State<_DialogTransitionScope> createState() => _DialogTransitionScopeState();
+}
+
+class _DialogTransitionScopeState extends State<_DialogTransitionScope> {
+  Widget? _cachedDialog;
+
+  static const _barrierDimColor = Color(0x40000000);
+
+  @override
+  Widget build(BuildContext context) {
+    _cachedDialog ??= DialogTransitionBuilder(
+      animation: widget.animation,
+      animationType: widget.animationType,
+      startAnimation: widget.startAnimation,
+      endAnimation: widget.endAnimation,
+      hideLikeCircle: widget.hideLikeCircle,
+      dialog: ModernDialog(
+        title: widget.title,
+        message: widget.message,
+        confirmText: widget.confirmText,
+        cancelText: widget.cancelText,
+        icon: widget.icon,
+        iconColor: widget.iconColor,
+        backgroundColor: widget.backgroundColor,
+        confirmButtonColor: widget.confirmButtonColor,
+        cancelButtonColor: widget.cancelButtonColor,
+        showCancelButton: widget.showCancelButton,
+        onConfirm: widget.onConfirm,
+        onConfirmAsync: widget.onConfirmAsync,
+        onCancel: widget.onCancel,
+        isDark: widget.isDark,
+        isLoading: widget.isLoading,
+        loadingNotifier: widget.loadingNotifier,
+        blur: widget.blur,
+        backdropFilter: widget.backdropFilter,
+      ),
+    );
+
+    if (widget.useBarrierBlur && widget.barrierFilter != null) {
+      final filter = widget.barrierFilter!;
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          RepaintBoundary(
+            child: GestureDetector(
+              onTap: widget.barrierDismissible
+                  ? () => Navigator.of(context).pop()
+                  : null,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: filter,
+                  child: Container(color: _barrierDimColor),
+                ),
+              ),
+            ),
+          ),
+          Center(child: _cachedDialog),
+        ],
+      );
+    }
+
+    return Center(child: _cachedDialog);
   }
 }

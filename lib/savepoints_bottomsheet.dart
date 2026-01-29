@@ -94,56 +94,30 @@ class SavePointsBottomsheet {
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, _) {
-        final sheet = BottomsheetTransitionBuilder(
+        return _BottomsheetTransitionScope(
           animation: animation,
           startAnimation: startAnimation,
           endAnimation: endAnimation,
           hideLikeCircle: hideLikeCircle,
-          bottomsheet: GestureDetector(
-            onTap: () {}, // Prevent tap from closing
-            child: ModernBottomsheet(
-              title: title,
-              icon: icon,
-              iconColor: iconColor,
-              backgroundColor: backgroundColor,
-              isDark: isDark,
-              isLoading: isLoading,
-              loadingNotifier: loadingNotifier,
-              showHandle: finalShowHandle,
-              isDismissible: finalIsDismissible,
-              enableDrag: finalEnableDrag,
-              maxHeight: maxHeight,
-              isScrollControlled: isScrollControlled,
-              blur: blur,
-              backdropFilter: backdropFilter,
-              child: child,
-            ),
-          ),
+          useBarrierBlur: useBarrierBlur,
+          barrierFilter: barrierFilter,
+          barrierDismissible: finalIsDismissible,
+          title: title,
+          icon: icon,
+          iconColor: iconColor,
+          backgroundColor: backgroundColor,
+          isDark: isDark,
+          isLoading: isLoading,
+          loadingNotifier: loadingNotifier,
+          showHandle: finalShowHandle,
+          isDismissible: finalIsDismissible,
+          enableDrag: finalEnableDrag,
+          maxHeight: maxHeight,
+          isScrollControlled: isScrollControlled,
+          blur: blur,
+          backdropFilter: backdropFilter,
+          child: child,
         );
-
-        if (useBarrierBlur) {
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              GestureDetector(
-                onTap: finalIsDismissible
-                    ? () => Navigator.of(context).pop()
-                    : null,
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: barrierFilter,
-                    child: Container(
-                      color: Colors.black.withValues(alpha: 0.25),
-                    ),
-                  ),
-                ),
-              ),
-              Align(alignment: Alignment.bottomCenter, child: sheet),
-            ],
-          );
-        }
-
-        return Align(alignment: Alignment.bottomCenter, child: sheet);
       },
     );
   }
@@ -154,5 +128,122 @@ class SavePointsBottomsheet {
     if (focusNode.hasFocus) {
       focusNode.unfocus();
     }
+  }
+}
+
+/// Caches sheet content so it is built once per show, reducing rebuilds during animation.
+class _BottomsheetTransitionScope extends StatefulWidget {
+  const _BottomsheetTransitionScope({
+    required this.animation,
+    this.startAnimation,
+    this.endAnimation,
+    this.hideLikeCircle = false,
+    required this.useBarrierBlur,
+    this.barrierFilter,
+    required this.barrierDismissible,
+    this.title,
+    this.icon,
+    this.iconColor,
+    this.backgroundColor,
+    required this.isDark,
+    required this.isLoading,
+    this.loadingNotifier,
+    required this.showHandle,
+    required this.isDismissible,
+    required this.enableDrag,
+    this.maxHeight,
+    required this.isScrollControlled,
+    this.blur,
+    this.backdropFilter,
+    this.child,
+  });
+
+  final Animation<double> animation;
+  final BottomsheetAnimationDirection? startAnimation;
+  final BottomsheetAnimationDirection? endAnimation;
+  final bool hideLikeCircle;
+  final bool useBarrierBlur;
+  final ImageFilter? barrierFilter;
+  final bool barrierDismissible;
+  final String? title;
+  final IconData? icon;
+  final Color? iconColor;
+  final Color? backgroundColor;
+  final bool isDark;
+  final bool isLoading;
+  final ValueNotifier<bool>? loadingNotifier;
+  final bool showHandle;
+  final bool isDismissible;
+  final bool enableDrag;
+  final double? maxHeight;
+  final bool isScrollControlled;
+  final double? blur;
+  final ImageFilter? backdropFilter;
+  final Widget? child;
+
+  @override
+  State<_BottomsheetTransitionScope> createState() =>
+      _BottomsheetTransitionScopeState();
+}
+
+class _BottomsheetTransitionScopeState
+    extends State<_BottomsheetTransitionScope> {
+  Widget? _cachedSheet;
+
+  static const _barrierDimColor = Color(0x40000000);
+
+  @override
+  Widget build(BuildContext context) {
+    _cachedSheet ??= BottomsheetTransitionBuilder(
+      animation: widget.animation,
+      startAnimation: widget.startAnimation,
+      endAnimation: widget.endAnimation,
+      hideLikeCircle: widget.hideLikeCircle,
+      bottomsheet: GestureDetector(
+        onTap: () {},
+        child: ModernBottomsheet(
+          title: widget.title,
+          icon: widget.icon,
+          iconColor: widget.iconColor,
+          backgroundColor: widget.backgroundColor,
+          isDark: widget.isDark,
+          isLoading: widget.isLoading,
+          loadingNotifier: widget.loadingNotifier,
+          showHandle: widget.showHandle,
+          isDismissible: widget.isDismissible,
+          enableDrag: widget.enableDrag,
+          maxHeight: widget.maxHeight,
+          isScrollControlled: widget.isScrollControlled,
+          blur: widget.blur,
+          backdropFilter: widget.backdropFilter,
+          child: widget.child,
+        ),
+      ),
+    );
+
+    if (widget.useBarrierBlur && widget.barrierFilter != null) {
+      final filter = widget.barrierFilter!;
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          RepaintBoundary(
+            child: GestureDetector(
+              onTap: widget.barrierDismissible
+                  ? () => Navigator.of(context).pop()
+                  : null,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: filter,
+                  child: Container(color: _barrierDimColor),
+                ),
+              ),
+            ),
+          ),
+          Align(alignment: Alignment.bottomCenter, child: _cachedSheet),
+        ],
+      );
+    }
+
+    return Align(alignment: Alignment.bottomCenter, child: _cachedSheet);
   }
 }
