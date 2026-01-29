@@ -153,6 +153,9 @@ static Future<bool?> show(
   DialogAnimationDirection? endAnimation,
   bool isLoading = false,
   ValueNotifier<bool>? loadingNotifier,
+  bool hideLikeCircle = false,
+  double? blur,
+  ImageFilter? backdropFilter,
 })
 ```
 
@@ -179,6 +182,9 @@ static Future<bool?> show(
 | `endAnimation` | `DialogAnimationDirection?` | No | `null` | Exit animation direction |
 | `isLoading` | `bool` | No | `false` | Initial loading state |
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading state control |
+| `hideLikeCircle` | `bool` | No | `false` | Disable circular reveal exit animation |
+| `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
+| `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
 #### Examples
 
@@ -290,6 +296,21 @@ SavePointsDialog.show(
 );
 ```
 
+**7. Dialog with Custom Backdrop Blur**
+
+```dart
+import 'dart:ui';
+
+SavePointsDialog.show(
+  context,
+  title: 'Glassmorphism',
+  message: 'Custom blur intensity for the frosted glass effect.',
+  blur: 24.0,
+  icon: Icons.blur_on,
+);
+// Or disable blur: blur: 0
+```
+
 ### 🍞 SavePointsSnackbar
 
 #### Method Signature
@@ -322,6 +343,8 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
   double? borderWidth,
   VoidCallback? onDismissed,
   VoidCallback? onTap,
+  double? blur,
+  ImageFilter? backdropFilter,
 })
 ```
 
@@ -350,6 +373,8 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 | `dismissOnTap` | `bool?` | No | `false` | Dismiss when tapped |
 | `onTap` | `VoidCallback?` | No | `null` | Custom tap handler |
 | `onDismissed` | `VoidCallback?` | No | `null` | Callback when dismissed |
+| `blur` | `double?` | No | `null` | Backdrop blur sigma (glassmorphism); no blur when null |
+| `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
 #### Examples
 
@@ -501,6 +526,20 @@ SavePointsSnackbar.show(
 );
 ```
 
+**13. Snackbar with Backdrop Blur**
+
+```dart
+import 'dart:ui';
+
+SavePointsSnackbar.show(
+  context,
+  title: 'Glassmorphism Snackbar',
+  subtitle: 'Frosted glass effect behind the snackbar',
+  blur: 12.0,
+  type: SnackbarType.info,
+);
+```
+
 ### 📱 SavePointsBottomsheet
 
 #### Method Signature
@@ -522,6 +561,9 @@ static Future<T?> show<T>({
   BottomsheetAnimationDirection? endAnimation,
   bool isLoading = false,
   ValueNotifier<bool>? loadingNotifier,
+  bool hideLikeCircle = false,
+  double? blur,
+  ImageFilter? backdropFilter,
 })
 ```
 
@@ -543,6 +585,9 @@ static Future<T?> show<T>({
 | `endAnimation` | `BottomsheetAnimationDirection?` | No | `null` | Exit animation |
 | `isLoading` | `bool` | No | `false` | Initial loading state |
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading control |
+| `hideLikeCircle` | `bool` | No | `false` | Disable circular reveal exit animation |
+| `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
+| `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
 #### Examples
 
@@ -705,6 +750,76 @@ SavePointsBottomsheet.show(
     ],
   ),
 );
+```
+
+**7. Bottom Sheet with Custom Blur**
+
+```dart
+import 'dart:ui';
+
+SavePointsBottomsheet.show(
+  context: context,
+  title: 'Glassmorphism',
+  icon: Icons.blur_on,
+  blur: 16.0,
+  child: const Padding(
+    padding: EdgeInsets.all(24.0),
+    child: Text(
+      'Backdrop blur can be customized with the blur parameter.',
+      style: TextStyle(fontSize: 16),
+    ),
+  ),
+);
+```
+
+## 🎭 Dialog Presets
+
+Use predefined configurations for common dialog flows:
+
+```dart
+import 'package:save_points_snackbar_dialog_bottomsheet/presets/presets.dart';
+```
+
+**Delete confirmation**
+
+```dart
+final confirmed = await DialogPresets.showDeleteConfirmation(
+  context,
+  itemName: 'My Document',
+);
+if (confirmed == true) {
+  // Delete the item
+}
+```
+
+**Logout confirmation**
+
+```dart
+final confirmed = await DialogPresets.showLogoutConfirmation(context);
+if (confirmed == true) {
+  // Perform logout
+}
+```
+
+**Discard changes**
+
+```dart
+final confirmed = await DialogPresets.showDiscardChangesConfirmation(context);
+if (confirmed == true) {
+  Navigator.pop(context);
+}
+```
+
+**Update available**
+
+```dart
+DialogPresets.showUpdateAvailable(context);
+```
+
+**Feature not available**
+
+```dart
+DialogPresets.showFeatureNotAvailable(context);
 ```
 
 ## 🎨 Animation Types
