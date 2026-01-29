@@ -78,7 +78,11 @@ class SavePointsSnackbar {
     double? borderWidth,
     VoidCallback? onDismissed,
     VoidCallback? onTap,
+
+    /// Optional blur sigma for glassmorphism behind the snackbar. When null, no blur is applied.
     double? blur,
+
+    /// Optional custom [ImageFilter] for the backdrop. When set, overrides [blur].
     ImageFilter? backdropFilter,
   }) {
     // Validate required parameters

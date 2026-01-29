@@ -195,11 +195,10 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     }
     _lastBlur = b;
     _lastBackdropFilterParam = backdropFilter;
+    // Optional blur: only apply when blur or backdropFilter is explicitly set.
     _cachedBackdropFilter =
         backdropFilter ??
-        (b != null && b <= 0
-            ? null
-            : ImageFilter.blur(sigmaX: b ?? 20.0, sigmaY: b ?? 20.0));
+        (b != null && b > 0 ? ImageFilter.blur(sigmaX: b, sigmaY: b) : null);
     return _cachedBackdropFilter;
   }
 
