@@ -227,14 +227,23 @@ class _BottomsheetTransitionScopeState
         fit: StackFit.expand,
         children: [
           RepaintBoundary(
-            child: GestureDetector(
-              onTap: widget.barrierDismissible
-                  ? () => Navigator.of(context).pop()
-                  : null,
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: filter,
-                  child: Container(color: _barrierDimColor),
+            child: AnimatedBuilder(
+              animation: widget.animation,
+              builder: (context, child) {
+                return Opacity(
+                  opacity: widget.animation.value,
+                  child: child,
+                );
+              },
+              child: GestureDetector(
+                onTap: widget.barrierDismissible
+                    ? () => Navigator.of(context).pop()
+                    : null,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: filter,
+                    child: Container(color: _barrierDimColor),
+                  ),
                 ),
               ),
             ),
