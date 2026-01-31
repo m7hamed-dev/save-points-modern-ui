@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-31
+
+### Added
+
+- **Two design styles (solid & outlined)** for dialogs, snackbars, and bottom sheets
+  - `ContentDesignStyle` enum: `solid` (filled background, current default) and `outlined` (light background with colored border and dark text)
+  - Snackbar: `designStyle` parameter and config `SnackbarConfig.defaultDesignStyle`; outlined style includes close button, bordered icon container, and refined shadows
+  - Dialog: `designStyle` parameter and config `DialogConfig.defaultDesignStyle`; outlined style uses bordered icon, outlined cancel button, and light shadows
+  - Bottom sheet: `designStyle` parameter; outlined style uses light/dark surface with primary border
+- **Theme support for both styles** – Outlined style adapts to light and dark theme (dark background and light text in dark mode)
+- **Design enhancements**
+  - Snackbar: icon container with outlined variant (bordered circle), progress bar with rounded ends and track color, 48dp touch target for close button, typography (title/subtitle line height and letter spacing), refined outlined shadows
+  - Dialog: icon with outlined variant (bordered circle), button minimum height 48dp for accessibility, refined outlined shadows
+  - Bottom sheet: larger handle (44×5) and pill-shaped border radius
+- **Snackbar sizing** – Minimum width (320dp) for bottom-position snackbars so they don’t appear too small
+
+### Changed
+
+- **Dismiss animation** – Dialog and bottom sheet barrier (blur + dim) now animate with the route so the blur stays visible during dismiss instead of disappearing abruptly
+- **Top-position snackbar** – Dummy SnackBar used for the controller is no longer placed off-screen (avoids “Floating SnackBar presented off screen”); uses on-screen margin with 1ms duration
+- **Shadows** – Refined multi-layer shadows for outlined style and primary buttons
+
+### Fixed
+
+- “Floating SnackBar presented off screen” when using top-position snackbars (dummy SnackBar now uses valid on-screen margin)
+- Small snackbar at bottom when using short text (min width applied for bottom position)
+
 ## [1.0.5] - 2026-01-29
 
 ### Changed

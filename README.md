@@ -34,6 +34,7 @@ All components feature automatic dark mode support, extensive customization opti
 ### 🎭 SavePointsDialog
 
 - **✨ Glassmorphism Design** - Beautiful frosted glass effects with backdrop blur
+- **🎨 Two design styles** - `solid` (filled) or `outlined` (light bg + colored border); both support light and dark themes
 - **🎨 Fully Customizable** - Colors, icons, buttons, and animations
 - **⚡ Smooth Animations** - Multiple animation types including fade, slide, scale, bounce, and more
 - **🌓 Dark Mode Support** - Automatic theme adaptation
@@ -45,6 +46,7 @@ All components feature automatic dark mode support, extensive customization opti
 ### 🍞 SavePointsSnackbar
 
 - **📊 Multiple Types** - Success, Error, Warning, and Info variants with predefined styling
+- **🎨 Two design styles** - `solid` (filled) or `outlined` (light bg + border, close button); both support light and dark themes
 - **🎬 Rich Animations** - 7+ animation types: fade, slide, scale, bounce, rotate, elastic, slideRotate
 - **📈 Progress Indicators** - Optional progress bars for timed notifications
 - **🎨 Gradient Backgrounds** - Support for custom gradient designs
@@ -57,6 +59,7 @@ All components feature automatic dark mode support, extensive customization opti
 ### 📱 SavePointsBottomsheet
 
 - **✨ Modern Design** - Glassmorphism effects with backdrop blur
+- **🎨 Two design styles** - `solid` (filled) or `outlined` (light bg + colored border); both support light and dark themes
 - **🎚️ Drag Handle** - Optional drag indicator for better UX
 - **📜 Scrollable Content** - Built-in support for scrollable content with proper constraints
 - **⏳ Loading States** - Support for loading indicators during async operations
@@ -71,7 +74,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.0.5
+  save_points_snackbar_dialog_bottomsheet: ^1.1.0
 ```
 
 Install the package:
@@ -125,6 +128,47 @@ SavePointsBottomsheet.show(
 );
 ```
 
+### Design styles (solid & outlined)
+
+All components support two visual styles via `ContentDesignStyle`:
+
+- **`solid`** (default) – Filled background, shadow, light text on colored background (snackbar/dialog).
+- **`outlined`** – Light/dark surface with colored border and dark/light text; works in both light and dark themes.
+
+```dart
+import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar.dart';
+
+// Solid (default)
+SavePointsSnackbar.showSuccess(context, title: 'Done!', subtitle: 'Saved.');
+
+// Outlined (light bg + border, close button for snackbar)
+SavePointsSnackbar.showSuccess(
+  context,
+  title: 'Done!',
+  subtitle: 'Saved.',
+  designStyle: ContentDesignStyle.outlined,
+);
+
+// Dialog outlined
+SavePointsDialog.show(
+  context,
+  title: 'Confirm',
+  message: 'Proceed?',
+  designStyle: ContentDesignStyle.outlined,
+  showCancelButton: true,
+);
+
+// Bottom sheet outlined
+SavePointsBottomsheet.show(
+  context: context,
+  title: 'Options',
+  designStyle: ContentDesignStyle.outlined,
+  child: YourContentWidget(),
+);
+```
+
+Default style can be set in config: `SnackbarConfig.defaultDesignStyle`, `DialogConfig.defaultDesignStyle`.
+
 ## 📚 Complete Documentation
 
 ### 🎭 SavePointsDialog
@@ -154,6 +198,7 @@ static Future<bool?> show(
   bool isLoading = false,
   ValueNotifier<bool>? loadingNotifier,
   bool hideLikeCircle = false,
+  ContentDesignStyle? designStyle,
   double? blur,
   ImageFilter? backdropFilter,
 })
@@ -183,6 +228,7 @@ static Future<bool?> show(
 | `isLoading` | `bool` | No | `false` | Initial loading state |
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading state control |
 | `hideLikeCircle` | `bool` | No | `false` | Disable circular reveal exit animation |
+| `designStyle` | `ContentDesignStyle?` | No | `solid` | Design: `solid` (filled) or `outlined` (light bg + border) |
 | `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
@@ -343,6 +389,7 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
   double? borderWidth,
   VoidCallback? onDismissed,
   VoidCallback? onTap,
+  ContentDesignStyle? designStyle,
   double? blur,
   ImageFilter? backdropFilter,
 })
@@ -361,7 +408,7 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 | `title` | `String` | ✅ Yes | - | Snackbar title text |
 | `subtitle` | `String?` | No | `null` | Optional subtitle text |
 | `type` | `SnackbarType?` | No | `info` | Type: `info`, `success`, `error`, `warning` |
-| `position` | `SnackbarPosition?` | No | `bottom` | Position: `top` or `bottom` |
+| `position` | `SnackbarPosition?` | No | `top` | Position: `top` or `bottom` |
 | `animation` | `SnackbarAnimation?` | No | `fadeSlide` | Animation type (legacy) |
 | `startAnimation` | `SnackbarAnimationDirection?` | No | `null` | Enter animation direction |
 | `endAnimation` | `SnackbarAnimationDirection?` | No | `null` | Exit animation direction |
@@ -373,6 +420,7 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 | `dismissOnTap` | `bool?` | No | `false` | Dismiss when tapped |
 | `onTap` | `VoidCallback?` | No | `null` | Custom tap handler |
 | `onDismissed` | `VoidCallback?` | No | `null` | Callback when dismissed |
+| `designStyle` | `ContentDesignStyle?` | No | `solid` | Design: `solid` (filled) or `outlined` (light bg + border) |
 | `blur` | `double?` | No | `null` | Backdrop blur sigma (glassmorphism); no blur when null |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
@@ -562,6 +610,7 @@ static Future<T?> show<T>({
   bool isLoading = false,
   ValueNotifier<bool>? loadingNotifier,
   bool hideLikeCircle = false,
+  ContentDesignStyle? designStyle,
   double? blur,
   ImageFilter? backdropFilter,
 })
@@ -586,6 +635,7 @@ static Future<T?> show<T>({
 | `isLoading` | `bool` | No | `false` | Initial loading state |
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading control |
 | `hideLikeCircle` | `bool` | No | `false` | Disable circular reveal exit animation |
+| `designStyle` | `ContentDesignStyle?` | No | `solid` | Design: `solid` (filled) or `outlined` (light bg + border) |
 | `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
@@ -884,14 +934,17 @@ SavePoints Modern UI provides a centralized configuration system through `SavePo
 
 ```dart
 // Configure global defaults
-SavePointsConfig.instance.snackbar
+final config = SavePointsConfig();
+config.snackbar
   ..defaultDuration = Duration(seconds: 5)
   ..defaultType = SnackbarType.info
-  ..defaultShowProgressIndicator = true;
+  ..defaultShowProgressIndicator = true
+  ..defaultDesignStyle = ContentDesignStyle.outlined; // or .solid
 
-SavePointsConfig.instance.dialog
+config.dialog
   ..defaultConfirmText = 'Continue'
-  ..defaultShowCancelButton = true;
+  ..defaultShowCancelButton = true
+  ..defaultDesignStyle = ContentDesignStyle.outlined; // or .solid
 ```
 
 See the [Configuration Guide](https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet/wiki/Configuration) for more details.
