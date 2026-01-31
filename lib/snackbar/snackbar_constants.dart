@@ -19,6 +19,8 @@ class SnackbarConstants {
   static const double horizontalPadding = 16.0;
   static const double verticalPadding = 16.0;
   static const double maxWidth = 500.0;
+  /// Minimum width when shown at bottom so the snackbar doesn't look too small
+  static const double minWidthBottom = 320.0;
   /// Minimum touch target size for accessibility (Material 48dp)
   static const double minTouchTargetSize = 48.0;
 }

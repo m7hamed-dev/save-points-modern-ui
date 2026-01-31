@@ -175,12 +175,19 @@ class SavePointsSnackbar {
         subtitleColor: colorConfig.subtitleColor,
         showCloseButton: finalDesignStyle == ContentDesignStyle.outlined || finalDismissible,
       );
-      // Return a dummy controller for top position (overlay handles display)
+      // Return a dummy controller for top position. The overlay shows the real
+      // toast at top; we show a minimal SnackBar on-screen (required by Flutter
+      // to avoid "Floating SnackBar presented off screen") with 1ms duration
+      // so it dismisses immediately and is barely visible.
+      final dummyMargin = _getMargin(context, SnackbarPosition.bottom);
       return ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: SizedBox.shrink(),
-          duration: Duration(milliseconds: 1),
-          behavior: .fixed,
+        SnackBar(
+          content: const SizedBox.shrink(),
+          duration: const Duration(milliseconds: 1),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          margin: dummyMargin,
         ),
       );
     }

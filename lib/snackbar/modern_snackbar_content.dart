@@ -244,9 +244,14 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     final hasBorder = widget.designStyle == ContentDesignStyle.outlined &&
         widget.borderColor != null;
 
+    final isBottom = widget.position == SnackbarPosition.bottom;
+    final constraints = BoxConstraints(
+      maxWidth: widget.maxWidth,
+      minWidth: isBottom ? SnackbarConstants.minWidthBottom : 0,
+    );
     Widget content = RepaintBoundary(
       child: Container(
-        constraints: BoxConstraints(maxWidth: widget.maxWidth),
+        constraints: constraints,
         decoration: BoxDecoration(
           color: widget.gradient == null ? widget.backgroundColor : null,
           gradient: widget.gradient,
