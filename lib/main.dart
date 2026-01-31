@@ -402,6 +402,42 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     return [
       _buildActionButton(
         context,
+        icon: Icons.format_paint,
+        label: 'Dialog Solid',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Solid Style',
+            message: 'Classic filled background with shadow.',
+            icon: Icons.check_circle,
+            iconColor: Colors.green,
+            designStyle: ContentDesignStyle.solid,
+            confirmText: 'OK',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.outlined_flag,
+        label: 'Dialog Outlined',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Outlined Style',
+            message: 'Light background with colored border and dark text.',
+            icon: Icons.info,
+            iconColor: Theme.of(context).colorScheme.primary,
+            designStyle: ContentDesignStyle.outlined,
+            confirmText: 'OK',
+            showCancelButton: true,
+            cancelText: 'Cancel',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.info_outline,
         label: 'Info Dialog',
         color: Colors.blue,
@@ -691,6 +727,49 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Yuhu! Download Success',
             subtitle: 'Lorem ipsum dolor sit amet...',
+            designStyle: ContentDesignStyle.outlined,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.error_outline,
+        label: 'Error Outlined',
+        color: Colors.red,
+        onPressed: () {
+          SavePointsSnackbar.showError(
+            context,
+            title: 'Oops! Error System',
+            subtitle: 'Lorem ipsum dolor sit amet...',
+            designStyle: ContentDesignStyle.outlined,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.warning_amber_outlined,
+        label: 'Warning Outlined',
+        color: Colors.orange,
+        onPressed: () {
+          SavePointsSnackbar.showWarning(
+            context,
+            title: 'Warning: System Disruption',
+            subtitle: 'Lorem ipsum dolor sit amet...',
+            designStyle: ContentDesignStyle.outlined,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.info_outline,
+        label: 'Info Outlined',
+        color: Colors.blue,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Update Found',
+            subtitle: 'Lorem ipsum dolor sit amet...',
+            type: SnackbarType.info,
             designStyle: ContentDesignStyle.outlined,
           );
         },
@@ -1023,6 +1102,48 @@ class _ExampleHomePageState extends State<ExampleHomePage>
   /// Builds all bottom sheet example buttons demonstrating various bottom sheet types
   List<Widget> _buildBottomSheetExamples(BuildContext context) {
     return [
+      _buildActionButton(
+        context,
+        icon: Icons.format_paint,
+        label: 'Sheet Solid',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Solid Style',
+            designStyle: ContentDesignStyle.solid,
+            child: const Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text(
+                'Classic filled background with shadow. '
+                'The default bottom sheet style.',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.outlined_flag,
+        label: 'Sheet Outlined',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Outlined Style',
+            designStyle: ContentDesignStyle.outlined,
+            child: const Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text(
+                'Light background with colored border and dark text. '
+                'Clean, minimal look.',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        },
+      ),
       _buildActionButton(
         context,
         icon: Icons.vertical_align_bottom,
