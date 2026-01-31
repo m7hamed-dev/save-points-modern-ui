@@ -6,6 +6,7 @@ library;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_builder.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/modern_bottomsheet.dart';
@@ -62,6 +63,7 @@ class SavePointsBottomsheet {
     bool isLoading = false,
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -114,6 +116,7 @@ class SavePointsBottomsheet {
           enableDrag: finalEnableDrag,
           maxHeight: maxHeight,
           isScrollControlled: isScrollControlled,
+          designStyle: designStyle,
           blur: blur,
           backdropFilter: backdropFilter,
           child: child,
@@ -153,6 +156,7 @@ class _BottomsheetTransitionScope extends StatefulWidget {
     required this.enableDrag,
     this.maxHeight,
     required this.isScrollControlled,
+    this.designStyle,
     this.blur,
     this.backdropFilter,
     this.child,
@@ -177,6 +181,7 @@ class _BottomsheetTransitionScope extends StatefulWidget {
   final bool enableDrag;
   final double? maxHeight;
   final bool isScrollControlled;
+  final ContentDesignStyle? designStyle;
   final double? blur;
   final ImageFilter? backdropFilter;
   final Widget? child;
@@ -199,7 +204,7 @@ class _BottomsheetTransitionScopeState
       startAnimation: widget.startAnimation,
       endAnimation: widget.endAnimation,
       hideLikeCircle: widget.hideLikeCircle,
-      bottomsheet: GestureDetector(
+        bottomsheet: GestureDetector(
         onTap: () {},
         child: ModernBottomsheet(
           title: widget.title,
@@ -214,6 +219,7 @@ class _BottomsheetTransitionScopeState
           enableDrag: widget.enableDrag,
           maxHeight: widget.maxHeight,
           isScrollControlled: widget.isScrollControlled,
+          designStyle: widget.designStyle,
           blur: widget.blur,
           backdropFilter: widget.backdropFilter,
           child: widget.child,

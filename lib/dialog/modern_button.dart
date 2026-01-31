@@ -10,6 +10,7 @@ class ModernButton extends StatefulWidget {
   final Color foregroundColor;
   final bool isPrimary;
   final bool isDark;
+  final bool isOutlined;
 
   const ModernButton({
     super.key,
@@ -19,6 +20,7 @@ class ModernButton extends StatefulWidget {
     required this.foregroundColor,
     this.isPrimary = false,
     required this.isDark,
+    this.isOutlined = false,
   });
 
   @override
@@ -60,11 +62,14 @@ class ModernButtonState extends State<ModernButton>
         child: Container(
           padding: DialogConstants.buttonPadding,
           decoration: BoxDecoration(
-            color: widget.backgroundColor,
+            color: widget.isOutlined ? Colors.transparent : widget.backgroundColor,
             borderRadius: BorderRadius.circular(
               DialogConstants.buttonBorderRadius,
             ),
-            boxShadow: widget.isPrimary
+            border: widget.isOutlined
+                ? Border.all(color: widget.foregroundColor, width: 2)
+                : null,
+            boxShadow: widget.isPrimary && !widget.isOutlined
                 ? ButtonShadows.getPrimaryShadow(widget.backgroundColor)
                 : null,
           ),

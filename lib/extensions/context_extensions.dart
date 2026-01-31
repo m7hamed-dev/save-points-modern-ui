@@ -21,6 +21,7 @@ extension SavePointsContextExtension on BuildContext {
     String? subtitle,
     Duration? duration,
     bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -30,6 +31,7 @@ extension SavePointsContextExtension on BuildContext {
       subtitle: subtitle,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -49,6 +51,7 @@ extension SavePointsContextExtension on BuildContext {
     String? subtitle,
     Duration? duration,
     bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -58,6 +61,7 @@ extension SavePointsContextExtension on BuildContext {
       subtitle: subtitle,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -77,6 +81,7 @@ extension SavePointsContextExtension on BuildContext {
     String? subtitle,
     Duration? duration,
     bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -86,6 +91,7 @@ extension SavePointsContextExtension on BuildContext {
       subtitle: subtitle,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -105,6 +111,7 @@ extension SavePointsContextExtension on BuildContext {
     String? subtitle,
     Duration? duration,
     bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -115,6 +122,7 @@ extension SavePointsContextExtension on BuildContext {
       type: SnackbarType.info,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -139,6 +147,7 @@ extension SavePointsContextExtension on BuildContext {
     String cancelText = 'Cancel',
     IconData? icon,
     Color? iconColor,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -151,6 +160,7 @@ extension SavePointsContextExtension on BuildContext {
       showCancelButton: true,
       icon: icon,
       iconColor: iconColor,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -171,6 +181,7 @@ extension SavePointsContextExtension on BuildContext {
     String confirmText = 'OK',
     IconData icon = Icons.info,
     Color iconColor = Colors.blue,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -181,6 +192,7 @@ extension SavePointsContextExtension on BuildContext {
       confirmText: confirmText,
       icon: icon,
       iconColor: iconColor,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -201,6 +213,7 @@ extension SavePointsContextExtension on BuildContext {
     String confirmText = 'OK',
     IconData icon = Icons.check_circle,
     Color iconColor = Colors.green,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -211,6 +224,7 @@ extension SavePointsContextExtension on BuildContext {
       confirmText: confirmText,
       icon: icon,
       iconColor: iconColor,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -231,6 +245,7 @@ extension SavePointsContextExtension on BuildContext {
     String confirmText = 'OK',
     IconData icon = Icons.error,
     Color iconColor = Colors.red,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -241,6 +256,7 @@ extension SavePointsContextExtension on BuildContext {
       confirmText: confirmText,
       icon: icon,
       iconColor: iconColor,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -261,6 +277,7 @@ extension SavePointsContextExtension on BuildContext {
     IconData? icon,
     bool isDismissible = true,
     bool enableDrag = true,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -271,6 +288,7 @@ extension SavePointsContextExtension on BuildContext {
       icon: icon,
       isDismissible: isDismissible,
       enableDrag: enableDrag,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );

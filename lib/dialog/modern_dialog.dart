@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_container.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_icon.dart';
@@ -30,6 +31,7 @@ class ModernDialog extends StatefulWidget {
   final ValueNotifier<bool>? loadingNotifier;
   final double? blur;
   final ImageFilter? backdropFilter;
+  final ContentDesignStyle? designStyle;
 
   const ModernDialog({
     super.key,
@@ -51,6 +53,7 @@ class ModernDialog extends StatefulWidget {
     this.loadingNotifier,
     this.blur,
     this.backdropFilter,
+    this.designStyle,
   });
 
   @override
@@ -100,6 +103,7 @@ class _ModernDialogState extends State<ModernDialog> {
       backgroundColor: widget.backgroundColor,
       confirmButtonColor: widget.confirmButtonColor,
       cancelButtonColor: widget.cancelButtonColor,
+      designStyle: widget.designStyle,
     );
   }
 
@@ -130,6 +134,7 @@ class _ModernDialogState extends State<ModernDialog> {
           backgroundColor: widget.backgroundColor,
           confirmButtonColor: widget.confirmButtonColor,
           cancelButtonColor: widget.cancelButtonColor,
+          designStyle: widget.designStyle,
         );
 
     return RepaintBoundary(
@@ -150,7 +155,6 @@ class _ModernDialogState extends State<ModernDialog> {
                   colorConfig: colorConfig,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       if (widget.icon != null)
                         RepaintBoundary(
@@ -163,6 +167,7 @@ class _ModernDialogState extends State<ModernDialog> {
                         child: DialogTitle(
                           title: widget.title,
                           isDark: widget.isDark,
+                          color: colorConfig.titleColor,
                         ),
                       ),
                       const SizedBox(
@@ -172,6 +177,7 @@ class _ModernDialogState extends State<ModernDialog> {
                         child: DialogMessage(
                           message: widget.message,
                           isDark: widget.isDark,
+                          color: colorConfig.messageColor,
                         ),
                       ),
                       const SizedBox(
@@ -193,6 +199,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             confirmColor: colorConfig.confirmColor,
                             cancelColor: colorConfig.cancelColor,
                             isDark: widget.isDark,
+                            isOutlined: colorConfig.designStyle == ContentDesignStyle.outlined,
                             onConfirm: () => _handleConfirm(context),
                             onCancel: () => _handleCancel(context),
                           ),

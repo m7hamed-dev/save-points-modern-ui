@@ -10,6 +10,7 @@ class DialogButtons extends StatelessWidget {
   final Color confirmColor;
   final Color cancelColor;
   final bool isDark;
+  final bool isOutlined;
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
 
@@ -21,6 +22,7 @@ class DialogButtons extends StatelessWidget {
     required this.confirmColor,
     required this.cancelColor,
     required this.isDark,
+    this.isOutlined = false,
     required this.onConfirm,
     required this.onCancel,
   });
@@ -35,9 +37,11 @@ class DialogButtons extends StatelessWidget {
               child: ModernButton(
                 text: cancelText,
                 onPressed: onCancel,
-                backgroundColor: cancelColor.withValues(alpha: 0.1),
+                backgroundColor:
+                    isOutlined ? Colors.transparent : cancelColor.withValues(alpha: 0.1),
                 foregroundColor: cancelColor,
                 isDark: isDark,
+                isOutlined: isOutlined,
               ),
             ),
           ),

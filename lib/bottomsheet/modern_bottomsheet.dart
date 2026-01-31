@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_container.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_handle.dart';
@@ -26,6 +27,7 @@ class ModernBottomsheet extends StatefulWidget {
     this.isScrollControlled = false,
     this.blur = 20.0,
     this.backdropFilter,
+    this.designStyle,
   });
 
   final String? title;
@@ -48,6 +50,8 @@ class ModernBottomsheet extends StatefulWidget {
 
   /// Optional custom [ImageFilter] for the [BackdropFilter]. When set, overrides [blur].
   final ImageFilter? backdropFilter;
+
+  final ContentDesignStyle? designStyle;
 
   @override
   State<ModernBottomsheet> createState() => _ModernBottomsheetState();
@@ -94,6 +98,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
       isDark: widget.isDark,
       background: widget.backgroundColor,
       icon: widget.iconColor,
+      designStyle: widget.designStyle,
     );
 
     if (widget.maxHeight == null) {
@@ -129,6 +134,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
           isDark: widget.isDark,
           background: widget.backgroundColor,
           icon: widget.iconColor,
+          designStyle: widget.designStyle,
         );
 
     final maxHeight =
@@ -160,7 +166,6 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                 showTopRadius: false,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     if (widget.showHandle)
                       RepaintBoundary(

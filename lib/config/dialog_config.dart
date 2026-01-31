@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_type.dart';
 
 /// Configuration for dialog appearance and behavior
 class DialogConfig {
+  /// Default design style: solid (filled) or outlined (light bg + border).
+  ContentDesignStyle defaultDesignStyle = ContentDesignStyle.solid;
+
   /// Default confirm button text
   String defaultConfirmText = 'OK';
 

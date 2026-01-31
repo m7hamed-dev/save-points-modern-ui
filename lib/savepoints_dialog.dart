@@ -6,6 +6,7 @@ library;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_type.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition_builder.dart';
@@ -78,6 +79,7 @@ class SavePointsDialog {
     bool isLoading = false,
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -111,6 +113,7 @@ class SavePointsDialog {
             ? null
             : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
     final useBarrierBlur = barrierFilter != null;
+    final finalDesignStyle = designStyle ?? config.defaultDesignStyle;
 
     return showGeneralDialog<bool>(
       context: context,
@@ -147,6 +150,7 @@ class SavePointsDialog {
           isDark: isDark,
           isLoading: isLoading,
           loadingNotifier: loadingNotifier,
+          designStyle: finalDesignStyle,
           blur: blur,
           backdropFilter: backdropFilter,
         );
@@ -190,6 +194,7 @@ class _DialogTransitionScope extends StatefulWidget {
     required this.isDark,
     required this.isLoading,
     this.loadingNotifier,
+    this.designStyle,
     this.blur,
     this.backdropFilter,
   });
@@ -218,6 +223,7 @@ class _DialogTransitionScope extends StatefulWidget {
   final bool isDark;
   final bool isLoading;
   final ValueNotifier<bool>? loadingNotifier;
+  final ContentDesignStyle? designStyle;
   final double? blur;
   final ImageFilter? backdropFilter;
 
@@ -255,6 +261,7 @@ class _DialogTransitionScopeState extends State<_DialogTransitionScope> {
         isDark: widget.isDark,
         isLoading: widget.isLoading,
         loadingNotifier: widget.loadingNotifier,
+        designStyle: widget.designStyle,
         blur: widget.blur,
         backdropFilter: widget.backdropFilter,
       ),

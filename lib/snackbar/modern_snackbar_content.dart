@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart' hide AnimatedIcon;
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_shadows.dart';
@@ -28,6 +29,12 @@ class ModernSnackbarContent extends StatefulWidget {
   final VoidCallback? onTap;
   final double? blur;
   final ImageFilter? backdropFilter;
+  final ContentDesignStyle designStyle;
+  final Color? titleColor;
+  final Color? subtitleColor;
+  final Color? borderColor;
+  final bool showCloseButton;
+  final VoidCallback? onCloseButtonPressed;
 
   const ModernSnackbarContent({
     super.key,
@@ -48,6 +55,12 @@ class ModernSnackbarContent extends StatefulWidget {
     this.onTap,
     this.blur,
     this.backdropFilter,
+    this.designStyle = ContentDesignStyle.solid,
+    this.titleColor,
+    this.subtitleColor,
+    this.borderColor,
+    this.showCloseButton = false,
+    this.onCloseButtonPressed,
   });
 
   @override
@@ -210,8 +223,27 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     );
   }
 
+  Color get _effectiveTitleColor {
+    if (widget.designStyle == ContentDesignStyle.outlined &&
+        widget.titleColor != null) {
+      return widget.titleColor!;
+    }
+    return Colors.white;
+  }
+
+  Color get _effectiveSubtitleColor {
+    if (widget.designStyle == ContentDesignStyle.outlined &&
+        widget.subtitleColor != null) {
+      return widget.subtitleColor!;
+    }
+    return Colors.white.withValues(alpha: 0.8);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final hasBorder = widget.designStyle == ContentDesignStyle.outlined &&
+        widget.borderColor != null;
+
     Widget content = RepaintBoundary(
       child: Container(
         constraints: BoxConstraints(maxWidth: widget.maxWidth),
@@ -219,7 +251,13 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
           color: widget.gradient == null ? widget.backgroundColor : null,
           gradient: widget.gradient,
           borderRadius: widget.borderRadius,
-          boxShadow: SnackbarShadows.getShadows(),
+          border: hasBorder
+              ? Border.all(
+                  color: widget.borderColor!,
+                  width: 2,
+                )
+              : null,
+          boxShadow: SnackbarShadows.getShadows(widget.designStyle),
         ),
         child: ClipRRect(
           borderRadius: widget.borderRadius,
@@ -258,9 +296,9 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                               children: [
                                 Text(
                                   widget.title,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: SnackbarConstants.titleFontSize,
-                                    color: Colors.white,
+                                    color: _effectiveTitleColor,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.2,
                                     decoration: TextDecoration.none,
@@ -273,9 +311,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                     style: TextStyle(
                                       fontSize:
                                           SnackbarConstants.subtitleFontSize,
-                                      color: Colors.white.withValues(
-                                        alpha: 0.8,
-                                      ),
+                                      color: _effectiveSubtitleColor,
                                       fontWeight: FontWeight.w400,
                                       decoration: TextDecoration.none,
                                     ),
@@ -286,6 +322,29 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           ),
                         ),
                       ),
+                      if (widget.showCloseButton)
+                        IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            size: 20,
+                            color: _effectiveTitleColor,
+                          ),
+                          onPressed: () {
+                            if (widget.onCloseButtonPressed != null) {
+                              widget.onCloseButtonPressed!();
+                            } else {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            }
+                          },
+                          padding: const EdgeInsets.all(4),
+                          constraints: const BoxConstraints(
+                            minWidth: 32,
+                            minHeight: 32,
+                          ),
+                          style: IconButton.styleFrom(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
                     ],
                   ),
                 ),

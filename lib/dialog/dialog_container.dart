@@ -17,6 +17,7 @@ class DialogContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isOutlined = colorConfig.borderColor != null;
 
     return Container(
       padding: DialogConstants.dialogPadding,
@@ -24,12 +25,14 @@ class DialogContainer extends StatelessWidget {
         color: colorConfig.backgroundColor,
         borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.1)
-              : Colors.black.withValues(alpha: 0.05),
-          width: 1.5,
+          color: isOutlined
+              ? colorConfig.borderColor!
+              : (isDark
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.black.withValues(alpha: 0.05)),
+          width: isOutlined ? 2 : 1.5,
         ),
-        boxShadow: DialogShadows.getShadows(isDark),
+        boxShadow: DialogShadows.getShadows(isDark, isOutlined: isOutlined),
       ),
       child: child,
     );

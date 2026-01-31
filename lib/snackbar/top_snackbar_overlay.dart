@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/modern_snackbar_content.dart';
@@ -38,6 +39,10 @@ class TopSnackbarOverlay {
     VoidCallback? onDismissed,
     double? blur,
     ImageFilter? backdropFilter,
+    ContentDesignStyle designStyle = ContentDesignStyle.solid,
+    Color? titleColor,
+    Color? subtitleColor,
+    bool showCloseButton = false,
   }) {
     // Hide any existing overlay
     hide();
@@ -80,6 +85,10 @@ class TopSnackbarOverlay {
         },
         blur: blur,
         backdropFilter: backdropFilter,
+        designStyle: designStyle,
+        titleColor: titleColor,
+        subtitleColor: subtitleColor,
+        showCloseButton: showCloseButton,
       ),
     );
 
@@ -126,6 +135,10 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
   final VoidCallback onDismissed;
   final double? blur;
   final ImageFilter? backdropFilter;
+  final ContentDesignStyle designStyle;
+  final Color? titleColor;
+  final Color? subtitleColor;
+  final bool showCloseButton;
 
   const _TopSnackbarOverlayWidget({
     required this.title,
@@ -152,6 +165,10 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
     required this.onDismissed,
     this.blur,
     this.backdropFilter,
+    this.designStyle = ContentDesignStyle.solid,
+    this.titleColor,
+    this.subtitleColor,
+    this.showCloseButton = false,
   });
 
   @override
@@ -426,7 +443,9 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
         constraints: BoxConstraints(maxWidth: widget.maxWidth),
         child: Container(
           width: double.infinity,
-          decoration: widget.borderWidth > 0 && widget.borderColor != null
+          decoration: widget.designStyle != ContentDesignStyle.outlined &&
+                  widget.borderWidth > 0 &&
+                  widget.borderColor != null
               ? BoxDecoration(
                   border: Border.all(
                     color: widget.borderColor!,
@@ -455,6 +474,15 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
               onTap: widget.onTap,
               blur: widget.blur,
               backdropFilter: widget.backdropFilter,
+              designStyle: widget.designStyle,
+              titleColor: widget.titleColor,
+              subtitleColor: widget.subtitleColor,
+              borderColor: widget.designStyle == ContentDesignStyle.outlined
+                  ? widget.borderColor
+                  : null,
+              showCloseButton: widget.showCloseButton,
+              onCloseButtonPressed:
+                  widget.showCloseButton ? widget.onDismissed : null,
             ),
           ),
         ),

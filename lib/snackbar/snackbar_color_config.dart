@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
@@ -8,6 +9,10 @@ class SnackbarColorConfig {
   final Color iconColor;
   final IconData defaultIcon;
   final Gradient? gradient;
+  final Color titleColor;
+  final Color subtitleColor;
+  final Color borderColor;
+  final ContentDesignStyle designStyle;
 
   SnackbarColorConfig({
     required ThemeData theme,
@@ -17,18 +22,33 @@ class SnackbarColorConfig {
     Color? iconColor,
     required SnackbarType type,
     required SnackbarConfig config,
-  }) : backgroundColor =
-           background ??
-           (gradient == null
-               ? config.getBackgroundColor(
-                       type,
-                       isDark ? Brightness.dark : Brightness.light,
-                     ) ??
-                     _getBackgroundColor(type, isDark)
-               : Colors.transparent),
-       iconColor =
-           iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
-       defaultIcon = config.getDefaultIcon(type) ?? _getDefaultIcon(type);
+    ContentDesignStyle? designStyle,
+  })  : designStyle = designStyle ?? config.defaultDesignStyle,
+        backgroundColor = background ??
+            (gradient == null
+                ? ((designStyle ?? config.defaultDesignStyle) ==
+                        ContentDesignStyle.outlined
+                    ? Colors.white
+                    : (config.getBackgroundColor(
+                              type,
+                              isDark ? Brightness.dark : Brightness.light,
+                            ) ??
+                            _getBackgroundColor(type, isDark)))
+                : Colors.transparent),
+        iconColor =
+            iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
+        defaultIcon = config.getDefaultIcon(type) ?? _getDefaultIcon(type),
+        titleColor = (designStyle ?? config.defaultDesignStyle) ==
+                ContentDesignStyle.outlined
+            ? const Color(0xFF424242)
+            : Colors.white,
+        subtitleColor = (designStyle ?? config.defaultDesignStyle) ==
+                ContentDesignStyle.outlined
+            ? const Color(0xFF616161)
+            : Colors.white.withValues(alpha: 0.8),
+        borderColor = iconColor ??
+            config.getIconColor(type) ??
+            _getIconColor(type);
 
   static Color _getBackgroundColor(SnackbarType type, bool isDark) {
     switch (type) {

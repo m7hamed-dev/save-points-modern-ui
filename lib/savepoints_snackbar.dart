@@ -7,6 +7,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/top_snackbar_overlay.dart';
@@ -14,6 +15,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/top_snackbar_ov
 // Export enums for public use
 export 'snackbar/snackbar_enums.dart';
 export 'snackbar/snackbar_animation_direction.dart';
+export 'content_design_style.dart';
 
 /// Modern, customizable snackbar widget with enhanced UI/UX.
 ///
@@ -79,6 +81,9 @@ class SavePointsSnackbar {
     VoidCallback? onDismissed,
     VoidCallback? onTap,
 
+    /// Design style: [ContentDesignStyle.solid] (filled) or [ContentDesignStyle.outlined] (light bg + border).
+    ContentDesignStyle? designStyle,
+
     /// Optional blur sigma for glassmorphism behind the snackbar. When null, no blur is applied.
     double? blur,
 
@@ -92,6 +97,7 @@ class SavePointsSnackbar {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final finalType = type ?? config.defaultType;
+    final finalDesignStyle = designStyle ?? config.defaultDesignStyle;
 
     final colorConfig = SnackbarColorConfig(
       theme: theme,
@@ -101,6 +107,7 @@ class SavePointsSnackbar {
       iconColor: iconColor,
       type: finalType,
       config: config,
+      designStyle: finalDesignStyle,
     );
 
     final finalIcon = icon ?? colorConfig.defaultIcon;
@@ -155,12 +162,18 @@ class SavePointsSnackbar {
         showProgressIndicator: finalShowProgressIndicator,
         borderRadius: finalBorderRadius,
         maxWidth: finalMaxWidth,
-        borderColor: finalBorderWidth > 0 ? finalBorderColor : null,
-        borderWidth: finalBorderWidth,
+        borderColor: finalDesignStyle == ContentDesignStyle.outlined
+            ? colorConfig.borderColor
+            : (finalBorderWidth > 0 ? finalBorderColor : null),
+        borderWidth: finalDesignStyle == ContentDesignStyle.outlined ? 2 : finalBorderWidth,
         onTap: onTap,
         onDismissed: onDismissed,
         blur: blur,
         backdropFilter: backdropFilter,
+        designStyle: finalDesignStyle,
+        titleColor: colorConfig.titleColor,
+        subtitleColor: colorConfig.subtitleColor,
+        showCloseButton: finalDesignStyle == ContentDesignStyle.outlined || finalDismissible,
       );
       // Return a dummy controller for top position (overlay handles display)
       return ScaffoldMessenger.of(context).showSnackBar(
@@ -184,7 +197,8 @@ class SavePointsSnackbar {
         margin: finalMargin,
         shape: RoundedRectangleBorder(
           borderRadius: finalBorderRadius,
-          side: finalBorderWidth > 0
+          side: finalDesignStyle != ContentDesignStyle.outlined &&
+                  finalBorderWidth > 0
               ? BorderSide(color: finalBorderColor, width: finalBorderWidth)
               : BorderSide.none,
         ),
@@ -211,6 +225,14 @@ class SavePointsSnackbar {
           onTap: onTap,
           blur: blur,
           backdropFilter: backdropFilter,
+          designStyle: finalDesignStyle,
+          titleColor: colorConfig.titleColor,
+          subtitleColor: colorConfig.subtitleColor,
+          borderColor: finalDesignStyle == ContentDesignStyle.outlined
+              ? colorConfig.borderColor
+              : null,
+          showCloseButton: finalDesignStyle == ContentDesignStyle.outlined ||
+              finalDismissible,
         ),
         action: onActionPressed != null && actionLabel != null
             ? SnackBarAction(
@@ -245,6 +267,7 @@ class SavePointsSnackbar {
     String? actionLabel,
     SnackbarPosition? position,
     bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -258,6 +281,7 @@ class SavePointsSnackbar {
       actionLabel: actionLabel,
       position: position,
       showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -273,6 +297,7 @@ class SavePointsSnackbar {
     String? actionLabel,
     SnackbarPosition? position,
     bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -286,6 +311,7 @@ class SavePointsSnackbar {
       actionLabel: actionLabel,
       position: position,
       showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );
@@ -301,6 +327,7 @@ class SavePointsSnackbar {
     String? actionLabel,
     SnackbarPosition? position,
     bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
   }) {
@@ -314,6 +341,7 @@ class SavePointsSnackbar {
       actionLabel: actionLabel,
       position: position,
       showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
     );

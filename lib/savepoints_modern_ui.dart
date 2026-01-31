@@ -12,6 +12,7 @@ export 'savepoints_dialog.dart';
 export 'savepoints_snackbar.dart';
 export 'savepoints_bottomsheet.dart';
 export 'savepoints_config.dart';
+export 'content_design_style.dart';
 
 // Export dialog components
 export 'dialog/dialog.dart';

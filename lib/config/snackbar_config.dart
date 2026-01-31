@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/config/snackbar_type_config.dart';
 
 /// Configuration for snackbar appearance and behavior
 class SnackbarConfig {
+  /// Default design style: solid (filled) or outlined (light bg + border).
+  ContentDesignStyle defaultDesignStyle = ContentDesignStyle.solid;
+
   /// Default duration
   Duration defaultDuration = const Duration(seconds: 3);
 

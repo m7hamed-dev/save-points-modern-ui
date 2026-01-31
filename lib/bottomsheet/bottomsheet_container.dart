@@ -19,6 +19,7 @@ class BottomsheetContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isOutlined = colorConfig.borderColor != null;
 
     return Container(
       padding: BottomsheetConstants.padding,
@@ -34,7 +35,14 @@ class BottomsheetContainer extends StatelessWidget {
           bottomLeft: const Radius.circular(BottomsheetConstants.borderRadius),
           bottomRight: const Radius.circular(BottomsheetConstants.borderRadius),
         ),
-        boxShadow: BottomsheetShadows.getShadows(isDark),
+        border: isOutlined
+            ? Border(
+                top: BorderSide(color: colorConfig.borderColor!, width: 2),
+                left: BorderSide(color: colorConfig.borderColor!, width: 2),
+                right: BorderSide(color: colorConfig.borderColor!, width: 2),
+              )
+            : null,
+        boxShadow: BottomsheetShadows.getShadows(isDark, isOutlined: isOutlined),
       ),
       child: child,
     );

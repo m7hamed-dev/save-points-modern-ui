@@ -669,6 +669,34 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     return [
       _buildActionButton(
         context,
+        icon: Icons.format_paint,
+        label: 'Toast Solid',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsSnackbar.showSuccess(
+            context,
+            title: 'Yuhu! Download Success',
+            subtitle: 'Lorem ipsum dolor sit amet...',
+            designStyle: ContentDesignStyle.solid,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.outlined_flag,
+        label: 'Toast Outlined',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsSnackbar.showSuccess(
+            context,
+            title: 'Yuhu! Download Success',
+            subtitle: 'Lorem ipsum dolor sit amet...',
+            designStyle: ContentDesignStyle.outlined,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.notifications_none,
         label: 'Basic',
         color: Colors.blue,
