@@ -50,34 +50,34 @@ class SnackbarConfig {
 
   /// Type-specific configurations
   Map<SnackbarType, SnackbarTypeConfig> typeConfigs = {
-    SnackbarType.success: SnackbarTypeConfig(
+    SnackbarType.success: const SnackbarTypeConfig(
       backgroundColor: {
-        Brightness.dark: const Color(0xFF1B5E20),
-        Brightness.light: const Color(0xFF2E7D32),
+        Brightness.dark: Color(0xFF1B5E20),
+        Brightness.light: Color(0xFF2E7D32),
       },
       iconColor: Colors.greenAccent,
       defaultIcon: Icons.check_circle,
     ),
-    SnackbarType.error: SnackbarTypeConfig(
+    SnackbarType.error: const SnackbarTypeConfig(
       backgroundColor: {
-        Brightness.dark: const Color(0xFFB71C1C),
-        Brightness.light: const Color(0xFFD32F2F),
+        Brightness.dark: Color(0xFFB71C1C),
+        Brightness.light: Color(0xFFD32F2F),
       },
       iconColor: Colors.redAccent,
       defaultIcon: Icons.error,
     ),
-    SnackbarType.warning: SnackbarTypeConfig(
+    SnackbarType.warning: const SnackbarTypeConfig(
       backgroundColor: {
-        Brightness.dark: const Color(0xFFE65100),
-        Brightness.light: const Color(0xFFF57C00),
+        Brightness.dark: Color(0xFFE65100),
+        Brightness.light: Color(0xFFF57C00),
       },
       iconColor: Colors.orangeAccent,
       defaultIcon: Icons.warning,
     ),
-    SnackbarType.info: SnackbarTypeConfig(
+    SnackbarType.info: const SnackbarTypeConfig(
       backgroundColor: {
-        Brightness.dark: const Color(0xFF2C2C2C),
-        Brightness.light: const Color(0xFF222222),
+        Brightness.dark: Color(0xFF2C2C2C),
+        Brightness.light: Color(0xFF222222),
       },
       iconColor: Colors.white,
       defaultIcon: Icons.info,
