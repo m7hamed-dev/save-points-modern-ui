@@ -161,6 +161,7 @@ class _ModernDialogState extends State<ModernDialog> {
                           child: DialogIcon(
                             icon: widget.icon!,
                             color: colorConfig.iconColor,
+                            designStyle: colorConfig.designStyle,
                           ),
                         ),
                       RepaintBoundary(

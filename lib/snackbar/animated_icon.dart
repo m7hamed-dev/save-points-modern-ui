@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
 
@@ -6,6 +7,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_consta
 ///
 /// This widget displays an icon with an optional scale animation effect
 /// based on the specified [SnackbarAnimation] type.
+/// For [ContentDesignStyle.outlined], the icon sits in a bordered circle.
 class AnimatedIcon extends StatefulWidget {
   /// The icon data to display.
   final IconData icon;
@@ -19,15 +21,17 @@ class AnimatedIcon extends StatefulWidget {
   /// The animation type to apply to the icon.
   final SnackbarAnimation animation;
 
+  /// When [ContentDesignStyle.outlined], uses bordered circle instead of filled.
+  final ContentDesignStyle? designStyle;
+
   /// Creates an animated icon widget.
-  ///
-  /// The [icon], [iconColor], [type], and [animation] parameters are required.
   const AnimatedIcon({
     super.key,
     required this.icon,
     required this.iconColor,
     required this.type,
     required this.animation,
+    this.designStyle,
   });
 
   @override
@@ -69,12 +73,22 @@ class AnimatedIconState extends State<AnimatedIcon>
 
   @override
   Widget build(BuildContext context) {
+    final isOutlined = widget.designStyle == ContentDesignStyle.outlined;
+    final decoration = BoxDecoration(
+      color: isOutlined
+          ? widget.iconColor.withValues(alpha: 0.08)
+          : widget.iconColor.withValues(alpha: 0.2),
+      shape: BoxShape.circle,
+      border: isOutlined
+          ? Border.all(color: widget.iconColor, width: 1.5)
+          : null,
+    );
+
     final iconWidget = Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: widget.iconColor.withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-      ),
+      width: SnackbarConstants.iconContainerSize,
+      height: SnackbarConstants.iconContainerSize,
+      alignment: Alignment.center,
+      decoration: decoration,
       child: Icon(
         widget.icon,
         size: SnackbarConstants.iconSize,

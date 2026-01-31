@@ -59,9 +59,13 @@ class ModernButtonState extends State<ModernButton>
       onTapCancel: _handleTapCancel,
       child: ScaleTransition(
         scale: _scaleAnimation,
-        child: Container(
-          padding: DialogConstants.buttonPadding,
-          decoration: BoxDecoration(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minHeight: DialogConstants.buttonMinHeight,
+          ),
+          child: Container(
+            padding: DialogConstants.buttonPadding,
+            decoration: BoxDecoration(
             color: widget.isOutlined ? Colors.transparent : widget.backgroundColor,
             borderRadius: BorderRadius.circular(
               DialogConstants.buttonBorderRadius,
@@ -73,14 +77,15 @@ class ModernButtonState extends State<ModernButton>
                 ? ButtonShadows.getPrimaryShadow(widget.backgroundColor)
                 : null,
           ),
-          child: Center(
-            child: Text(
-              widget.text,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: widget.foregroundColor,
-                letterSpacing: 0.5,
+            child: Center(
+              child: Text(
+                widget.text,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: widget.foregroundColor,
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
           ),

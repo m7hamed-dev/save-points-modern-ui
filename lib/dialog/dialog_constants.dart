@@ -15,6 +15,8 @@ class DialogConstants {
     vertical: 16,
     horizontal: 24,
   );
+  /// Minimum button height for accessibility (Material 48dp)
+  static const double buttonMinHeight = 48.0;
   static const double buttonSpacing = 12.0;
   static const double contentSpacingAfterIcon = 20.0;
   static const double contentSpacingAfterTitle = 12.0;

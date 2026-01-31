@@ -5,8 +5,9 @@ class BottomsheetConstants {
   static const Duration transitionDuration = Duration(milliseconds: 300);
   static const double borderRadius = 24.0;
   static const double topBorderRadius = 16.0;
-  static const double handleHeight = 4.0;
-  static const double handleWidth = 40.0;
+  static const double handleHeight = 5.0;
+  static const double handleWidth = 44.0;
+  static const double handleBorderRadius = 2.5;
   static const EdgeInsets padding = EdgeInsets.all(24);
   static const EdgeInsets contentPadding = EdgeInsets.symmetric(horizontal: 24);
   static const double maxHeight = 0.9; // 90% of screen height

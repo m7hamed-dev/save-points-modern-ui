@@ -281,6 +281,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           iconColor: widget.iconColor,
                           type: widget.type,
                           animation: widget.animation,
+                          designStyle: widget.designStyle,
                         ),
                       ),
                       const SizedBox(width: SnackbarConstants.iconSpacing),
@@ -301,6 +302,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                     color: _effectiveTitleColor,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.2,
+                                    height: SnackbarConstants.titleLineHeight,
                                     decoration: TextDecoration.none,
                                   ),
                                 ),
@@ -313,6 +315,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                           SnackbarConstants.subtitleFontSize,
                                       color: _effectiveSubtitleColor,
                                       fontWeight: FontWeight.w400,
+                                      height: SnackbarConstants.subtitleLineHeight,
+                                      letterSpacing: SnackbarConstants.subtitleLetterSpacing,
                                       decoration: TextDecoration.none,
                                     ),
                                   ),
@@ -336,13 +340,16 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                               ScaffoldMessenger.of(context).hideCurrentSnackBar();
                             }
                           },
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(12),
                           constraints: const BoxConstraints(
-                            minWidth: 32,
-                            minHeight: 32,
+                            minWidth: SnackbarConstants.minTouchTargetSize,
+                            minHeight: SnackbarConstants.minTouchTargetSize,
                           ),
                           style: IconButton.styleFrom(
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                     ],
