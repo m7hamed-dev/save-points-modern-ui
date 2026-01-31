@@ -3,10 +3,10 @@ import 'package:save_points_snackbar_dialog_bottomsheet/config/snackbar_config.d
 import 'package:save_points_snackbar_dialog_bottomsheet/config/dialog_config.dart';
 
 /// Global configuration for SavePoints snackbars and dialogs
-class SavePointsConfig {
-  static final SavePointsConfig _instance = SavePointsConfig._internal();
-  factory SavePointsConfig() => _instance;
-  SavePointsConfig._internal();
+class SnackDiaBottomConfig {
+  static final _instance = SnackDiaBottomConfig._internal();
+  factory SnackDiaBottomConfig() => _instance;
+  SnackDiaBottomConfig._internal();
 
   /// Snackbar configuration
   SnackbarConfig snackbar = SnackbarConfig();

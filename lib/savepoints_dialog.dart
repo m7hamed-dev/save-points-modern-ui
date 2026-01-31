@@ -90,7 +90,7 @@ class SavePointsDialog {
     // Dismiss keyboard when showing dialog to prevent UI overlap
     _dismissKeyboard(context);
 
-    final config = SavePointsConfig().dialog;
+    final config = SnackDiaBottomConfig().dialog;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -276,10 +276,7 @@ class _DialogTransitionScopeState extends State<_DialogTransitionScope> {
             child: AnimatedBuilder(
               animation: widget.animation,
               builder: (context, child) {
-                return Opacity(
-                  opacity: widget.animation.value,
-                  child: child,
-                );
+                return Opacity(opacity: widget.animation.value, child: child);
               },
               child: GestureDetector(
                 onTap: widget.barrierDismissible

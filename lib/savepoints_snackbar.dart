@@ -93,7 +93,7 @@ class SavePointsSnackbar {
     // Validate required parameters
     assert(title.isNotEmpty, 'Title cannot be empty');
 
-    final config = SavePointsConfig().snackbar;
+    final config = SnackDiaBottomConfig().snackbar;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final finalType = type ?? config.defaultType;
@@ -165,7 +165,9 @@ class SavePointsSnackbar {
         borderColor: finalDesignStyle == ContentDesignStyle.outlined
             ? colorConfig.borderColor
             : (finalBorderWidth > 0 ? finalBorderColor : null),
-        borderWidth: finalDesignStyle == ContentDesignStyle.outlined ? 2 : finalBorderWidth,
+        borderWidth: finalDesignStyle == ContentDesignStyle.outlined
+            ? 2
+            : finalBorderWidth,
         onTap: onTap,
         onDismissed: onDismissed,
         blur: blur,
@@ -173,7 +175,8 @@ class SavePointsSnackbar {
         designStyle: finalDesignStyle,
         titleColor: colorConfig.titleColor,
         subtitleColor: colorConfig.subtitleColor,
-        showCloseButton: finalDesignStyle == ContentDesignStyle.outlined || finalDismissible,
+        showCloseButton:
+            finalDesignStyle == ContentDesignStyle.outlined || finalDismissible,
       );
       // Return a dummy controller for top position. The overlay shows the real
       // toast at top; we show a minimal SnackBar on-screen (required by Flutter
@@ -204,7 +207,8 @@ class SavePointsSnackbar {
         margin: finalMargin,
         shape: RoundedRectangleBorder(
           borderRadius: finalBorderRadius,
-          side: finalDesignStyle != ContentDesignStyle.outlined &&
+          side:
+              finalDesignStyle != ContentDesignStyle.outlined &&
                   finalBorderWidth > 0
               ? BorderSide(color: finalBorderColor, width: finalBorderWidth)
               : BorderSide.none,
@@ -238,7 +242,8 @@ class SavePointsSnackbar {
           borderColor: finalDesignStyle == ContentDesignStyle.outlined
               ? colorConfig.borderColor
               : null,
-          showCloseButton: finalDesignStyle == ContentDesignStyle.outlined ||
+          showCloseButton:
+              finalDesignStyle == ContentDesignStyle.outlined ||
               finalDismissible,
         ),
         action: onActionPressed != null && actionLabel != null

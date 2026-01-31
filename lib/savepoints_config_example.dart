@@ -7,7 +7,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart
 /// This demonstrates how to configure and customize the default
 /// behavior of snackbars and dialogs globally.
 void configureSavePoints() {
-  final config = SavePointsConfig();
+  final config = SnackDiaBottomConfig();
 
   // Configure snackbar defaults
   config.snackbar.defaultDuration = const Duration(seconds: 4);
@@ -59,7 +59,7 @@ void showConfiguredSnackbar(BuildContext context) {
 
 /// Example: Applying theme-specific configurations
 void applyThemeConfiguration(BuildContext context) {
-  final config = SavePointsConfig();
+  final config = SnackDiaBottomConfig();
   final brightness = Theme.of(context).brightness;
 
   // Apply theme-aware settings
@@ -70,6 +70,6 @@ void applyThemeConfiguration(BuildContext context) {
 
 /// Example: Resetting to defaults
 void resetConfiguration() {
-  final config = SavePointsConfig();
+  final config = SnackDiaBottomConfig();
   config.reset(); // Restores all defaults
 }
