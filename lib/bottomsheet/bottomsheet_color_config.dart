@@ -22,7 +22,7 @@ class BottomsheetColorConfig {
         backgroundColor =
             background ??
             ((designStyle ?? ContentDesignStyle.solid) == ContentDesignStyle.outlined
-                ? Colors.white
+                ? (isDark ? const Color(0xFF1E1E1E) : Colors.white)
                 : (isDark ? const Color(0xFF1E1E1E) : const Color(0xFFFFFFFF))),
         handleColor =
             handle ??
@@ -32,7 +32,7 @@ class BottomsheetColorConfig {
         textColor =
             text ??
             ((designStyle ?? ContentDesignStyle.solid) == ContentDesignStyle.outlined
-                ? Colors.black87
+                ? (isDark ? Colors.white : Colors.black87)
                 : (isDark ? Colors.white : Colors.black87)),
         iconColor =
             icon ??

@@ -28,7 +28,7 @@ class SnackbarColorConfig {
             (gradient == null
                 ? ((designStyle ?? config.defaultDesignStyle) ==
                         ContentDesignStyle.outlined
-                    ? Colors.white
+                    ? (isDark ? Colors.grey[900]! : Colors.white)
                     : (config.getBackgroundColor(
                               type,
                               isDark ? Brightness.dark : Brightness.light,
@@ -40,11 +40,11 @@ class SnackbarColorConfig {
         defaultIcon = config.getDefaultIcon(type) ?? _getDefaultIcon(type),
         titleColor = (designStyle ?? config.defaultDesignStyle) ==
                 ContentDesignStyle.outlined
-            ? const Color(0xFF424242)
+            ? (isDark ? Colors.white : const Color(0xFF424242))
             : Colors.white,
         subtitleColor = (designStyle ?? config.defaultDesignStyle) ==
                 ContentDesignStyle.outlined
-            ? const Color(0xFF616161)
+            ? (isDark ? Colors.grey[400]! : const Color(0xFF616161))
             : Colors.white.withValues(alpha: 0.8),
         borderColor = iconColor ??
             config.getIconColor(type) ??

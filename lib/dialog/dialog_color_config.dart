@@ -27,7 +27,7 @@ class DialogColorConfig {
         backgroundColor =
             backgroundColor ??
             ((designStyle ?? ContentDesignStyle.solid) == ContentDesignStyle.outlined
-                ? Colors.white
+                ? (isDark ? Colors.grey[900]! : Colors.white)
                 : (isDark
                     ? Colors.grey[900]!.withValues(alpha: 0.95)
                     : Colors.white.withValues(alpha: 0.95))),
@@ -39,9 +39,9 @@ class DialogColorConfig {
             ? (isDark ? Colors.blueAccent : theme.colorScheme.primary)
             : null,
         titleColor = (designStyle ?? ContentDesignStyle.solid) == ContentDesignStyle.outlined
-            ? Colors.grey[900]!
+            ? (isDark ? Colors.white : Colors.grey[900]!)
             : (isDark ? Colors.white : Colors.grey[900]!),
         messageColor = (designStyle ?? ContentDesignStyle.solid) == ContentDesignStyle.outlined
-            ? Colors.grey[700]!
+            ? (isDark ? Colors.grey[400]! : Colors.grey[700]!)
             : (isDark ? Colors.grey[400]! : Colors.grey[700]!);
 }
