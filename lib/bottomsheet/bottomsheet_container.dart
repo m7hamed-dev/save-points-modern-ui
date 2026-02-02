@@ -47,7 +47,15 @@ class BottomsheetContainer extends StatelessWidget {
           isOutlined: isOutlined,
         ),
       ),
-      child: child,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: child,
+        ),
+      ),
     );
   }
 }
