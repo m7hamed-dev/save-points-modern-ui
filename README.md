@@ -62,6 +62,7 @@ All components feature automatic dark mode support, extensive customization opti
 - **🎨 Two design styles** - `solid` (filled) or `outlined` (light bg + colored border); both support light and dark themes
 - **🎚️ Drag Handle** - Optional drag indicator for better UX
 - **📜 Scrollable Content** - Built-in support for scrollable content with proper constraints
+- **⌨️ Keyboard Aware** - Automatically positions above keyboard when TextFormField is focused
 - **⏳ Loading States** - Support for loading indicators during async operations
 - **🎬 Custom Animations** - Flexible enter and exit animations
 - **📏 Flexible Sizing** - Customizable max height and constraints
@@ -74,7 +75,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.1.0
+  save_points_snackbar_dialog_bottomsheet: ^1.1.1
 ```
 
 Install the package:
