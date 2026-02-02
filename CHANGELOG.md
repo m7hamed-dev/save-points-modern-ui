@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2026-02-02
+
+### Fixed
+
+- **Snackbar dismiss animation**: Fixed animation not playing on dismiss by using `AnimatedBuilder` and proper curve handling
+- **Animation curves**: Added `reverseCurve` (easeInCubic) for smooth exit animations instead of reversed bounceOut/elasticOut
+- **Nested animations**: Cleaned up nested `CurvedAnimation` wrappers that prevented proper animation playback
+
+### Changed
+
+- **Animation architecture**: Simplified by passing controller directly to `AnimatedWrapper` instead of pre-curved animation
+- **Dismiss handling**: Use `removeCurrentSnackBar()` instead of `hideCurrentSnackBar()` to avoid Flutter's dismiss animation conflict
+
 ## [1.1.3] - 2026-02-02
 
 ### Added
