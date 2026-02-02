@@ -5,20 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.5] - 2026-02-02
+## [1.1.4] - 2026-02-02
 
 ### Added
 
 - **HeaderDialog**: New dialog style with colored header bar and close button positioned outside the dialog box
 - **SavePointsDialog.showCustom()**: New method to show custom dialogs with header, custom content widget, and primary/secondary action buttons
-- Features:
   - Close button outside the dialog (top-left)
   - Colored header with customizable background and text color
   - Custom child widget for flexible content
   - Primary and secondary action buttons
   - Support for blur/glassmorphism backdrop
-
-## [1.1.4] - 2026-02-02
+- **Example app**: Added HeaderDialog and snackbar dismiss animation examples
 
 ### Fixed
 
