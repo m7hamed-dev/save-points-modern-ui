@@ -194,38 +194,50 @@ class _BottomsheetTransitionScope extends StatefulWidget {
 class _BottomsheetTransitionScopeState
     extends State<_BottomsheetTransitionScope> {
   Widget? _cachedSheet;
+  double _lastKeyboardHeight = 0;
 
   static const _barrierDimColor = Color(0x40000000);
 
   @override
   Widget build(BuildContext context) {
-    _cachedSheet ??= BottomsheetTransitionBuilder(
-      animation: widget.animation,
-      startAnimation: widget.startAnimation,
-      endAnimation: widget.endAnimation,
-      hideLikeCircle: widget.hideLikeCircle,
+    // Get current keyboard height to detect changes
+    final currentKeyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
+
+    // Rebuild sheet when keyboard state changes (appears/disappears)
+    if (_cachedSheet == null ||
+        (currentKeyboardHeight > 0) != (_lastKeyboardHeight > 0)) {
+      _lastKeyboardHeight = currentKeyboardHeight;
+      _cachedSheet = BottomsheetTransitionBuilder(
+        animation: widget.animation,
+        startAnimation: widget.startAnimation,
+        endAnimation: widget.endAnimation,
+        hideLikeCircle: widget.hideLikeCircle,
         bottomsheet: GestureDetector(
-        onTap: () {},
-        child: ModernBottomsheet(
-          title: widget.title,
-          icon: widget.icon,
-          iconColor: widget.iconColor,
-          backgroundColor: widget.backgroundColor,
-          isDark: widget.isDark,
-          isLoading: widget.isLoading,
-          loadingNotifier: widget.loadingNotifier,
-          showHandle: widget.showHandle,
-          isDismissible: widget.isDismissible,
-          enableDrag: widget.enableDrag,
-          maxHeight: widget.maxHeight,
-          isScrollControlled: widget.isScrollControlled,
-          designStyle: widget.designStyle,
-          blur: widget.blur,
-          backdropFilter: widget.backdropFilter,
-          child: widget.child,
+          onTap: () {},
+          child: ModernBottomsheet(
+            title: widget.title,
+            icon: widget.icon,
+            iconColor: widget.iconColor,
+            backgroundColor: widget.backgroundColor,
+            isDark: widget.isDark,
+            isLoading: widget.isLoading,
+            loadingNotifier: widget.loadingNotifier,
+            showHandle: widget.showHandle,
+            isDismissible: widget.isDismissible,
+            enableDrag: widget.enableDrag,
+            maxHeight: widget.maxHeight,
+            isScrollControlled: widget.isScrollControlled,
+            designStyle: widget.designStyle,
+            blur: widget.blur,
+            backdropFilter: widget.backdropFilter,
+            child: widget.child,
+          ),
         ),
-      ),
-    );
+      );
+    }
+
+    // Get keyboard height to position bottom sheet above it
+    final keyboardHeight = currentKeyboardHeight;
 
     if (widget.useBarrierBlur && widget.barrierFilter != null) {
       final filter = widget.barrierFilter!;
@@ -236,10 +248,7 @@ class _BottomsheetTransitionScopeState
             child: AnimatedBuilder(
               animation: widget.animation,
               builder: (context, child) {
-                return Opacity(
-                  opacity: widget.animation.value,
-                  child: child,
-                );
+                return Opacity(opacity: widget.animation.value, child: child);
               },
               child: GestureDetector(
                 onTap: widget.barrierDismissible
@@ -254,11 +263,32 @@ class _BottomsheetTransitionScopeState
               ),
             ),
           ),
-          Align(alignment: Alignment.bottomCenter, child: _cachedSheet),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: keyboardHeight,
+            child: _cachedSheet!,
+          ),
         ],
       );
     }
 
-    return Align(alignment: Alignment.bottomCenter, child: _cachedSheet);
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // Barrier for dismissing
+        if (widget.barrierDismissible)
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(color: Colors.transparent),
+          ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: keyboardHeight,
+          child: _cachedSheet!,
+        ),
+      ],
+    );
   }
 }

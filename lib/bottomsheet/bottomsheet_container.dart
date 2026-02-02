@@ -1,3 +1,6 @@
+/// Bottom sheet container widget with styling and safe area handling.
+library;
+
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_constants.dart';
@@ -47,15 +50,7 @@ class BottomsheetContainer extends StatelessWidget {
           isOutlined: isOutlined,
         ),
       ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          child: child,
-        ),
-      ),
+      child: SafeArea(top: false, child: child),
     );
   }
 }

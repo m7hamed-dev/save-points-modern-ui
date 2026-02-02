@@ -7,13 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.1] - 2026-02-02
 
+### Fixed
+
+- **Keyboard visibility with TextFormField**: Bottom sheet now properly positions above the keyboard when a text field is focused, ensuring the input field remains visible
+- **Bottom sheet max height**: Dynamically adjusts max height when keyboard is visible to prevent content overflow
+
 ### Improved
 
-- **BottomsheetContainer**: Wrapped child in `SafeArea` and `Padding` to improve visibility and prevent content overflow at the bottom of the screen
-- **BottomsheetContainer**: Better handling of bottom insets for a more consistent user experience across devices with different safe area configurations
+- **BottomsheetContainer**: Wrapped child in `SafeArea` to improve visibility and prevent content overflow at the bottom of the screen
+- **BottomsheetContainer**: Better handling of safe area for a more consistent user experience across devices
 
 ### Changed
 
+- **Bottom sheet positioning**: Sheet now uses `Positioned` widget to lift above keyboard instead of internal padding, providing smoother keyboard interaction
 - **BottomsheetContainer**: Refactored code organization by moving property declarations to the constructor for improved readability
 - **BottomsheetContainer**: Enhanced `boxShadow` configuration formatting for better code clarity
 

@@ -137,10 +137,23 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
           designStyle: widget.designStyle,
         );
 
-    final maxHeight =
+    // Get keyboard height to adjust max height accordingly
+    final viewInsets = MediaQuery.viewInsetsOf(context);
+    final keyboardHeight = viewInsets.bottom;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
+    // Calculate available height (screen height minus keyboard)
+    final availableHeight = screenHeight - keyboardHeight;
+
+    // Use the smaller of: configured maxHeight or available height (with some margin)
+    final configuredMaxHeight =
         _cachedMaxHeight ??
-        (widget.maxHeight ??
-            MediaQuery.sizeOf(context).height * BottomsheetConstants.maxHeight);
+        (widget.maxHeight ?? screenHeight * BottomsheetConstants.maxHeight);
+
+    // When keyboard is visible, limit max height to available space minus safe margin
+    final maxHeight = keyboardHeight > 0
+        ? math.min(configuredMaxHeight, availableHeight - 20)
+        : configuredMaxHeight;
 
     // Ensure minHeight is never greater than maxHeight
     final minHeight = math.min(BottomsheetConstants.minHeight, maxHeight);
