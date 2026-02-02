@@ -697,6 +697,79 @@ class _ExampleHomePageState extends State<ExampleHomePage>
           );
         },
       ),
+      _buildActionButton(
+        context,
+        icon: Icons.credit_card,
+        label: 'Header Dialog',
+        color: const Color(0xFF2D1B69),
+        onPressed: () {
+          SavePointsDialog.showCustom(
+            context: context,
+            headerTitle: 'Payment Confirmation',
+            headerColor: const Color(0xFF2D1B69),
+            primaryButtonText: 'Confirm',
+            secondaryButtonText: 'Change Plan',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '4 Installments',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                _PaymentItem(
+                  amount: '\$54.04',
+                  label: 'Due Today',
+                  isActive: true,
+                ),
+                _PaymentItem(amount: '\$54.01', date: 'Feb 19'),
+                _PaymentItem(amount: '\$54.01', date: 'Mar 19'),
+                _PaymentItem(amount: '\$54.01', date: 'Apr 19'),
+                const Divider(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Total Amount',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          'Including \$2.47 fees',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Text(
+                      '\$216.07',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            onPrimaryPressed: () {
+              Navigator.pop(context);
+              SavePointsSnackbar.showSuccess(
+                context,
+                title: 'Payment Confirmed!',
+                subtitle: 'Your payment has been processed',
+              );
+            },
+          );
+        },
+      ),
     ];
   }
 
@@ -1093,6 +1166,23 @@ class _ExampleHomePageState extends State<ExampleHomePage>
               ],
             ),
             showProgressIndicator: true,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.motion_photos_off,
+        label: 'Dismiss Animation',
+        color: Colors.deepOrange,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Animated Dismiss',
+            subtitle: 'Tap close button or swipe to see exit animation',
+            type: SnackbarType.info,
+            animation: SnackbarAnimation.bounce,
+            designStyle: ContentDesignStyle.outlined,
+            duration: const Duration(seconds: 10),
           );
         },
       ),
@@ -1674,6 +1764,56 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       label: label,
       color: color,
       onPressed: onPressed,
+    );
+  }
+}
+
+/// Payment item widget for HeaderDialog example
+class _PaymentItem extends StatelessWidget {
+  const _PaymentItem({
+    required this.amount,
+    this.label,
+    this.date,
+    this.isActive = false,
+  });
+
+  final String amount;
+  final String? label;
+  final String? date;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isActive ? const Color(0xFF2D1B69) : Colors.grey[300],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              label ?? date ?? '',
+              style: TextStyle(
+                color: isActive ? const Color(0xFF2D1B69) : Colors.grey[600],
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ),
+          Text(
+            amount,
+            style: TextStyle(
+              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

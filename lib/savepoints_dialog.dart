@@ -11,11 +11,13 @@ import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_type.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition_builder.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/modern_dialog.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/header_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 
 // Export animation types for public use
 export 'dialog/dialog_animation_type.dart';
 export 'dialog/dialog_animation_direction.dart';
+export 'dialog/header_dialog.dart';
 
 /// A modern, customizable dialog with glassmorphism design.
 ///
@@ -154,6 +156,124 @@ class SavePointsDialog {
           blur: blur,
           backdropFilter: backdropFilter,
         );
+      },
+    );
+  }
+
+  /// Shows a custom dialog with header bar and close button outside the box.
+  ///
+  /// This dialog style features:
+  /// - Close button positioned outside (top-left) the dialog
+  /// - A colored header with title
+  /// - Custom content area (your widget)
+  /// - Primary and optional secondary action buttons
+  ///
+  /// Example:
+  /// ```dart
+  /// SavePointsDialog.showCustom(
+  ///   context,
+  ///   headerTitle: 'Payment Details',
+  ///   headerColor: Colors.deepPurple,
+  ///   primaryButtonText: 'Confirm',
+  ///   secondaryButtonText: 'Cancel',
+  ///   child: YourCustomContent(),
+  /// );
+  /// ```
+  static Future<T?> showCustom<T>({
+    required BuildContext context,
+    required String headerTitle,
+    required Widget child,
+    Color? headerColor,
+    Color? headerTextColor,
+    String? primaryButtonText,
+    String? secondaryButtonText,
+    VoidCallback? onPrimaryPressed,
+    VoidCallback? onSecondaryPressed,
+    Color? primaryButtonColor,
+    Color? secondaryButtonColor,
+    bool showCloseButton = true,
+    VoidCallback? onClose,
+    bool barrierDismissible = true,
+    DialogAnimationDirection? startAnimation,
+    DialogAnimationDirection? endAnimation,
+    double? blur,
+    ImageFilter? backdropFilter,
+  }) {
+    // Dismiss keyboard when showing dialog
+    _dismissKeyboard(context);
+
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final ImageFilter? barrierFilter =
+        backdropFilter ??
+        (blur != null && blur <= 0
+            ? null
+            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+    final useBarrierBlur = barrierFilter != null;
+
+    return showGeneralDialog<T>(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      barrierLabel: 'Close dialog',
+      barrierColor: useBarrierBlur ? Colors.transparent : Colors.black54,
+      transitionDuration: const Duration(milliseconds: 350),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (context, animation, secondaryAnimation, _) {
+        final dialog = HeaderDialog(
+          headerTitle: headerTitle,
+          headerColor: headerColor,
+          headerTextColor: headerTextColor,
+          primaryButtonText: primaryButtonText,
+          secondaryButtonText: secondaryButtonText,
+          onPrimaryPressed: onPrimaryPressed,
+          onSecondaryPressed: onSecondaryPressed,
+          primaryButtonColor: primaryButtonColor,
+          secondaryButtonColor: secondaryButtonColor,
+          showCloseButton: showCloseButton,
+          onClose: onClose,
+          isDark: isDark,
+          blur: blur,
+          backdropFilter: backdropFilter,
+          child: child,
+        );
+
+        final transitionedDialog = DialogTransitionBuilder(
+          animation: animation,
+          startAnimation: startAnimation,
+          endAnimation: endAnimation,
+          dialog: dialog,
+        );
+
+        if (useBarrierBlur) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              RepaintBoundary(
+                child: AnimatedBuilder(
+                  animation: animation,
+                  builder: (context, child) {
+                    return Opacity(opacity: animation.value, child: child);
+                  },
+                  child: GestureDetector(
+                    onTap: barrierDismissible
+                        ? () => Navigator.of(context).pop()
+                        : null,
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: barrierFilter,
+                        child: Container(color: const Color(0x40000000)),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Center(child: transitionedDialog),
+            ],
+          );
+        }
+
+        return Center(child: transitionedDialog);
       },
     );
   }
