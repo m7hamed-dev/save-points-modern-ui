@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animation.dart';
 
-/// Wrapper for entrance animations
+/// Wrapper for entrance and exit animations
 class AnimatedWrapper extends StatelessWidget {
   const AnimatedWrapper({
     super.key,
@@ -18,10 +18,40 @@ class AnimatedWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Clamp all animations to prevent values outside [0, 1] range
-    final clampedAnimation = ClampedAnimation(animation);
+    // Use different curves for forward (entrance) and reverse (exit)
+    final forwardCurve = _getForwardCurve();
+    final reverseCurve = Curves.easeInCubic;
+
+    final curvedAnimation = CurvedAnimation(
+      parent: animation,
+      curve: forwardCurve,
+      reverseCurve: reverseCurve,
+    );
+
+    final clampedAnimation = ClampedAnimation(curvedAnimation);
 
     return RepaintBoundary(child: _buildAnimation(clampedAnimation));
+  }
+
+  Curve _getForwardCurve() {
+    switch (animationType) {
+      case SnackbarAnimation.fadeSlide:
+        return Curves.easeOutCubic;
+      case SnackbarAnimation.scale:
+        return Curves.easeOutBack;
+      case SnackbarAnimation.slide:
+        return Curves.easeOutCubic;
+      case SnackbarAnimation.bounce:
+        return Curves.bounceOut;
+      case SnackbarAnimation.rotate:
+        return Curves.easeOutBack;
+      case SnackbarAnimation.elastic:
+        return Curves.elasticOut;
+      case SnackbarAnimation.slideRotate:
+        return Curves.easeOutCubic;
+      case SnackbarAnimation.none:
+        return Curves.linear;
+    }
   }
 
   Widget _buildAnimation(Animation<double> clampedAnimation) {
@@ -54,17 +84,13 @@ class AnimatedWrapper extends StatelessWidget {
         return FadeTransition(
           opacity: clampedAnimation,
           child: ScaleTransition(
-            scale: ClampedAnimation(
-              CurvedAnimation(parent: animation, curve: Curves.bounceOut),
-            ),
+            scale: clampedAnimation,
             child: child,
           ),
         );
       case SnackbarAnimation.rotate:
         final rotationAnimation = Tween<double>(begin: -0.1, end: 0.0).animate(
-          ClampedAnimation(
-            CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
-          ),
+          clampedAnimation,
         );
         return FadeTransition(
           opacity: clampedAnimation,
@@ -77,17 +103,13 @@ class AnimatedWrapper extends StatelessWidget {
         return FadeTransition(
           opacity: clampedAnimation,
           child: ScaleTransition(
-            scale: ClampedAnimation(
-              CurvedAnimation(parent: animation, curve: Curves.elasticOut),
-            ),
+            scale: clampedAnimation,
             child: child,
           ),
         );
       case SnackbarAnimation.slideRotate:
         final rotationAnimation = Tween<double>(begin: 0.1, end: 0.0).animate(
-          ClampedAnimation(
-            CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
-          ),
+          clampedAnimation,
         );
         return FadeTransition(
           opacity: clampedAnimation,

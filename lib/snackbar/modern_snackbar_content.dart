@@ -8,7 +8,6 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_shadow
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/progress_indicator_bar.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animation.dart';
 
 /// Modern snackbar content with enhanced features
 class ModernSnackbarContent extends StatefulWidget {
@@ -71,7 +70,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     with TickerProviderStateMixin {
   late AnimationController _progressController;
   late AnimationController _entranceController;
-  late Animation<double> _entranceAnimation;
   Timer? _timer;
   ImageFilter? _cachedBackdropFilter;
   double? _lastBlur;
@@ -96,9 +94,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     _entranceController = AnimationController(
       duration: _getAnimationDuration(widget.animation),
       vsync: this,
-    );
-    _entranceAnimation = _getAnimation(widget.animation);
-    _entranceController.forward();
+    )..forward();
   }
 
   Duration _getAnimationDuration(SnackbarAnimation animation) {
@@ -119,70 +115,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         return const Duration(milliseconds: 450);
       case SnackbarAnimation.none:
         return const Duration(milliseconds: 1);
-    }
-  }
-
-  Animation<double> _getAnimation(SnackbarAnimation animation) {
-    switch (animation) {
-      case SnackbarAnimation.fadeSlide:
-        return Tween<double>(begin: 0.0, end: 1.0).animate(
-          CurvedAnimation(
-            parent: _entranceController,
-            curve: Curves.easeOutCubic,
-          ),
-        );
-      case SnackbarAnimation.scale:
-        return ClampedAnimation(
-          Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-              parent: _entranceController,
-              curve: Curves.elasticOut,
-            ),
-          ),
-        );
-      case SnackbarAnimation.slide:
-        return ClampedAnimation(
-          Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-              parent: _entranceController,
-              curve: Curves.easeOutBack,
-            ),
-          ),
-        );
-      case SnackbarAnimation.bounce:
-        return ClampedAnimation(
-          Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-              parent: _entranceController,
-              curve: Curves.bounceOut,
-            ),
-          ),
-        );
-      case SnackbarAnimation.rotate:
-        return Tween<double>(begin: 0.0, end: 1.0).animate(
-          CurvedAnimation(
-            parent: _entranceController,
-            curve: Curves.easeOutBack,
-          ),
-        );
-      case SnackbarAnimation.elastic:
-        return ClampedAnimation(
-          Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-              parent: _entranceController,
-              curve: Curves.elasticOut,
-            ),
-          ),
-        );
-      case SnackbarAnimation.slideRotate:
-        return Tween<double>(begin: 0.0, end: 1.0).animate(
-          CurvedAnimation(
-            parent: _entranceController,
-            curve: Curves.easeOutCubic,
-          ),
-        );
-      case SnackbarAnimation.none:
-        return const AlwaysStoppedAnimation(1.0);
     }
   }
 
@@ -209,7 +141,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     // Reverse the entrance animation for exit
     _entranceController.reverse().then((_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        // Use removeCurrentSnackBar to avoid Flutter's dismiss animation conflicting
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
       }
     });
   }
@@ -389,10 +322,16 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     );
     content = _wrapWithBackdrop(content);
 
-    return AnimatedWrapper(
-      animation: _entranceAnimation,
-      animationType: widget.animation,
-      position: widget.position,
+    return AnimatedBuilder(
+      animation: _entranceController,
+      builder: (context, child) {
+        return AnimatedWrapper(
+          animation: _entranceController,
+          animationType: widget.animation,
+          position: widget.position,
+          child: child!,
+        );
+      },
       child: content,
     );
   }
