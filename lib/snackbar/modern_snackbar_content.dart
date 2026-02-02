@@ -76,6 +76,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   ImageFilter? _cachedBackdropFilter;
   double? _lastBlur;
   ImageFilter? _lastBackdropFilterParam;
+  bool _isDismissing = false;
 
   @override
   void initState() {

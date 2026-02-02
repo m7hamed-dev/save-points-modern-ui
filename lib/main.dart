@@ -88,10 +88,10 @@ class _AnimationConstants {
 
 /// Constants for UI spacing
 class _SpacingConstants {
-  static const double sectionSpacing = 24.0;
-  static const double headerBottomSpacing = 32.0;
-  static const double bottomSpacing = 32.0;
-  static const double contentPadding = 20.0;
+  static const sectionSpacing = 24.0;
+  static const headerBottomSpacing = 32.0;
+  static const bottomSpacing = 32.0;
+  static const contentPadding = 20.0;
 }
 
 /// Home page showcasing all SavePoints UI components
