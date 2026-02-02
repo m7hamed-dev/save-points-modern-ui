@@ -78,12 +78,12 @@ class _MyAppState extends State<MyApp> {
 
 /// Constants for animation timings and delays
 class _AnimationConstants {
-  static const Duration gradientDuration = Duration(seconds: 10);
-  static const Duration headerAnimationDuration = Duration(milliseconds: 800);
-  static const Duration sectionAnimationDuration = Duration(milliseconds: 600);
-  static const int sectionCount = 4;
-  static const int initialDelay = 300;
-  static const int staggerDelay = 150;
+  static const gradientDuration = Duration(seconds: 10);
+  static const headerAnimationDuration = Duration(milliseconds: 800);
+  static const sectionAnimationDuration = Duration(milliseconds: 600);
+  static const sectionCount = 4;
+  static const initialDelay = 300;
+  static const staggerDelay = 150;
 }
 
 /// Constants for UI spacing
