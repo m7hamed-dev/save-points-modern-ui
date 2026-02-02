@@ -3,9 +3,8 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 
 /// Bottom sheet drag handle
 class BottomsheetHandle extends StatelessWidget {
-  final Color? color;
-
   const BottomsheetHandle({super.key, this.color});
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
