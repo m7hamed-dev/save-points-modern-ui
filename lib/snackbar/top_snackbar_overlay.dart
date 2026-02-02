@@ -482,7 +482,7 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
                   : null,
               showCloseButton: widget.showCloseButton,
               onCloseButtonPressed:
-                  widget.showCloseButton ? widget.onDismissed : null,
+                  widget.showCloseButton ? _handleDismiss : null,
             ),
           ),
         ),

@@ -197,8 +197,21 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   void _handleTap() {
     widget.onTap?.call();
     if (widget.dismissOnTap) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      _animateDismiss();
     }
+  }
+
+  /// Animates the snackbar out before dismissing
+  void _animateDismiss() {
+    if (_isDismissing) return;
+    _isDismissing = true;
+
+    // Reverse the entrance animation for exit
+    _entranceController.reverse().then((_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      }
+    });
   }
 
   ImageFilter? _getBackdropFilter() {
@@ -343,7 +356,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                             if (widget.onCloseButtonPressed != null) {
                               widget.onCloseButtonPressed!();
                             } else {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              _animateDismiss();
                             }
                           },
                           padding: const EdgeInsets.all(12),
