@@ -5,16 +5,16 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 
 /// Bottom sheet container with decoration
 class BottomsheetContainer extends StatelessWidget {
-  final BottomsheetColorConfig colorConfig;
-  final Widget child;
-  final bool showTopRadius;
-
   const BottomsheetContainer({
     super.key,
     required this.colorConfig,
     required this.child,
     this.showTopRadius = true,
   });
+
+  final BottomsheetColorConfig colorConfig;
+  final Widget child;
+  final bool showTopRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,10 @@ class BottomsheetContainer extends StatelessWidget {
                 right: BorderSide(color: colorConfig.borderColor!, width: 2),
               )
             : null,
-        boxShadow: BottomsheetShadows.getShadows(isDark, isOutlined: isOutlined),
+        boxShadow: BottomsheetShadows.getShadows(
+          isDark,
+          isOutlined: isOutlined,
+        ),
       ),
       child: child,
     );
