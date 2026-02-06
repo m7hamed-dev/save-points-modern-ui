@@ -133,10 +133,16 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     }
   }
 
-  /// Animates the snackbar out before dismissing
+  /// Animates the snackbar out before dismissing with enhanced exit animation
   void _animateDismiss() {
     if (_isDismissing) return;
     _isDismissing = true;
+
+    // Use a faster duration for dismiss to feel more responsive
+    final dismissDuration = _getDismissDuration(widget.animation);
+
+    // Create a new animation controller for dismiss with optimized duration
+    _entranceController.duration = dismissDuration;
 
     // Reverse the entrance animation for exit
     _entranceController.reverse().then((_) {
@@ -145,6 +151,28 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       }
     });
+  }
+
+  /// Get optimized dismiss duration based on animation type
+  Duration _getDismissDuration(SnackbarAnimation animation) {
+    switch (animation) {
+      case SnackbarAnimation.fadeSlide:
+        return const Duration(milliseconds: 250);
+      case SnackbarAnimation.scale:
+        return const Duration(milliseconds: 200);
+      case SnackbarAnimation.slide:
+        return const Duration(milliseconds: 220);
+      case SnackbarAnimation.bounce:
+        return const Duration(milliseconds: 200);
+      case SnackbarAnimation.rotate:
+        return const Duration(milliseconds: 280);
+      case SnackbarAnimation.elastic:
+        return const Duration(milliseconds: 250);
+      case SnackbarAnimation.slideRotate:
+        return const Duration(milliseconds: 300);
+      case SnackbarAnimation.none:
+        return const Duration(milliseconds: 1);
+    }
   }
 
   ImageFilter? _getBackdropFilter() {
@@ -346,6 +374,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
       ),
     );
     content = _wrapWithBackdrop(content);
+    content = _wrapWithSwipeDismiss(content);
 
     return AnimatedBuilder(
       animation: _entranceController,
@@ -354,8 +383,32 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
           animation: _entranceController,
           animationType: widget.animation,
           position: widget.position,
+          isDismissing: _isDismissing,
           child: child!,
         );
+      },
+      child: content,
+    );
+  }
+
+  /// Wraps content with swipe-to-dismiss gesture
+  Widget _wrapWithSwipeDismiss(Widget content) {
+    if (!widget.dismissOnTap) return content;
+
+    final isTop = widget.position == SnackbarPosition.top;
+
+    return Dismissible(
+      key: UniqueKey(),
+      direction: isTop ? DismissDirection.up : DismissDirection.down,
+      onDismissed: (_) {
+        if (mounted && !_isDismissing) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        }
+      },
+      movementDuration: const Duration(milliseconds: 200),
+      dismissThresholds: const {
+        DismissDirection.up: 0.2,
+        DismissDirection.down: 0.2,
       },
       child: content,
     );
@@ -612,6 +665,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     );
 
     content = _wrapWithBackdrop(content);
+    content = _wrapWithSwipeDismiss(content);
 
     return AnimatedBuilder(
       animation: _entranceController,
@@ -620,6 +674,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
           animation: _entranceController,
           animationType: widget.animation,
           position: widget.position,
+          isDismissing: _isDismissing,
           child: child!,
         );
       },
