@@ -137,7 +137,8 @@ class _ModernDialogState extends State<ModernDialog> {
           designStyle: widget.designStyle,
         );
 
-    final isColorHeader = colorConfig.designStyle == ContentDesignStyle.colorHeader;
+    final isColorHeader =
+        colorConfig.designStyle == ContentDesignStyle.colorHeader;
 
     if (isColorHeader) {
       return _buildColorHeaderLayout(context, colorConfig);
@@ -146,7 +147,10 @@ class _ModernDialogState extends State<ModernDialog> {
     return _buildDefaultLayout(context, colorConfig);
   }
 
-  Widget _buildDefaultLayout(BuildContext context, DialogColorConfig colorConfig) {
+  Widget _buildDefaultLayout(
+    BuildContext context,
+    DialogColorConfig colorConfig,
+  ) {
     return RepaintBoundary(
       child: Material(
         color: Colors.transparent,
@@ -210,7 +214,9 @@ class _ModernDialogState extends State<ModernDialog> {
                             confirmColor: colorConfig.confirmColor,
                             cancelColor: colorConfig.cancelColor,
                             isDark: widget.isDark,
-                            isOutlined: colorConfig.designStyle == ContentDesignStyle.outlined,
+                            isOutlined:
+                                colorConfig.designStyle ==
+                                ContentDesignStyle.outlined,
                             onConfirm: () => _handleConfirm(context),
                             onCancel: () => _handleCancel(context),
                           ),
@@ -226,7 +232,10 @@ class _ModernDialogState extends State<ModernDialog> {
     );
   }
 
-  Widget _buildColorHeaderLayout(BuildContext context, DialogColorConfig colorConfig) {
+  Widget _buildColorHeaderLayout(
+    BuildContext context,
+    DialogColorConfig colorConfig,
+  ) {
     return RepaintBoundary(
       child: Material(
         color: Colors.transparent,
@@ -259,61 +268,94 @@ class _ModernDialogState extends State<ModernDialog> {
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        // Header gradient background
+                        // Header gradient background with smooth transition
                         Container(
                           width: double.infinity,
-                          height: 100,
+                          height: 110,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                               colors: [
                                 colorConfig.headerColor,
-                                colorConfig.headerColor.withValues(alpha: 0.3),
+                                colorConfig.headerColorEnd,
                               ],
+                              stops: const [0.0, 1.0],
                             ),
                           ),
                         ),
-                        // Close button
+                        // Subtle pattern overlay for depth
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: RadialGradient(
+                                center: Alignment.topRight,
+                                radius: 1.5,
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.1),
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Close button with hover effect
                         Positioned(
                           top: 12,
                           right: 12,
-                          child: GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Color(0xFF666666),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => Navigator.of(context).pop(),
+                              borderRadius: BorderRadius.circular(14),
+                              child: Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: widget.isDark
+                                      ? Colors.white.withValues(alpha: 0.1)
+                                      : Colors.black.withValues(alpha: 0.06),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.close_rounded,
+                                  size: 16,
+                                  color: widget.isDark
+                                      ? Colors.white.withValues(alpha: 0.7)
+                                      : const Color(0xFF6B7280),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        // Centered icon in circle
+                        // Centered icon in circle with enhanced shadow
                         if (widget.icon != null)
                           Positioned(
                             left: 0,
                             right: 0,
-                            bottom: -28,
+                            bottom: -30,
                             child: Center(
                               child: RepaintBoundary(
                                 child: Container(
-                                  width: 56,
-                                  height: 56,
+                                  width: 60,
+                                  height: 60,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: colorConfig.iconBackgroundColor,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.1),
-                                        blurRadius: 12,
+                                        color: colorConfig.iconColor.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        blurRadius: 16,
                                         offset: const Offset(0, 4),
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.08,
+                                        ),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
                                       ),
                                     ],
                                   ),
@@ -328,47 +370,48 @@ class _ModernDialogState extends State<ModernDialog> {
                           ),
                       ],
                     ),
-                    // Content area
+                    // Content area with enhanced spacing
                     Padding(
                       padding: EdgeInsets.only(
-                        top: widget.icon != null ? 40 : 24,
-                        left: 24,
-                        right: 24,
-                        bottom: 24,
+                        top: widget.icon != null ? 44 : 28,
+                        left: 28,
+                        right: 28,
+                        bottom: 28,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Title
+                          // Title with enhanced typography
                           RepaintBoundary(
                             child: Text(
                               widget.title,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
                                 color: colorConfig.titleColor,
-                                letterSpacing: 0.2,
-                                height: 1.3,
+                                letterSpacing: -0.3,
+                                height: 1.2,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 12),
-                          // Message
+                          const SizedBox(height: 10),
+                          // Message with better readability
                           RepaintBoundary(
                             child: Text(
                               widget.message,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w400,
                                 color: colorConfig.messageColor,
-                                height: 1.5,
+                                height: 1.55,
+                                letterSpacing: 0.1,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 24),
-                          // Action button(s)
+                          const SizedBox(height: 28),
+                          // Action button(s) with enhanced styling
                           if (_isLoading)
                             RepaintBoundary(
                               child: DialogLoadingIndicator(
@@ -378,51 +421,78 @@ class _ModernDialogState extends State<ModernDialog> {
                           else
                             Column(
                               children: [
-                                // Primary button (dark style)
+                                // Primary button with gradient and shadow
                                 SizedBox(
                                   width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: () => _handleConfirm(context),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: colorConfig.buttonColor,
-                                      foregroundColor: colorConfig.buttonTextColor,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 14,
-                                        horizontal: 24,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(28),
-                                      ),
-                                      elevation: 0,
+                                  height: 52,
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(26),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: colorConfig.buttonColor
+                                              .withValues(alpha: 0.3),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
                                     ),
-                                    child: Text(
-                                      widget.confirmText,
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
+                                    child: ElevatedButton(
+                                      onPressed: () => _handleConfirm(context),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            colorConfig.buttonColor,
+                                        foregroundColor:
+                                            colorConfig.buttonTextColor,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 14,
+                                          horizontal: 28,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            26,
+                                          ),
+                                        ),
+                                        elevation: 0,
+                                      ),
+                                      child: Text(
+                                        widget.confirmText,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.3,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                                // Cancel button (if shown)
+                                // Cancel button with subtle styling
                                 if (widget.showCancelButton) ...[
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: 14),
                                   SizedBox(
                                     width: double.infinity,
+                                    height: 44,
                                     child: TextButton(
                                       onPressed: () => _handleCancel(context),
                                       style: TextButton.styleFrom(
-                                        foregroundColor: colorConfig.cancelColor,
+                                        foregroundColor:
+                                            colorConfig.cancelColor,
                                         padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
+                                          vertical: 10,
                                           horizontal: 24,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            22,
+                                          ),
                                         ),
                                       ),
                                       child: Text(
                                         widget.cancelText,
                                         style: const TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w500,
+                                          letterSpacing: 0.2,
                                         ),
                                       ),
                                     ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 
-/// Dialog color configuration
+/// Professional dialog color configuration with enhanced palettes
 class DialogColorConfig {
   final Color iconColor;
   final Color backgroundColor;
@@ -12,8 +12,10 @@ class DialogColorConfig {
   final Color titleColor;
   final Color messageColor;
   final Color headerColor;
+  final Color headerColorEnd;
   final Color buttonColor;
   final Color buttonTextColor;
+  final Color iconBackgroundColor;
 
   DialogColorConfig({
     required ThemeData theme,
@@ -23,35 +25,50 @@ class DialogColorConfig {
     Color? confirmButtonColor,
     Color? cancelButtonColor,
     ContentDesignStyle? designStyle,
-  })  : designStyle = designStyle ?? ContentDesignStyle.solid,
-        iconColor =
-            iconColor ??
-            (isDark ? Colors.blueAccent : theme.colorScheme.primary),
-        backgroundColor = _computeBackgroundColor(
-          backgroundColor: backgroundColor,
-          designStyle: designStyle ?? ContentDesignStyle.solid,
-          isDark: isDark,
-        ),
-        confirmColor =
-            confirmButtonColor ??
-            (isDark ? Colors.blueAccent : theme.colorScheme.primary),
-        cancelColor = cancelButtonColor ?? Colors.grey,
-        borderColor = (designStyle ?? ContentDesignStyle.solid) == ContentDesignStyle.outlined
-            ? (isDark ? Colors.blueAccent : theme.colorScheme.primary)
-            : null,
-        titleColor = _computeTitleColor(
-          designStyle: designStyle ?? ContentDesignStyle.solid,
-          isDark: isDark,
-        ),
-        messageColor = _computeMessageColor(
-          designStyle: designStyle ?? ContentDesignStyle.solid,
-          isDark: isDark,
-        ),
-        headerColor = _computeHeaderColor(
-          iconColor: iconColor ?? (isDark ? Colors.blueAccent : theme.colorScheme.primary),
-        ),
-        buttonColor = isDark ? Colors.grey[800]! : const Color(0xFF2D2D2D),
-        buttonTextColor = Colors.white;
+  }) : designStyle = designStyle ?? ContentDesignStyle.solid,
+       iconColor =
+           iconColor ??
+           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+       backgroundColor = _computeBackgroundColor(
+         backgroundColor: backgroundColor,
+         designStyle: designStyle ?? ContentDesignStyle.solid,
+         isDark: isDark,
+       ),
+       confirmColor =
+           confirmButtonColor ??
+           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+       cancelColor =
+           cancelButtonColor ??
+           (isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
+       borderColor = _computeBorderColor(
+         designStyle: designStyle ?? ContentDesignStyle.solid,
+         iconColor: iconColor,
+         theme: theme,
+         isDark: isDark,
+       ),
+       titleColor = _computeTitleColor(
+         designStyle: designStyle ?? ContentDesignStyle.solid,
+         isDark: isDark,
+       ),
+       messageColor = _computeMessageColor(
+         designStyle: designStyle ?? ContentDesignStyle.solid,
+         isDark: isDark,
+       ),
+       headerColor = _computeHeaderColor(
+         iconColor:
+             iconColor ??
+             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+         isDark: isDark,
+       ),
+       headerColorEnd = _computeHeaderColorEnd(
+         iconColor:
+             iconColor ??
+             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+         isDark: isDark,
+       ),
+       buttonColor = isDark ? const Color(0xFF374151) : const Color(0xFF1F2937),
+       buttonTextColor = Colors.white,
+       iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
 
   static Color _computeBackgroundColor({
     required Color? backgroundColor,
@@ -62,13 +79,29 @@ class DialogColorConfig {
 
     switch (designStyle) {
       case ContentDesignStyle.outlined:
+        return isDark ? const Color(0xFF1F2937) : Colors.white;
       case ContentDesignStyle.colorHeader:
-        return isDark ? Colors.grey[900]! : Colors.white;
+        return isDark ? const Color(0xFF111827) : const Color(0xFFFAFAFA);
       case ContentDesignStyle.solid:
         return isDark
-            ? Colors.grey[900]!.withValues(alpha: 0.95)
-            : Colors.white.withValues(alpha: 0.95);
+            ? const Color(0xFF1F2937).withValues(alpha: 0.98)
+            : Colors.white.withValues(alpha: 0.98);
     }
+  }
+
+  static Color? _computeBorderColor({
+    required ContentDesignStyle designStyle,
+    required Color? iconColor,
+    required ThemeData theme,
+    required bool isDark,
+  }) {
+    if (designStyle == ContentDesignStyle.outlined) {
+      final baseColor =
+          iconColor ??
+          (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
+      return baseColor.withValues(alpha: isDark ? 0.5 : 0.3);
+    }
+    return null;
   }
 
   static Color _computeTitleColor({
@@ -79,7 +112,7 @@ class DialogColorConfig {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
       case ContentDesignStyle.solid:
-        return isDark ? Colors.white : Colors.grey[900]!;
+        return isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
     }
   }
 
@@ -91,13 +124,31 @@ class DialogColorConfig {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
       case ContentDesignStyle.solid:
-        return isDark ? Colors.grey[400]! : Colors.grey[700]!;
+        return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
     }
   }
 
-  static Color _computeHeaderColor({required Color iconColor}) {
-    // Create a light pastel version based on icon color
+  static Color _computeHeaderColor({
+    required Color iconColor,
+    required bool isDark,
+  }) {
     final hsl = HSLColor.fromColor(iconColor);
-    return hsl.withSaturation(0.3).withLightness(0.92).toColor();
+    if (isDark) {
+      // Darker, more saturated header for dark mode
+      return hsl.withSaturation(0.4).withLightness(0.15).toColor();
+    }
+    // Light, pastel header for light mode
+    return hsl.withSaturation(0.35).withLightness(0.94).toColor();
+  }
+
+  static Color _computeHeaderColorEnd({
+    required Color iconColor,
+    required bool isDark,
+  }) {
+    final hsl = HSLColor.fromColor(iconColor);
+    if (isDark) {
+      return hsl.withSaturation(0.3).withLightness(0.08).toColor();
+    }
+    return hsl.withSaturation(0.2).withLightness(0.98).toColor();
   }
 }

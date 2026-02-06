@@ -213,7 +213,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   }
 
   Widget _buildDefaultLayout() {
-    final hasBorder = widget.designStyle == ContentDesignStyle.outlined &&
+    final hasBorder =
+        widget.designStyle == ContentDesignStyle.outlined &&
         widget.borderColor != null;
 
     final isBottom = widget.position == SnackbarPosition.bottom;
@@ -229,10 +230,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
           gradient: widget.gradient,
           borderRadius: widget.borderRadius,
           border: hasBorder
-              ? Border.all(
-                  color: widget.borderColor!,
-                  width: 2,
-                )
+              ? Border.all(color: widget.borderColor!, width: 2)
               : null,
           boxShadow: SnackbarShadows.getShadows(widget.designStyle),
         ),
@@ -292,8 +290,10 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                           SnackbarConstants.subtitleFontSize,
                                       color: _effectiveSubtitleColor,
                                       fontWeight: FontWeight.w400,
-                                      height: SnackbarConstants.subtitleLineHeight,
-                                      letterSpacing: SnackbarConstants.subtitleLetterSpacing,
+                                      height:
+                                          SnackbarConstants.subtitleLineHeight,
+                                      letterSpacing: SnackbarConstants
+                                          .subtitleLetterSpacing,
                                       decoration: TextDecoration.none,
                                     ),
                                   ),
@@ -368,6 +368,12 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
       minWidth: isBottom ? SnackbarConstants.minWidthBottom : 0,
     );
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final buttonColor = isDark
+        ? const Color(0xFF374151)
+        : const Color(0xFF1F2937);
+    final iconBgColor = isDark ? const Color(0xFF1F2937) : Colors.white;
+
     Widget content = RepaintBoundary(
       child: Container(
         constraints: constraints,
@@ -385,77 +391,111 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Colored header with icon
+                // Colored header with icon - enhanced gradient
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    // Header gradient background
+                    // Header gradient background with smooth transition
                     Container(
                       width: double.infinity,
-                      height: 80,
+                      height: 90,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                           colors: [
                             _headerGradientColor,
-                            _headerGradientColor.withValues(alpha: 0.3),
+                            _headerGradientColor.withValues(
+                              alpha: isDark ? 0.4 : 0.2,
+                            ),
                           ],
                         ),
                       ),
                     ),
-                    // Close button
+                    // Subtle radial overlay for depth
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: RadialGradient(
+                            center: Alignment.topRight,
+                            radius: 1.5,
+                            colors: [
+                              Colors.white.withValues(
+                                alpha: isDark ? 0.05 : 0.15,
+                              ),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Close button with enhanced styling
                     if (widget.showCloseButton)
                       Positioned(
-                        top: 8,
-                        right: 8,
-                        child: GestureDetector(
-                          onTap: () {
-                            if (widget.onCloseButtonPressed != null) {
-                              widget.onCloseButtonPressed!();
-                            } else {
-                              _animateDismiss();
-                            }
-                          },
-                          child: Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.close,
-                              size: 14,
-                              color: Color(0xFF666666),
+                        top: 10,
+                        right: 10,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              if (widget.onCloseButtonPressed != null) {
+                                widget.onCloseButtonPressed!();
+                              } else {
+                                _animateDismiss();
+                              }
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              width: 26,
+                              height: 26,
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.1)
+                                    : Colors.black.withValues(alpha: 0.06),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.close_rounded,
+                                size: 14,
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.7)
+                                    : const Color(0xFF6B7280),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    // Centered icon in circle
+                    // Centered icon in circle with enhanced shadow
                     Positioned(
                       left: 0,
                       right: 0,
-                      bottom: -24,
+                      bottom: -26,
                       child: Center(
                         child: RepaintBoundary(
                           child: Container(
-                            width: 48,
-                            height: 48,
+                            width: 52,
+                            height: 52,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: iconBgColor,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.1),
-                                  blurRadius: 8,
+                                  color: widget.iconColor.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.06),
+                                  blurRadius: 6,
                                   offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
                             child: Icon(
                               widget.icon,
-                              size: 24,
+                              size: 26,
                               color: widget.iconColor,
                             ),
                           ),
@@ -464,33 +504,33 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                     ),
                   ],
                 ),
-                // Content area
+                // Content area with enhanced typography
                 Padding(
                   padding: const EdgeInsets.only(
-                    top: 32,
-                    left: 20,
-                    right: 20,
-                    bottom: 20,
+                    top: 36,
+                    left: 24,
+                    right: 24,
+                    bottom: 24,
                   ),
                   child: DefaultTextStyle(
                     style: const TextStyle(decoration: TextDecoration.none),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Title
+                        // Title with enhanced typography
                         Text(
                           widget.title,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             color: _effectiveTitleColor,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.2,
-                            height: 1.3,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.2,
+                            height: 1.2,
                             decoration: TextDecoration.none,
                           ),
                         ),
-                        // Subtitle/Message
+                        // Subtitle/Message with better readability
                         if (widget.subtitle != null) ...[
                           const SizedBox(height: 8),
                           Text(
@@ -500,39 +540,54 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                               fontSize: 14,
                               color: _effectiveSubtitleColor,
                               fontWeight: FontWeight.w400,
-                              height: 1.4,
+                              height: 1.5,
+                              letterSpacing: 0.1,
                               decoration: TextDecoration.none,
                             ),
                           ),
                         ],
-                        // Action button
-                        const SizedBox(height: 16),
+                        // Action button with enhanced styling
+                        const SizedBox(height: 20),
                         SizedBox(
                           width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              widget.onTap?.call();
-                              if (widget.dismissOnTap) {
-                                _animateDismiss();
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF2D2D2D),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                                horizontal: 24,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              elevation: 0,
+                          height: 48,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: buttonColor.withValues(alpha: 0.25),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
-                            child: const Text(
-                              'Continue',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                widget.onTap?.call();
+                                if (widget.dismissOnTap) {
+                                  _animateDismiss();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: buttonColor,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 28,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                elevation: 0,
+                              ),
+                              child: const Text(
+                                'Continue',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.3,
+                                ),
                               ),
                             ),
                           ),

@@ -137,7 +137,8 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
           designStyle: widget.designStyle,
         );
 
-    final isColorHeader = colorConfig.designStyle == ContentDesignStyle.colorHeader;
+    final isColorHeader =
+        colorConfig.designStyle == ContentDesignStyle.colorHeader;
 
     if (isColorHeader) {
       return _buildColorHeaderLayout(context, colorConfig);
@@ -146,7 +147,10 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     return _buildDefaultLayout(context, colorConfig);
   }
 
-  Widget _buildDefaultLayout(BuildContext context, BottomsheetColorConfig colorConfig) {
+  Widget _buildDefaultLayout(
+    BuildContext context,
+    BottomsheetColorConfig colorConfig,
+  ) {
     // Get keyboard height to adjust max height accordingly
     final viewInsets = MediaQuery.viewInsetsOf(context);
     final keyboardHeight = viewInsets.bottom;
@@ -252,7 +256,10 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     );
   }
 
-  Widget _buildColorHeaderLayout(BuildContext context, BottomsheetColorConfig colorConfig) {
+  Widget _buildColorHeaderLayout(
+    BuildContext context,
+    BottomsheetColorConfig colorConfig,
+  ) {
     // Get keyboard height to adjust max height accordingly
     final viewInsets = MediaQuery.viewInsetsOf(context);
     final keyboardHeight = viewInsets.bottom;
@@ -288,6 +295,16 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
               topLeft: Radius.circular(BottomsheetConstants.borderRadius),
               topRight: Radius.circular(BottomsheetConstants.borderRadius),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(
+                  alpha: widget.isDark ? 0.3 : 0.12,
+                ),
+                blurRadius: 24,
+                offset: const Offset(0, -8),
+                spreadRadius: -4,
+              ),
+            ],
           ),
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
@@ -300,26 +317,44 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Colored header with icon
+                  // Colored header with icon - enhanced gradient
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      // Header gradient background
+                      // Header gradient background with smooth transition
                       Container(
                         width: double.infinity,
-                        height: 100,
+                        height: 110,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                             colors: [
                               colorConfig.headerColor,
-                              colorConfig.headerColor.withValues(alpha: 0.3),
+                              colorConfig.headerColorEnd,
                             ],
+                            stops: const [0.0, 1.0],
                           ),
                         ),
                       ),
-                      // Handle
+                      // Subtle radial overlay for depth
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: RadialGradient(
+                              center: Alignment.topRight,
+                              radius: 1.5,
+                              colors: [
+                                Colors.white.withValues(
+                                  alpha: widget.isDark ? 0.05 : 0.12,
+                                ),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Handle with enhanced styling
                       if (widget.showHandle)
                         Positioned(
                           top: 12,
@@ -327,56 +362,75 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                           right: 0,
                           child: Center(
                             child: Container(
-                              width: 40,
-                              height: 4,
+                              width: 44,
+                              height: 5,
                               decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(2),
+                                color: widget.isDark
+                                    ? Colors.white.withValues(alpha: 0.2)
+                                    : Colors.black.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(2.5),
                               ),
                             ),
                           ),
                         ),
-                      // Close button
+                      // Close button with enhanced styling
                       if (widget.isDismissible)
                         Positioned(
                           top: 12,
                           right: 12,
-                          child: GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Color(0xFF666666),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => Navigator.of(context).pop(),
+                              borderRadius: BorderRadius.circular(14),
+                              child: Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: widget.isDark
+                                      ? Colors.white.withValues(alpha: 0.1)
+                                      : Colors.black.withValues(alpha: 0.06),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.close_rounded,
+                                  size: 16,
+                                  color: widget.isDark
+                                      ? Colors.white.withValues(alpha: 0.7)
+                                      : const Color(0xFF6B7280),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      // Centered icon in circle
+                      // Centered icon in circle with enhanced shadow
                       if (widget.icon != null)
                         Positioned(
                           left: 0,
                           right: 0,
-                          bottom: -28,
+                          bottom: -30,
                           child: Center(
                             child: RepaintBoundary(
                               child: Container(
-                                width: 56,
-                                height: 56,
+                                width: 60,
+                                height: 60,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: colorConfig.iconBackgroundColor,
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.1),
-                                      blurRadius: 12,
+                                      color: colorConfig.iconColor.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                      blurRadius: 16,
                                       offset: const Offset(0, 4),
+                                    ),
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.08,
+                                      ),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
                                     ),
                                   ],
                                 ),
@@ -391,34 +445,34 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                         ),
                     ],
                   ),
-                  // Content area
+                  // Content area with enhanced spacing
                   Flexible(
                     child: Padding(
                       padding: EdgeInsets.only(
-                        top: widget.icon != null ? 40 : 24,
-                        left: 24,
-                        right: 24,
-                        bottom: 24,
+                        top: widget.icon != null ? 44 : 28,
+                        left: 28,
+                        right: 28,
+                        bottom: 28,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Title
+                          // Title with enhanced typography
                           if (widget.title != null) ...[
                             RepaintBoundary(
                               child: Text(
                                 widget.title!,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
                                   color: colorConfig.textColor,
-                                  letterSpacing: 0.2,
-                                  height: 1.3,
+                                  letterSpacing: -0.3,
+                                  height: 1.2,
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 18),
                           ],
                           // Main content: loading indicator or scrollable child
                           if (_isLoading)

@@ -3,7 +3,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dar
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
-/// Snackbar color configuration
+/// Professional snackbar color configuration with enhanced palettes
 class SnackbarColorConfig {
   final Color backgroundColor;
   final Color iconColor;
@@ -14,6 +14,7 @@ class SnackbarColorConfig {
   final Color borderColor;
   final ContentDesignStyle designStyle;
   final Color headerColor;
+  final Color headerColorEnd;
   final Color buttonColor;
   final Color buttonTextColor;
 
@@ -50,9 +51,12 @@ class SnackbarColorConfig {
            iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
        headerColor = _computeHeaderColor(
          type: type,
-         iconColor: iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
+         iconColor:
+             iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
+         isDark: isDark,
        ),
-       buttonColor = isDark ? Colors.grey[800]! : const Color(0xFF2D2D2D),
+       headerColorEnd = _computeHeaderColorEnd(type: type, isDark: isDark),
+       buttonColor = isDark ? const Color(0xFF374151) : const Color(0xFF1F2937),
        buttonTextColor = Colors.white;
 
   static Color _computeBackgroundColor({
@@ -108,17 +112,59 @@ class SnackbarColorConfig {
   static Color _computeHeaderColor({
     required SnackbarType type,
     required Color iconColor,
+    bool isDark = false,
   }) {
-    // Return a lighter/pastel version of the icon color for the header gradient
+    if (isDark) {
+      // Darker, richer header colors for dark mode
+      switch (type) {
+        case SnackbarType.success:
+          return const Color(0xFF064E3B); // Dark emerald
+        case SnackbarType.error:
+          return const Color(0xFF7F1D1D); // Dark red
+        case SnackbarType.warning:
+          return const Color(0xFF78350F); // Dark amber
+        case SnackbarType.info:
+          return const Color(0xFF1E3A5F); // Dark blue
+      }
+    }
+    // Light, pastel header colors for light mode
     switch (type) {
       case SnackbarType.success:
-        return const Color(0xFFE8F5E9); // Light green
+        return const Color(0xFFDCFCE7); // Soft mint green
       case SnackbarType.error:
-        return const Color(0xFFFFEBEE); // Light red/coral
+        return const Color(0xFFFEE2E2); // Soft rose
       case SnackbarType.warning:
-        return const Color(0xFFFFF3E0); // Light orange
+        return const Color(0xFFFEF3C7); // Soft amber
       case SnackbarType.info:
-        return const Color(0xFFE3F2FD); // Light blue
+        return const Color(0xFFDBEAFE); // Soft blue
+    }
+  }
+
+  static Color _computeHeaderColorEnd({
+    required SnackbarType type,
+    bool isDark = false,
+  }) {
+    if (isDark) {
+      switch (type) {
+        case SnackbarType.success:
+          return const Color(0xFF022C22);
+        case SnackbarType.error:
+          return const Color(0xFF450A0A);
+        case SnackbarType.warning:
+          return const Color(0xFF451A03);
+        case SnackbarType.info:
+          return const Color(0xFF0C1929);
+      }
+    }
+    switch (type) {
+      case SnackbarType.success:
+        return const Color(0xFFF0FDF4);
+      case SnackbarType.error:
+        return const Color(0xFFFFF5F5);
+      case SnackbarType.warning:
+        return const Color(0xFFFFFBEB);
+      case SnackbarType.info:
+        return const Color(0xFFF0F7FF);
     }
   }
 
