@@ -10,12 +10,16 @@ class DialogPresets {
     BuildContext context, {
     String? itemName,
   }) {
+    final title = 'Delete ${itemName ?? 'Item'}?';
+    final message = itemName != null
+        ? 'Are you sure you want to delete "$itemName"? This action cannot be undone.'
+        : 'Are you sure you want to delete this item? This action cannot be undone.';
+
+    /// Show the dialog
     return SavePointsDialog.show(
       context,
-      title: 'Delete ${itemName ?? 'Item'}?',
-      message: itemName != null
-          ? 'Are you sure you want to delete "$itemName"? This action cannot be undone.'
-          : 'Are you sure you want to delete this item? This action cannot be undone.',
+      title: title,
+      message: message,
       icon: Icons.delete_outline,
       iconColor: Colors.red,
       confirmText: 'Delete',
@@ -45,11 +49,13 @@ class DialogPresets {
   ///
   /// Returns `true` if user confirmed discarding, `false` if cancelled
   static Future<bool?> showDiscardChangesConfirmation(BuildContext context) {
+    const title = 'Discard Changes?';
+    const message =
+        'You have unsaved changes. Are you sure you want to discard them?';
     return SavePointsDialog.show(
       context,
-      title: 'Discard Changes?',
-      message:
-          'You have unsaved changes. Are you sure you want to discard them?',
+      title: title,
+      message: message,
       icon: Icons.warning_amber,
       iconColor: Colors.orange,
       confirmText: 'Discard',
@@ -65,11 +71,13 @@ class DialogPresets {
     BuildContext context, {
     String? itemType,
   }) {
+    final title = 'Clear All ${itemType ?? 'Items'}?';
+    final message =
+        'Are you sure you want to clear all ${itemType?.toLowerCase() ?? 'items'}? This action cannot be undone.';
     return SavePointsDialog.show(
       context,
-      title: 'Clear All ${itemType ?? 'Items'}?',
-      message:
-          'Are you sure you want to clear all ${itemType?.toLowerCase() ?? 'items'}? This action cannot be undone.',
+      title: title,
+      message: message,
       icon: Icons.clear_all,
       iconColor: Colors.orange,
       confirmText: 'Clear All',
@@ -102,11 +110,13 @@ class DialogPresets {
 
   /// Shows a "Feature not available" dialog
   static Future<bool?> showFeatureNotAvailable(BuildContext context) {
+    const title = 'Feature Not Available';
+    const message =
+        'This feature is currently under development and will be available soon.';
     return SavePointsDialog.show(
       context,
-      title: 'Feature Not Available',
-      message:
-          'This feature is currently under development and will be available soon.',
+      title: title,
+      message: message,
       icon: Icons.construction,
       iconColor: Colors.orange,
       confirmText: 'OK',
@@ -120,12 +130,14 @@ class DialogPresets {
     BuildContext context, {
     String? version,
   }) {
+    const title = 'Update Available';
+    final message = version != null
+        ? 'A new version ($version) is available. Would you like to update now?'
+        : 'A new version is available. Would you like to update now?';
     return SavePointsDialog.show(
       context,
-      title: 'Update Available',
-      message: version != null
-          ? 'A new version ($version) is available. Would you like to update now?'
-          : 'A new version is available. Would you like to update now?',
+      title: title,
+      message: message,
       icon: Icons.system_update,
       iconColor: Colors.green,
       confirmText: 'Update',

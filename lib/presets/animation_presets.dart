@@ -108,13 +108,6 @@ class AnimationPresets {
 
 /// Animation configuration for all component types
 class AnimationConfig {
-  final DialogAnimationDirection? dialogStart;
-  final DialogAnimationDirection? dialogEnd;
-  final SnackbarAnimationDirection? snackbarStart;
-  final SnackbarAnimationDirection? snackbarEnd;
-  final BottomsheetAnimationDirection? bottomsheetStart;
-  final BottomsheetAnimationDirection? bottomsheetEnd;
-
   const AnimationConfig({
     this.dialogStart,
     this.dialogEnd,
@@ -123,4 +116,10 @@ class AnimationConfig {
     this.bottomsheetStart,
     this.bottomsheetEnd,
   });
+  final DialogAnimationDirection? dialogStart;
+  final DialogAnimationDirection? dialogEnd;
+  final SnackbarAnimationDirection? snackbarStart;
+  final SnackbarAnimationDirection? snackbarEnd;
+  final BottomsheetAnimationDirection? bottomsheetStart;
+  final BottomsheetAnimationDirection? bottomsheetEnd;
 }
