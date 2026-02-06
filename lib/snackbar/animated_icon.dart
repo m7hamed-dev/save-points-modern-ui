@@ -74,15 +74,34 @@ class AnimatedIconState extends State<AnimatedIcon>
   @override
   Widget build(BuildContext context) {
     final isOutlined = widget.designStyle == ContentDesignStyle.outlined;
-    final decoration = BoxDecoration(
-      color: isOutlined
-          ? widget.iconColor.withValues(alpha: 0.08)
-          : widget.iconColor.withValues(alpha: 0.2),
-      shape: BoxShape.circle,
-      border: isOutlined
-          ? Border.all(color: widget.iconColor, width: 1.5)
-          : null,
-    );
+    final isColorHeader = widget.designStyle == ContentDesignStyle.colorHeader;
+
+    BoxDecoration decoration;
+    if (isColorHeader) {
+      // For colorHeader style: white circle with icon color
+      decoration = const BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x1A000000),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
+      );
+    } else if (isOutlined) {
+      decoration = BoxDecoration(
+        color: widget.iconColor.withValues(alpha: 0.08),
+        shape: BoxShape.circle,
+        border: Border.all(color: widget.iconColor, width: 1.5),
+      );
+    } else {
+      decoration = BoxDecoration(
+        color: widget.iconColor.withValues(alpha: 0.2),
+        shape: BoxShape.circle,
+      );
+    }
 
     final iconWidget = Container(
       width: SnackbarConstants.iconContainerSize,

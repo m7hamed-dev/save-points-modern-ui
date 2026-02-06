@@ -438,6 +438,42 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       ),
       _buildActionButton(
         context,
+        icon: Icons.gradient,
+        label: 'Color Header',
+        color: Colors.green,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Done',
+            message: 'The device has been created successfully.',
+            icon: Icons.check_circle,
+            iconColor: Colors.green,
+            designStyle: ContentDesignStyle.colorHeader,
+            confirmText: 'Continue',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.warning_amber,
+        label: 'Color Header Cancel',
+        color: Colors.red,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Cancel',
+            message: 'Are you sure you want to cancel? This can\'t be undone.',
+            icon: Icons.warning,
+            iconColor: Colors.red,
+            designStyle: ContentDesignStyle.colorHeader,
+            confirmText: 'Continue',
+            showCancelButton: true,
+            cancelText: 'Go Back',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.info_outline,
         label: 'Info Dialog',
         color: Colors.blue,
@@ -849,6 +885,51 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       ),
       _buildActionButton(
         context,
+        icon: Icons.gradient,
+        label: 'Color Header Success',
+        color: Colors.green,
+        onPressed: () {
+          SavePointsSnackbar.showSuccess(
+            context,
+            title: 'Done',
+            subtitle: 'The device has been created successfully.',
+            designStyle: ContentDesignStyle.colorHeader,
+            position: SnackbarPosition.top,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.gradient,
+        label: 'Color Header Error',
+        color: Colors.red,
+        onPressed: () {
+          SavePointsSnackbar.showError(
+            context,
+            title: 'Cancel',
+            subtitle: 'Are you sure you want to cancel? This can\'t be undone.',
+            designStyle: ContentDesignStyle.colorHeader,
+            position: SnackbarPosition.top,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.gradient,
+        label: 'Color Header Warning',
+        color: Colors.orange,
+        onPressed: () {
+          SavePointsSnackbar.showWarning(
+            context,
+            title: 'Warning',
+            subtitle: 'Please review your changes before proceeding.',
+            designStyle: ContentDesignStyle.colorHeader,
+            position: SnackbarPosition.top,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.notifications_none,
         label: 'Basic',
         color: Colors.blue,
@@ -1230,6 +1311,62 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                 'Clean, minimal look.',
                 style: TextStyle(fontSize: 16),
               ),
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.gradient,
+        label: 'Color Header',
+        color: Colors.green,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Success',
+            icon: Icons.check_circle,
+            iconColor: Colors.green,
+            designStyle: ContentDesignStyle.colorHeader,
+            child: const Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text(
+                'Card style with colored header gradient, centered icon in circle, '
+                'and modern design. Perfect for success states and confirmations.',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.gradient,
+        label: 'Color Header Info',
+        color: Colors.blue,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Information',
+            icon: Icons.info,
+            iconColor: Colors.blue,
+            designStyle: ContentDesignStyle.colorHeader,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.description),
+                  title: const Text('View Details'),
+                  subtitle: const Text('See more information'),
+                  onTap: () => Navigator.pop(context),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.share),
+                  title: const Text('Share'),
+                  subtitle: const Text('Share with others'),
+                  onTap: () => Navigator.pop(context),
+                ),
+              ],
             ),
           );
         },

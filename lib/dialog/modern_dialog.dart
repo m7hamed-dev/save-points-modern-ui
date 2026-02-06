@@ -137,6 +137,16 @@ class _ModernDialogState extends State<ModernDialog> {
           designStyle: widget.designStyle,
         );
 
+    final isColorHeader = colorConfig.designStyle == ContentDesignStyle.colorHeader;
+
+    if (isColorHeader) {
+      return _buildColorHeaderLayout(context, colorConfig);
+    }
+
+    return _buildDefaultLayout(context, colorConfig);
+  }
+
+  Widget _buildDefaultLayout(BuildContext context, DialogColorConfig colorConfig) {
     return RepaintBoundary(
       child: Material(
         color: Colors.transparent,
@@ -207,6 +217,223 @@ class _ModernDialogState extends State<ModernDialog> {
                         ),
                     ],
                   ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColorHeaderLayout(BuildContext context, DialogColorConfig colorConfig) {
+    return RepaintBoundary(
+      child: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            margin: DialogConstants.dialogMargin,
+            constraints: const BoxConstraints(
+              maxWidth: DialogConstants.maxDialogWidth,
+            ),
+            decoration: BoxDecoration(
+              color: colorConfig.backgroundColor,
+              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
+              child: _buildContent(
+                blur: widget.blur,
+                backdropFilter: widget.backdropFilter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Colored header with icon
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // Header gradient background
+                        Container(
+                          width: double.infinity,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                colorConfig.headerColor,
+                                colorConfig.headerColor.withValues(alpha: 0.3),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Close button
+                        Positioned(
+                          top: 12,
+                          right: 12,
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                size: 16,
+                                color: Color(0xFF666666),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Centered icon in circle
+                        if (widget.icon != null)
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: -28,
+                            child: Center(
+                              child: RepaintBoundary(
+                                child: Container(
+                                  width: 56,
+                                  height: 56,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.1),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    widget.icon,
+                                    size: 28,
+                                    color: colorConfig.iconColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    // Content area
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: widget.icon != null ? 40 : 24,
+                        left: 24,
+                        right: 24,
+                        bottom: 24,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Title
+                          RepaintBoundary(
+                            child: Text(
+                              widget.title,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: colorConfig.titleColor,
+                                letterSpacing: 0.2,
+                                height: 1.3,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // Message
+                          RepaintBoundary(
+                            child: Text(
+                              widget.message,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: colorConfig.messageColor,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          // Action button(s)
+                          if (_isLoading)
+                            RepaintBoundary(
+                              child: DialogLoadingIndicator(
+                                color: colorConfig.confirmColor,
+                              ),
+                            )
+                          else
+                            Column(
+                              children: [
+                                // Primary button (dark style)
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () => _handleConfirm(context),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: colorConfig.buttonColor,
+                                      foregroundColor: colorConfig.buttonTextColor,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                        horizontal: 24,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(28),
+                                      ),
+                                      elevation: 0,
+                                    ),
+                                    child: Text(
+                                      widget.confirmText,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Cancel button (if shown)
+                                if (widget.showCancelButton) ...[
+                                  const SizedBox(height: 12),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: TextButton(
+                                      onPressed: () => _handleCancel(context),
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: colorConfig.cancelColor,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                          horizontal: 24,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        widget.cancelText,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -137,6 +137,16 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
           designStyle: widget.designStyle,
         );
 
+    final isColorHeader = colorConfig.designStyle == ContentDesignStyle.colorHeader;
+
+    if (isColorHeader) {
+      return _buildColorHeaderLayout(context, colorConfig);
+    }
+
+    return _buildDefaultLayout(context, colorConfig);
+  }
+
+  Widget _buildDefaultLayout(BuildContext context, BottomsheetColorConfig colorConfig) {
     // Get keyboard height to adjust max height accordingly
     final viewInsets = MediaQuery.viewInsetsOf(context);
     final keyboardHeight = viewInsets.bottom;
@@ -234,6 +244,203 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                       ),
                   ],
                 ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColorHeaderLayout(BuildContext context, BottomsheetColorConfig colorConfig) {
+    // Get keyboard height to adjust max height accordingly
+    final viewInsets = MediaQuery.viewInsetsOf(context);
+    final keyboardHeight = viewInsets.bottom;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
+    // Calculate available height (screen height minus keyboard)
+    final availableHeight = screenHeight - keyboardHeight;
+
+    // Use the smaller of: configured maxHeight or available height (with some margin)
+    final configuredMaxHeight =
+        _cachedMaxHeight ??
+        (widget.maxHeight ?? screenHeight * BottomsheetConstants.maxHeight);
+
+    // When keyboard is visible, limit max height to available space minus safe margin
+    final maxHeight = keyboardHeight > 0
+        ? math.min(configuredMaxHeight, availableHeight - 20)
+        : configuredMaxHeight;
+
+    // Ensure minHeight is never greater than maxHeight
+    final minHeight = math.min(BottomsheetConstants.minHeight, maxHeight);
+
+    return RepaintBoundary(
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: maxHeight,
+            minHeight: minHeight,
+          ),
+          decoration: BoxDecoration(
+            color: colorConfig.backgroundColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(BottomsheetConstants.borderRadius),
+              topRight: Radius.circular(BottomsheetConstants.borderRadius),
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(BottomsheetConstants.borderRadius),
+              topRight: Radius.circular(BottomsheetConstants.borderRadius),
+            ),
+            child: _buildContent(
+              blur: widget.blur,
+              backdropFilter: widget.backdropFilter,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Colored header with icon
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Header gradient background
+                      Container(
+                        width: double.infinity,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              colorConfig.headerColor,
+                              colorConfig.headerColor.withValues(alpha: 0.3),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Handle
+                      if (widget.showHandle)
+                        Positioned(
+                          top: 12,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: Container(
+                              width: 40,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          ),
+                        ),
+                      // Close button
+                      if (widget.isDismissible)
+                        Positioned(
+                          top: 12,
+                          right: 12,
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                size: 16,
+                                color: Color(0xFF666666),
+                              ),
+                            ),
+                          ),
+                        ),
+                      // Centered icon in circle
+                      if (widget.icon != null)
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: -28,
+                          child: Center(
+                            child: RepaintBoundary(
+                              child: Container(
+                                width: 56,
+                                height: 56,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.1),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  widget.icon,
+                                  size: 28,
+                                  color: colorConfig.iconColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  // Content area
+                  Flexible(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: widget.icon != null ? 40 : 24,
+                        left: 24,
+                        right: 24,
+                        bottom: 24,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Title
+                          if (widget.title != null) ...[
+                            RepaintBoundary(
+                              child: Text(
+                                widget.title!,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorConfig.textColor,
+                                  letterSpacing: 0.2,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                          // Main content: loading indicator or scrollable child
+                          if (_isLoading)
+                            RepaintBoundary(
+                              child: BottomsheetLoadingIndicator(
+                                color: colorConfig.iconColor,
+                              ),
+                            )
+                          else if (widget.child != null)
+                            Flexible(
+                              child: RepaintBoundary(
+                                child: SingleChildScrollView(
+                                  physics: const ClampingScrollPhysics(),
+                                  child: widget.child!,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

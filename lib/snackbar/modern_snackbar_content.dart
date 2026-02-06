@@ -171,23 +171,48 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   }
 
   Color get _effectiveTitleColor {
-    if (widget.designStyle == ContentDesignStyle.outlined &&
+    if ((widget.designStyle == ContentDesignStyle.outlined ||
+            widget.designStyle == ContentDesignStyle.colorHeader) &&
         widget.titleColor != null) {
       return widget.titleColor!;
+    }
+    if (widget.designStyle == ContentDesignStyle.colorHeader) {
+      return const Color(0xFF424242);
     }
     return Colors.white;
   }
 
   Color get _effectiveSubtitleColor {
-    if (widget.designStyle == ContentDesignStyle.outlined &&
+    if ((widget.designStyle == ContentDesignStyle.outlined ||
+            widget.designStyle == ContentDesignStyle.colorHeader) &&
         widget.subtitleColor != null) {
       return widget.subtitleColor!;
+    }
+    if (widget.designStyle == ContentDesignStyle.colorHeader) {
+      return const Color(0xFF616161);
     }
     return Colors.white.withValues(alpha: 0.8);
   }
 
+  /// Get the header gradient color for colorHeader style
+  Color get _headerGradientColor {
+    // Create a light pastel version based on icon color
+    final hsl = HSLColor.fromColor(widget.iconColor);
+    return hsl.withSaturation(0.3).withLightness(0.92).toColor();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isColorHeader = widget.designStyle == ContentDesignStyle.colorHeader;
+
+    if (isColorHeader) {
+      return _buildColorHeaderLayout();
+    }
+
+    return _buildDefaultLayout();
+  }
+
+  Widget _buildDefaultLayout() {
     final hasBorder = widget.designStyle == ContentDesignStyle.outlined &&
         widget.borderColor != null;
 
@@ -320,6 +345,217 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         ),
       ),
     );
+    content = _wrapWithBackdrop(content);
+
+    return AnimatedBuilder(
+      animation: _entranceController,
+      builder: (context, child) {
+        return AnimatedWrapper(
+          animation: _entranceController,
+          animationType: widget.animation,
+          position: widget.position,
+          child: child!,
+        );
+      },
+      child: content,
+    );
+  }
+
+  Widget _buildColorHeaderLayout() {
+    final isBottom = widget.position == SnackbarPosition.bottom;
+    final constraints = BoxConstraints(
+      maxWidth: widget.maxWidth,
+      minWidth: isBottom ? SnackbarConstants.minWidthBottom : 0,
+    );
+
+    Widget content = RepaintBoundary(
+      child: Container(
+        constraints: constraints,
+        decoration: BoxDecoration(
+          color: widget.backgroundColor,
+          borderRadius: widget.borderRadius,
+          boxShadow: SnackbarShadows.getShadows(widget.designStyle),
+        ),
+        child: ClipRRect(
+          borderRadius: widget.borderRadius,
+          child: GestureDetector(
+            onTap: widget.dismissOnTap || widget.onTap != null
+                ? _handleTap
+                : null,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Colored header with icon
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Header gradient background
+                    Container(
+                      width: double.infinity,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            _headerGradientColor,
+                            _headerGradientColor.withValues(alpha: 0.3),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Close button
+                    if (widget.showCloseButton)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: GestureDetector(
+                          onTap: () {
+                            if (widget.onCloseButtonPressed != null) {
+                              widget.onCloseButtonPressed!();
+                            } else {
+                              _animateDismiss();
+                            }
+                          },
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              size: 14,
+                              color: Color(0xFF666666),
+                            ),
+                          ),
+                        ),
+                      ),
+                    // Centered icon in circle
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: -24,
+                      child: Center(
+                        child: RepaintBoundary(
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              widget.icon,
+                              size: 24,
+                              color: widget.iconColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Content area
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 32,
+                    left: 20,
+                    right: 20,
+                    bottom: 20,
+                  ),
+                  child: DefaultTextStyle(
+                    style: const TextStyle(decoration: TextDecoration.none),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Title
+                        Text(
+                          widget.title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: _effectiveTitleColor,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.2,
+                            height: 1.3,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        // Subtitle/Message
+                        if (widget.subtitle != null) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            widget.subtitle!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: _effectiveSubtitleColor,
+                              fontWeight: FontWeight.w400,
+                              height: 1.4,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ],
+                        // Action button
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              widget.onTap?.call();
+                              if (widget.dismissOnTap) {
+                                _animateDismiss();
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF2D2D2D),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 24,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: const Text(
+                              'Continue',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Progress indicator
+                if (widget.showProgressIndicator)
+                  RepaintBoundary(
+                    child: ProgressIndicatorBar(
+                      animation: _progressController,
+                      color: widget.iconColor,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
     content = _wrapWithBackdrop(content);
 
     return AnimatedBuilder(

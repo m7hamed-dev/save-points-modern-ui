@@ -29,9 +29,7 @@ class _MyAppState extends State<MyApp> {
       title: 'SavePoints Modern UI',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6366F1),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6366F1)),
         useMaterial3: true,
         cardTheme: CardThemeData(
           elevation: 2,
