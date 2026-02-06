@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.5] - 2026-02-07
+
+### Added
+
+- **OrganicShape**: New shared utility for organic blob-like shapes (amoeba/fluid forms)
+  - `OrganicShape.pathInRect()` for smooth irregular closed paths
+  - `OrganicShapeClipper` for clipping widgets to organic blob shape
+  - `OrganicBlobBorderPainter` for painting blob outlines with optional soft shadow/glow
+
+### Improved
+
+- **DialogIcon**: Enhanced icon styling with entrance scale animation, subtle pulse glow, gradient icon fills, and refined design-style decorations
+- **AnimatedIcon**: Added `colorHeader` design style support for snackbar icons; refined solid, outlined, and color-header icon container styling with gradient fills
+
 ## [1.1.4] - 2026-02-02
 
 ### Added
