@@ -19,12 +19,9 @@ void configureSavePoints() {
 
   // Customize specific snackbar types
   config.snackbar.customizeType(
-    SnackbarType.success,
+    .success,
     const SnackbarTypeConfig(
-      backgroundColor: {
-        Brightness.dark: Color(0xFF0D7377),
-        Brightness.light: Color(0xFF14A085),
-      },
+      backgroundColor: {.dark: Color(0xFF0D7377), .light: Color(0xFF14A085)},
       iconColor: Colors.tealAccent,
       defaultIcon: Icons.check_circle_outline,
     ),

@@ -9,6 +9,16 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_consta
 /// based on the specified [SnackbarAnimation] type.
 /// For [ContentDesignStyle.outlined], the icon sits in a bordered circle.
 class AnimatedIcon extends StatefulWidget {
+  /// Creates an animated icon widget.
+  const AnimatedIcon({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.type,
+    required this.animation,
+    this.designStyle,
+  });
+
   /// The icon data to display.
   final IconData icon;
 
@@ -23,16 +33,6 @@ class AnimatedIcon extends StatefulWidget {
 
   /// When [ContentDesignStyle.outlined], uses bordered circle instead of filled.
   final ContentDesignStyle? designStyle;
-
-  /// Creates an animated icon widget.
-  const AnimatedIcon({
-    super.key,
-    required this.icon,
-    required this.iconColor,
-    required this.type,
-    required this.animation,
-    this.designStyle,
-  });
 
   @override
   State<AnimatedIcon> createState() => AnimatedIconState();

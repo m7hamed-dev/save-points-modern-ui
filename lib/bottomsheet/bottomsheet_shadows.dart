@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Bottom sheet shadows
 class BottomsheetShadows {
+  const BottomsheetShadows();
   static List<BoxShadow> getShadows(bool isDark, {bool isOutlined = false}) {
     if (isOutlined) {
       return [

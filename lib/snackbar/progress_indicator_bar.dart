@@ -3,14 +3,14 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_consta
 
 /// Progress indicator bar at the bottom with rounded ends
 class ProgressIndicatorBar extends StatelessWidget {
-  final AnimationController animation;
-  final Color color;
-
   const ProgressIndicatorBar({
     super.key,
     required this.animation,
     required this.color,
   });
+
+  final AnimationController animation;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

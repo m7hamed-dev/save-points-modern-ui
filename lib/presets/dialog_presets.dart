@@ -3,6 +3,8 @@ import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
 
 /// Predefined dialog configurations for common use cases
 class DialogPresets {
+  const DialogPresets();
+
   /// Shows a delete confirmation dialog
   ///
   /// Returns `true` if user confirmed deletion, `false` if cancelled

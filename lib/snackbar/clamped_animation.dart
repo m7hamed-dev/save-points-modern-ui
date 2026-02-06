@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// which can produce values outside the normal range
 class ClampedAnimation extends Animation<double>
     with AnimationWithParentMixin<double> {
-  ClampedAnimation(this.parent);
+  const ClampedAnimation(this.parent);
 
   @override
   final Animation<double> parent;
