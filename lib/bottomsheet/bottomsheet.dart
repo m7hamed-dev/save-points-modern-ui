@@ -12,4 +12,5 @@ export 'bottomsheet_handle.dart';
 export 'bottomsheet_container.dart';
 export 'bottomsheet_loading_indicator.dart';
 export 'bottomsheet_transition_builder.dart';
+export 'bottomsheet_transition_scope.dart';
 export 'modern_bottomsheet.dart';
