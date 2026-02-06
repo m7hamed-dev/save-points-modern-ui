@@ -201,24 +201,38 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
 
   Color get _effectiveTitleColor {
     if ((widget.designStyle == ContentDesignStyle.outlined ||
-            widget.designStyle == ContentDesignStyle.colorHeader) &&
+            widget.designStyle == ContentDesignStyle.colorHeader ||
+            widget.designStyle == ContentDesignStyle.leftAccent ||
+            widget.designStyle == ContentDesignStyle.tonal) &&
         widget.titleColor != null) {
       return widget.titleColor!;
     }
     if (widget.designStyle == ContentDesignStyle.colorHeader) {
-      return const Color(0xFF424242);
+      return _isDark ? Colors.white : const Color(0xFF424242);
+    }
+    if (widget.designStyle == ContentDesignStyle.leftAccent ||
+        widget.designStyle == ContentDesignStyle.tonal) {
+      return _isDark ? Colors.white : const Color(0xFF424242);
     }
     return Colors.white;
   }
 
+  bool get _isDark => Theme.of(context).brightness == Brightness.dark;
+
   Color get _effectiveSubtitleColor {
     if ((widget.designStyle == ContentDesignStyle.outlined ||
-            widget.designStyle == ContentDesignStyle.colorHeader) &&
+            widget.designStyle == ContentDesignStyle.colorHeader ||
+            widget.designStyle == ContentDesignStyle.leftAccent ||
+            widget.designStyle == ContentDesignStyle.tonal) &&
         widget.subtitleColor != null) {
       return widget.subtitleColor!;
     }
     if (widget.designStyle == ContentDesignStyle.colorHeader) {
-      return const Color(0xFF616161);
+      return _isDark ? Colors.grey[400]! : const Color(0xFF616161);
+    }
+    if (widget.designStyle == ContentDesignStyle.leftAccent ||
+        widget.designStyle == ContentDesignStyle.tonal) {
+      return _isDark ? Colors.grey[400]! : const Color(0xFF616161);
     }
     return Colors.white.withValues(alpha: 0.8);
   }
@@ -251,6 +265,9 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
       maxWidth: widget.maxWidth,
       minWidth: isBottom ? SnackbarConstants.minWidthBottom : 0,
     );
+    final showLeftAccent =
+        widget.designStyle == ContentDesignStyle.leftAccent;
+
     Widget content = RepaintBoundary(
       child: Container(
         constraints: constraints,
@@ -263,9 +280,58 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
               : null,
           boxShadow: SnackbarShadows.getShadows(widget.designStyle),
         ),
-        child: ClipRRect(
-          borderRadius: widget.borderRadius,
-          child: Column(
+        child: showLeftAccent
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    width: 5,
+                    decoration: BoxDecoration(
+                      color: widget.iconColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: widget.borderRadius.topLeft,
+                        bottomLeft: widget.borderRadius.bottomLeft,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topRight: widget.borderRadius.topRight,
+                        bottomRight: widget.borderRadius.bottomRight,
+                      ),
+                      child: _buildDefaultLayoutContent(),
+                    ),
+                  ),
+                ],
+              )
+            : ClipRRect(
+                borderRadius: widget.borderRadius,
+                child: _buildDefaultLayoutContent(),
+              ),
+      ),
+    );
+    content = _wrapWithBackdrop(content);
+    content = _wrapWithSwipeDismiss(content);
+
+    return AnimatedBuilder(
+      animation: _entranceController,
+      builder: (context, child) {
+        return AnimatedWrapper(
+          animation: _entranceController,
+          animationType: widget.animation,
+          position: widget.position,
+          isDismissing: _isDismissing,
+          child: child!,
+        );
+      },
+      child: content,
+    );
+  }
+
+  Widget _buildDefaultLayoutContent() {
+    return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               GestureDetector(
@@ -370,25 +436,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                   ),
                 ),
             ],
-          ),
-        ),
-      ),
-    );
-    content = _wrapWithBackdrop(content);
-    content = _wrapWithSwipeDismiss(content);
-
-    return AnimatedBuilder(
-      animation: _entranceController,
-      builder: (context, child) {
-        return AnimatedWrapper(
-          animation: _entranceController,
-          animationType: widget.animation,
-          position: widget.position,
-          isDismissing: _isDismissing,
-          child: child!,
-        );
-      },
-      child: content,
     );
   }
 

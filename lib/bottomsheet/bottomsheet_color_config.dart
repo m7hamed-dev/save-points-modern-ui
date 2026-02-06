@@ -80,9 +80,13 @@ class BottomsheetColorConfig {
 
     switch (designStyle) {
       case ContentDesignStyle.outlined:
+      case ContentDesignStyle.leftAccent:
         return isDark ? const Color(0xFF1F2937) : Colors.white;
       case ContentDesignStyle.colorHeader:
         return isDark ? const Color(0xFF111827) : const Color(0xFFFAFAFA);
+      case ContentDesignStyle.tonal:
+        if (background != null) return background;
+        return isDark ? const Color(0xFF1F2937) : Colors.white;
       case ContentDesignStyle.solid:
         return isDark ? const Color(0xFF1F2937) : Colors.white;
     }
@@ -98,6 +102,8 @@ class BottomsheetColorConfig {
     switch (designStyle) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
       case ContentDesignStyle.solid:
         return isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
     }
@@ -114,6 +120,8 @@ class BottomsheetColorConfig {
     switch (designStyle) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
         return isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary;
       case ContentDesignStyle.solid:
         return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
@@ -132,6 +140,7 @@ class BottomsheetColorConfig {
           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
       return baseColor.withValues(alpha: isDark ? 0.4 : 0.25);
     }
+    // leftAccent uses a left bar; tonal has no border
     return null;
   }
 

@@ -73,13 +73,41 @@ class SnackbarColorConfig {
     switch (designStyle) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
         return isDark ? Colors.grey[900]! : Colors.white;
+      case ContentDesignStyle.tonal:
+        return _getTonalBackgroundColor(type, isDark);
       case ContentDesignStyle.solid:
         return config.getBackgroundColor(
               type,
               isDark ? Brightness.dark : Brightness.light,
             ) ??
             _getBackgroundColor(type, isDark);
+    }
+  }
+
+  static Color _getTonalBackgroundColor(SnackbarType type, bool isDark) {
+    if (isDark) {
+      switch (type) {
+        case SnackbarType.success:
+          return const Color(0xFF064E3B);
+        case SnackbarType.error:
+          return const Color(0xFF7F1D1D);
+        case SnackbarType.warning:
+          return const Color(0xFF78350F);
+        case SnackbarType.info:
+          return const Color(0xFF1E3A5F);
+      }
+    }
+    switch (type) {
+      case SnackbarType.success:
+        return const Color(0xFFDCFCE7);
+      case SnackbarType.error:
+        return const Color(0xFFFEE2E2);
+      case SnackbarType.warning:
+        return const Color(0xFFFEF3C7);
+      case SnackbarType.info:
+        return const Color(0xFFDBEAFE);
     }
   }
 
@@ -90,6 +118,8 @@ class SnackbarColorConfig {
     switch (designStyle) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
         return isDark ? Colors.white : const Color(0xFF424242);
       case ContentDesignStyle.solid:
         return Colors.white;
@@ -103,6 +133,8 @@ class SnackbarColorConfig {
     switch (designStyle) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
         return isDark ? Colors.grey[400]! : const Color(0xFF616161);
       case ContentDesignStyle.solid:
         return Colors.white.withValues(alpha: 0.8);

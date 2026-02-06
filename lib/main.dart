@@ -474,6 +474,40 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       ),
       _buildActionButton(
         context,
+        icon: Icons.border_color,
+        label: 'Left Accent',
+        color: Colors.teal,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Left Accent Style',
+            message: 'Dialog with a colored vertical bar on the left edge.',
+            icon: Icons.check_circle_rounded,
+            iconColor: Colors.teal,
+            designStyle: ContentDesignStyle.leftAccent,
+            confirmText: 'OK',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.tonality,
+        label: 'Tonal',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Tonal Style',
+            message: 'Material 3 filled tonal — light tinted background.',
+            icon: Icons.info_rounded,
+            iconColor: Colors.indigo,
+            designStyle: ContentDesignStyle.tonal,
+            confirmText: 'OK',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.info_outline,
         label: 'Info Dialog',
         color: Colors.blue,
@@ -930,6 +964,35 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       ),
       _buildActionButton(
         context,
+        icon: Icons.border_color,
+        label: 'Left Accent',
+        color: Colors.teal,
+        onPressed: () {
+          SavePointsSnackbar.showSuccess(
+            context,
+            title: 'Left Accent',
+            subtitle: 'Snackbar with a colored bar on the left.',
+            designStyle: ContentDesignStyle.leftAccent,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.tonality,
+        label: 'Tonal',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Tonal Style',
+            subtitle: 'Light tinted background, dark text.',
+            type: SnackbarType.info,
+            designStyle: ContentDesignStyle.tonal,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.notifications_none,
         label: 'Basic',
         color: Colors.blue,
@@ -1367,6 +1430,50 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                   onTap: () => Navigator.pop(context),
                 ),
               ],
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.border_color,
+        label: 'Left Accent',
+        color: Colors.teal,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Left Accent Sheet',
+            icon: Icons.check_circle_rounded,
+            iconColor: Colors.teal,
+            designStyle: ContentDesignStyle.leftAccent,
+            child: const Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text(
+                'Bottom sheet with a colored vertical bar on the left.',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.tonality,
+        label: 'Tonal',
+        color: Colors.indigo,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Tonal Sheet',
+            icon: Icons.info_rounded,
+            iconColor: Colors.indigo,
+            designStyle: ContentDesignStyle.tonal,
+            child: const Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text(
+                'Material 3 tonal style — light tinted surface.',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           );
         },

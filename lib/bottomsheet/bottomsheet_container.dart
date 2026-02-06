@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
@@ -23,22 +24,31 @@ class BottomsheetContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOutlined = colorConfig.borderColor != null;
+    final isLeftAccent =
+        colorConfig.designStyle == ContentDesignStyle.leftAccent;
 
-    return Container(
+    final borderRadius = BorderRadius.only(
+      topLeft: Radius.circular(
+        showTopRadius ? BottomsheetConstants.topBorderRadius : 0,
+      ),
+      topRight: Radius.circular(
+        showTopRadius ? BottomsheetConstants.topBorderRadius : 0,
+      ),
+      bottomLeft: const Radius.circular(BottomsheetConstants.borderRadius),
+      bottomRight: const Radius.circular(BottomsheetConstants.borderRadius),
+    );
+
+    Widget content = Container(
       padding: BottomsheetConstants.padding,
       decoration: BoxDecoration(
         color: colorConfig.backgroundColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(
-            showTopRadius ? BottomsheetConstants.topBorderRadius : 0,
-          ),
-          topRight: Radius.circular(
-            showTopRadius ? BottomsheetConstants.topBorderRadius : 0,
-          ),
-          bottomLeft: const Radius.circular(BottomsheetConstants.borderRadius),
-          bottomRight: const Radius.circular(BottomsheetConstants.borderRadius),
-        ),
-        border: isOutlined
+        borderRadius: isLeftAccent
+            ? BorderRadius.only(
+                topRight: borderRadius.topRight,
+                bottomRight: borderRadius.bottomRight,
+              )
+            : borderRadius,
+        border: isOutlined && !isLeftAccent
             ? Border(
                 top: BorderSide(color: colorConfig.borderColor!, width: 2),
                 left: BorderSide(color: colorConfig.borderColor!, width: 2),
@@ -48,9 +58,28 @@ class BottomsheetContainer extends StatelessWidget {
         boxShadow: BottomsheetShadows.getShadows(
           isDark,
           isOutlined: isOutlined,
+          designStyle: colorConfig.designStyle,
         ),
       ),
       child: SafeArea(top: false, child: child),
     );
+
+    if (isLeftAccent) {
+      content = ClipRRect(
+        borderRadius: borderRadius,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 5,
+              color: colorConfig.iconColor,
+            ),
+            Expanded(child: content),
+          ],
+        ),
+      );
+    }
+
+    return content;
   }
 }

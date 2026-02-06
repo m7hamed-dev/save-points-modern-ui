@@ -50,6 +50,49 @@ class SnackbarShadows {
           ),
         ];
 
+      case ContentDesignStyle.leftAccent:
+        // Same as outlined: subtle, elegant shadow
+        return [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 1,
+            offset: const Offset(0, 1),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+            spreadRadius: -4,
+          ),
+        ];
+
+      case ContentDesignStyle.tonal:
+        // Softer than solid, medium depth
+        return [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+            spreadRadius: -2,
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 28,
+            offset: const Offset(0, 14),
+            spreadRadius: -6,
+          ),
+        ];
+
       case ContentDesignStyle.solid:
         // Rich, deep shadow for solid style
         return [

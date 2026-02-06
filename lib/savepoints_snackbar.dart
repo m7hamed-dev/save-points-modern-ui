@@ -176,7 +176,10 @@ class SavePointsSnackbar {
         titleColor: colorConfig.titleColor,
         subtitleColor: colorConfig.subtitleColor,
         showCloseButton:
-            finalDesignStyle == ContentDesignStyle.outlined || finalDismissible,
+            finalDesignStyle == ContentDesignStyle.outlined ||
+                finalDesignStyle == ContentDesignStyle.leftAccent ||
+                finalDesignStyle == ContentDesignStyle.tonal ||
+                finalDismissible,
       );
       // Return a dummy controller for top position. The overlay shows the real
       // toast at top; we show a minimal SnackBar on-screen (required by Flutter
@@ -244,7 +247,9 @@ class SavePointsSnackbar {
               : null,
           showCloseButton:
               finalDesignStyle == ContentDesignStyle.outlined ||
-              finalDismissible,
+                  finalDesignStyle == ContentDesignStyle.leftAccent ||
+                  finalDesignStyle == ContentDesignStyle.tonal ||
+                  finalDismissible,
         ),
         action: onActionPressed != null && actionLabel != null
             ? SnackBarAction(

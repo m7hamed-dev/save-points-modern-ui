@@ -33,6 +33,8 @@ class DialogColorConfig {
          backgroundColor: backgroundColor,
          designStyle: designStyle ?? ContentDesignStyle.solid,
          isDark: isDark,
+         iconColor: iconColor ??
+             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
        ),
        confirmColor =
            confirmButtonColor ??
@@ -74,14 +76,26 @@ class DialogColorConfig {
     required Color? backgroundColor,
     required ContentDesignStyle designStyle,
     required bool isDark,
+    Color? iconColor,
   }) {
     if (backgroundColor != null) return backgroundColor;
 
     switch (designStyle) {
       case ContentDesignStyle.outlined:
+      case ContentDesignStyle.leftAccent:
         return isDark ? const Color(0xFF1F2937) : Colors.white;
       case ContentDesignStyle.colorHeader:
         return isDark ? const Color(0xFF111827) : const Color(0xFFFAFAFA);
+      case ContentDesignStyle.tonal:
+        if (iconColor != null) {
+          final hsl = HSLColor.fromColor(iconColor);
+          return isDark
+              ? hsl.withSaturation(0.2).withLightness(0.18).toColor()
+              : hsl.withSaturation(0.25).withLightness(0.95).toColor();
+        }
+        return isDark
+            ? const Color(0xFF1F2937).withValues(alpha: 0.98)
+            : Colors.white.withValues(alpha: 0.98);
       case ContentDesignStyle.solid:
         return isDark
             ? const Color(0xFF1F2937).withValues(alpha: 0.98)
@@ -101,6 +115,7 @@ class DialogColorConfig {
           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
       return baseColor.withValues(alpha: isDark ? 0.5 : 0.3);
     }
+    // leftAccent uses a left bar, not full border; tonal has no border
     return null;
   }
 
@@ -111,6 +126,8 @@ class DialogColorConfig {
     switch (designStyle) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
       case ContentDesignStyle.solid:
         return isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
     }
@@ -123,6 +140,8 @@ class DialogColorConfig {
     switch (designStyle) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
       case ContentDesignStyle.solid:
         return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
     }

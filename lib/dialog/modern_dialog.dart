@@ -217,7 +217,11 @@ class _ModernDialogState extends State<ModernDialog> {
                             isDark: widget.isDark,
                             isOutlined:
                                 colorConfig.designStyle ==
-                                ContentDesignStyle.outlined,
+                                    ContentDesignStyle.outlined ||
+                                colorConfig.designStyle ==
+                                    ContentDesignStyle.leftAccent ||
+                                colorConfig.designStyle ==
+                                    ContentDesignStyle.tonal,
                             onConfirm: () => _handleConfirm(context),
                             onCancel: () => _handleCancel(context),
                           ),
