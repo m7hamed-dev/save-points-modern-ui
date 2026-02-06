@@ -3,14 +3,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart
 
 /// Snackbar queue item
 class _QueuedSnackbar {
-  final BuildContext context;
-  final String title;
-  final String? subtitle;
-  final SnackbarType? type;
-  final Duration? duration;
-  final bool showProgressIndicator;
-
-  _QueuedSnackbar({
+  const _QueuedSnackbar({
     required this.context,
     required this.title,
     this.subtitle,
@@ -18,11 +11,17 @@ class _QueuedSnackbar {
     this.duration,
     this.showProgressIndicator = false,
   });
+  final BuildContext context;
+  final String title;
+  final String? subtitle;
+  final SnackbarType? type;
+  final Duration? duration;
+  final bool showProgressIndicator;
 }
 
 /// Manages a queue of snackbars to show them one at a time
 class SnackbarQueue {
-  static final SnackbarQueue _instance = SnackbarQueue._internal();
+  static final _instance = SnackbarQueue._internal();
   factory SnackbarQueue() => _instance;
   SnackbarQueue._internal();
 
@@ -73,28 +72,28 @@ class SnackbarQueue {
             showProgressIndicator: item.showProgressIndicator,
           )
         : item.type == SnackbarType.success
-            ? SavePointsSnackbar.showSuccess(
-                item.context,
-                title: item.title,
-                subtitle: item.subtitle,
-                duration: item.duration,
-                showProgressIndicator: item.showProgressIndicator,
-              )
-            : item.type == SnackbarType.error
-                ? SavePointsSnackbar.showError(
-                    item.context,
-                    title: item.title,
-                    subtitle: item.subtitle,
-                    duration: item.duration,
-                    showProgressIndicator: item.showProgressIndicator,
-                  )
-                : SavePointsSnackbar.showWarning(
-                    item.context,
-                    title: item.title,
-                    subtitle: item.subtitle,
-                    duration: item.duration,
-                    showProgressIndicator: item.showProgressIndicator,
-                  );
+        ? SavePointsSnackbar.showSuccess(
+            item.context,
+            title: item.title,
+            subtitle: item.subtitle,
+            duration: item.duration,
+            showProgressIndicator: item.showProgressIndicator,
+          )
+        : item.type == SnackbarType.error
+        ? SavePointsSnackbar.showError(
+            item.context,
+            title: item.title,
+            subtitle: item.subtitle,
+            duration: item.duration,
+            showProgressIndicator: item.showProgressIndicator,
+          )
+        : SavePointsSnackbar.showWarning(
+            item.context,
+            title: item.title,
+            subtitle: item.subtitle,
+            duration: item.duration,
+            showProgressIndicator: item.showProgressIndicator,
+          );
 
     controller.closed.then((_) {
       _isShowing = false;
@@ -119,4 +118,3 @@ class SnackbarQueue {
   /// Checks if a snackbar is currently showing
   bool get isShowing => _isShowing;
 }
-

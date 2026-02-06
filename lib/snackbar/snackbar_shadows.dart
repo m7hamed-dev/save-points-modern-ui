@@ -3,7 +3,9 @@ import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dar
 
 /// Snackbar shadows configuration
 class SnackbarShadows {
-  static List<BoxShadow> getShadows([ContentDesignStyle style = ContentDesignStyle.solid]) {
+  static List<BoxShadow> getShadows([
+    ContentDesignStyle style = ContentDesignStyle.solid,
+  ]) {
     if (style == ContentDesignStyle.outlined) {
       return [
         BoxShadow(

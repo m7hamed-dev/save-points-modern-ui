@@ -89,4 +89,3 @@ class SemanticsProperties {
     this.onTap,
   });
 }
-

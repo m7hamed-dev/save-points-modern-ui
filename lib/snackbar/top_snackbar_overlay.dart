@@ -443,7 +443,8 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
         constraints: BoxConstraints(maxWidth: widget.maxWidth),
         child: Container(
           width: double.infinity,
-          decoration: widget.designStyle != ContentDesignStyle.outlined &&
+          decoration:
+              widget.designStyle != ContentDesignStyle.outlined &&
                   widget.borderWidth > 0 &&
                   widget.borderColor != null
               ? BoxDecoration(
@@ -481,8 +482,9 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
                   ? widget.borderColor
                   : null,
               showCloseButton: widget.showCloseButton,
-              onCloseButtonPressed:
-                  widget.showCloseButton ? _handleDismiss : null,
+              onCloseButtonPressed: widget.showCloseButton
+                  ? _handleDismiss
+                  : null,
             ),
           ),
         ),

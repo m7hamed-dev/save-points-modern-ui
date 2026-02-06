@@ -19,8 +19,12 @@ class ProgressIndicatorBar extends StatelessWidget {
       builder: (context, child) {
         return ClipRRect(
           borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(SnackbarConstants.progressBarBorderRadius),
-            bottomRight: Radius.circular(SnackbarConstants.progressBarBorderRadius),
+            bottomLeft: Radius.circular(
+              SnackbarConstants.progressBarBorderRadius,
+            ),
+            bottomRight: Radius.circular(
+              SnackbarConstants.progressBarBorderRadius,
+            ),
           ),
           child: LinearProgressIndicator(
             value: 1.0 - animation.value,

@@ -41,4 +41,3 @@ class KeyboardUtils {
     hideKeyboard(context);
   }
 }
-

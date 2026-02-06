@@ -48,7 +48,8 @@ class DialogPresets {
     return SavePointsDialog.show(
       context,
       title: 'Discard Changes?',
-      message: 'You have unsaved changes. Are you sure you want to discard them?',
+      message:
+          'You have unsaved changes. Are you sure you want to discard them?',
       icon: Icons.warning_amber,
       iconColor: Colors.orange,
       confirmText: 'Discard',
@@ -67,7 +68,8 @@ class DialogPresets {
     return SavePointsDialog.show(
       context,
       title: 'Clear All ${itemType ?? 'Items'}?',
-      message: 'Are you sure you want to clear all ${itemType?.toLowerCase() ?? 'items'}? This action cannot be undone.',
+      message:
+          'Are you sure you want to clear all ${itemType?.toLowerCase() ?? 'items'}? This action cannot be undone.',
       icon: Icons.clear_all,
       iconColor: Colors.orange,
       confirmText: 'Clear All',
@@ -103,7 +105,8 @@ class DialogPresets {
     return SavePointsDialog.show(
       context,
       title: 'Feature Not Available',
-      message: 'This feature is currently under development and will be available soon.',
+      message:
+          'This feature is currently under development and will be available soon.',
       icon: Icons.construction,
       iconColor: Colors.orange,
       confirmText: 'OK',
@@ -131,4 +134,3 @@ class DialogPresets {
     );
   }
 }
-

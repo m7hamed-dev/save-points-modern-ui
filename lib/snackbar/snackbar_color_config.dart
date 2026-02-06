@@ -23,68 +23,70 @@ class SnackbarColorConfig {
     required SnackbarType type,
     required SnackbarConfig config,
     ContentDesignStyle? designStyle,
-  })  : designStyle = designStyle ?? config.defaultDesignStyle,
-        backgroundColor = background ??
-            (gradient == null
-                ? ((designStyle ?? config.defaultDesignStyle) ==
-                        ContentDesignStyle.outlined
-                    ? (isDark ? Colors.grey[900]! : Colors.white)
-                    : (config.getBackgroundColor(
-                              type,
-                              isDark ? Brightness.dark : Brightness.light,
-                            ) ??
-                            _getBackgroundColor(type, isDark)))
-                : Colors.transparent),
-        iconColor =
-            iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
-        defaultIcon = config.getDefaultIcon(type) ?? _getDefaultIcon(type),
-        titleColor = (designStyle ?? config.defaultDesignStyle) ==
-                ContentDesignStyle.outlined
-            ? (isDark ? Colors.white : const Color(0xFF424242))
-            : Colors.white,
-        subtitleColor = (designStyle ?? config.defaultDesignStyle) ==
-                ContentDesignStyle.outlined
-            ? (isDark ? Colors.grey[400]! : const Color(0xFF616161))
-            : Colors.white.withValues(alpha: 0.8),
-        borderColor = iconColor ??
-            config.getIconColor(type) ??
-            _getIconColor(type);
+  }) : designStyle = designStyle ?? config.defaultDesignStyle,
+       backgroundColor =
+           background ??
+           (gradient == null
+               ? ((designStyle ?? config.defaultDesignStyle) ==
+                         ContentDesignStyle.outlined
+                     ? (isDark ? Colors.grey[900]! : Colors.white)
+                     : (config.getBackgroundColor(
+                             type,
+                             isDark ? Brightness.dark : Brightness.light,
+                           ) ??
+                           _getBackgroundColor(type, isDark)))
+               : Colors.transparent),
+       iconColor =
+           iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
+       defaultIcon = config.getDefaultIcon(type) ?? _getDefaultIcon(type),
+       titleColor =
+           (designStyle ?? config.defaultDesignStyle) ==
+               ContentDesignStyle.outlined
+           ? (isDark ? Colors.white : const Color(0xFF424242))
+           : Colors.white,
+       subtitleColor =
+           (designStyle ?? config.defaultDesignStyle) ==
+               ContentDesignStyle.outlined
+           ? (isDark ? Colors.grey[400]! : const Color(0xFF616161))
+           : Colors.white.withValues(alpha: 0.8),
+       borderColor =
+           iconColor ?? config.getIconColor(type) ?? _getIconColor(type);
 
   static Color _getBackgroundColor(SnackbarType type, bool isDark) {
     switch (type) {
-      case SnackbarType.success:
+      case .success:
         return isDark ? const Color(0xFF1B5E20) : const Color(0xFF2E7D32);
-      case SnackbarType.error:
+      case .error:
         return isDark ? const Color(0xFFB71C1C) : const Color(0xFFD32F2F);
-      case SnackbarType.warning:
+      case .warning:
         return isDark ? const Color(0xFFE65100) : const Color(0xFFF57C00);
-      case SnackbarType.info:
+      case .info:
         return isDark ? const Color(0xFF2C2C2C) : const Color(0xFF222222);
     }
   }
 
   static Color _getIconColor(SnackbarType type) {
     switch (type) {
-      case SnackbarType.success:
+      case .success:
         return Colors.greenAccent;
-      case SnackbarType.error:
+      case .error:
         return Colors.redAccent;
-      case SnackbarType.warning:
+      case .warning:
         return Colors.orangeAccent;
-      case SnackbarType.info:
+      case .info:
         return Colors.white;
     }
   }
 
   static IconData _getDefaultIcon(SnackbarType type) {
     switch (type) {
-      case SnackbarType.success:
+      case .success:
         return Icons.check_circle;
-      case SnackbarType.error:
+      case .error:
         return Icons.error;
-      case SnackbarType.warning:
+      case .warning:
         return Icons.warning;
-      case SnackbarType.info:
+      case .info:
         return Icons.info;
     }
   }

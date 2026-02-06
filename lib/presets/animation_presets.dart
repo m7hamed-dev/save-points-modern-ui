@@ -6,102 +6,103 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 class AnimationPresets {
   /// Smooth fade animation
   static const fade = AnimationConfig(
-    dialogStart: DialogAnimationDirection.fade,
-    dialogEnd: DialogAnimationDirection.fade,
-    snackbarStart: SnackbarAnimationDirection.fade,
-    snackbarEnd: SnackbarAnimationDirection.fade,
-    bottomsheetStart: BottomsheetAnimationDirection.fade,
-    bottomsheetEnd: BottomsheetAnimationDirection.fade,
+    dialogStart: .fade,
+    dialogEnd: .fade,
+    snackbarStart: .fade,
+    snackbarEnd: .fade,
+    bottomsheetStart: .fade,
+    bottomsheetEnd: .fade,
   );
 
   /// Slide from bottom (default for bottom sheets)
   static const slideFromBottom = AnimationConfig(
-    dialogStart: DialogAnimationDirection.fromBottom,
-    dialogEnd: DialogAnimationDirection.fromBottom,
-    snackbarStart: SnackbarAnimationDirection.fromBottom,
-    snackbarEnd: SnackbarAnimationDirection.fromBottom,
-    bottomsheetStart: BottomsheetAnimationDirection.fromBottom,
-    bottomsheetEnd: BottomsheetAnimationDirection.fromBottom,
+    dialogStart: .fromBottom,
+    dialogEnd: .fromBottom,
+    snackbarStart: .fromBottom,
+    snackbarEnd: .fromBottom,
+    bottomsheetStart: .fromBottom,
+    bottomsheetEnd: .fromBottom,
   );
 
   /// Slide from top
   static const slideFromTop = AnimationConfig(
-    dialogStart: DialogAnimationDirection.fromTop,
-    dialogEnd: DialogAnimationDirection.fromTop,
-    snackbarStart: SnackbarAnimationDirection.fromTop,
-    snackbarEnd: SnackbarAnimationDirection.fromTop,
-    bottomsheetStart: BottomsheetAnimationDirection.fromBottom, // Bottom sheets always from bottom
-    bottomsheetEnd: BottomsheetAnimationDirection.fromBottom,
+    dialogStart: .fromTop,
+    dialogEnd: .fromTop,
+    snackbarStart: .fromTop,
+    snackbarEnd: .fromTop,
+    bottomsheetStart: BottomsheetAnimationDirection
+        .fromBottom, // Bottom sheets always from bottom
+    bottomsheetEnd: .fromBottom,
   );
 
   /// Slide from left
   static const slideFromLeft = AnimationConfig(
-    dialogStart: DialogAnimationDirection.fromLeft,
-    dialogEnd: DialogAnimationDirection.fromLeft,
-    snackbarStart: SnackbarAnimationDirection.fromLeft,
-    snackbarEnd: SnackbarAnimationDirection.fromLeft,
-    bottomsheetStart: BottomsheetAnimationDirection.fromLeft,
-    bottomsheetEnd: BottomsheetAnimationDirection.fromLeft,
+    dialogStart: .fromLeft,
+    dialogEnd: .fromLeft,
+    snackbarStart: .fromLeft,
+    snackbarEnd: .fromLeft,
+    bottomsheetStart: .fromLeft,
+    bottomsheetEnd: .fromLeft,
   );
 
   /// Slide from right
   static const slideFromRight = AnimationConfig(
-    dialogStart: DialogAnimationDirection.fromRight,
-    dialogEnd: DialogAnimationDirection.fromRight,
-    snackbarStart: SnackbarAnimationDirection.fromRight,
-    snackbarEnd: SnackbarAnimationDirection.fromRight,
-    bottomsheetStart: BottomsheetAnimationDirection.fromRight,
-    bottomsheetEnd: BottomsheetAnimationDirection.fromRight,
+    dialogStart: .fromRight,
+    dialogEnd: .fromRight,
+    snackbarStart: .fromRight,
+    snackbarEnd: .fromRight,
+    bottomsheetStart: .fromRight,
+    bottomsheetEnd: .fromRight,
   );
 
   /// Scale animation
   static const scale = AnimationConfig(
-    dialogStart: DialogAnimationDirection.scale,
-    dialogEnd: DialogAnimationDirection.scale,
-    snackbarStart: SnackbarAnimationDirection.scale,
-    snackbarEnd: SnackbarAnimationDirection.scale,
-    bottomsheetStart: BottomsheetAnimationDirection.scale,
-    bottomsheetEnd: BottomsheetAnimationDirection.scale,
+    dialogStart: .scale,
+    dialogEnd: .scale,
+    snackbarStart: .scale,
+    snackbarEnd: .scale,
+    bottomsheetStart: .scale,
+    bottomsheetEnd: .scale,
   );
 
   /// Bounce animation
   static const bounce = AnimationConfig(
-    dialogStart: DialogAnimationDirection.bounce,
-    dialogEnd: DialogAnimationDirection.bounce,
-    snackbarStart: SnackbarAnimationDirection.bounce,
-    snackbarEnd: SnackbarAnimationDirection.bounce,
-    bottomsheetStart: BottomsheetAnimationDirection.scale, // No bounce for bottom sheets
-    bottomsheetEnd: BottomsheetAnimationDirection.scale,
+    dialogStart: .bounce,
+    dialogEnd: .bounce,
+    snackbarStart: .bounce,
+    snackbarEnd: .bounce,
+    bottomsheetStart: .scale, // No bounce for bottom sheets
+    bottomsheetEnd: .scale,
   );
 
   /// Elastic animation
   static const elastic = AnimationConfig(
-    dialogStart: DialogAnimationDirection.elastic,
-    dialogEnd: DialogAnimationDirection.elastic,
-    snackbarStart: SnackbarAnimationDirection.elastic,
-    snackbarEnd: SnackbarAnimationDirection.elastic,
-    bottomsheetStart: BottomsheetAnimationDirection.scale,
-    bottomsheetEnd: BottomsheetAnimationDirection.scale,
+    dialogStart: .elastic,
+    dialogEnd: .elastic,
+    snackbarStart: .elastic,
+    snackbarEnd: .elastic,
+    bottomsheetStart: .scale,
+    bottomsheetEnd: .scale,
   );
 
   /// Slide in from left, exit to right
   static const slideLeftToRight = AnimationConfig(
-    dialogStart: DialogAnimationDirection.fromLeft,
-    dialogEnd: DialogAnimationDirection.fromRight,
-    snackbarStart: SnackbarAnimationDirection.fromLeft,
-    snackbarEnd: SnackbarAnimationDirection.fromRight,
-    bottomsheetStart: BottomsheetAnimationDirection.fromLeft,
-    bottomsheetEnd: BottomsheetAnimationDirection.fromRight,
+    dialogStart: .fromLeft,
+    dialogEnd: .fromRight,
+    snackbarStart: .fromLeft,
+    snackbarEnd: .fromRight,
+    bottomsheetStart: .fromLeft,
+    bottomsheetEnd: .fromRight,
   );
 
   /// Slide in from right, exit to left
   static const slideRightToLeft = AnimationConfig(
-    dialogStart: DialogAnimationDirection.fromRight,
-    dialogEnd: DialogAnimationDirection.fromLeft,
-    snackbarStart: SnackbarAnimationDirection.fromRight,
-    snackbarEnd: SnackbarAnimationDirection.fromLeft,
-    bottomsheetStart: BottomsheetAnimationDirection.fromRight,
-    bottomsheetEnd: BottomsheetAnimationDirection.fromLeft,
+    dialogStart: .fromRight,
+    dialogEnd: .fromLeft,
+    snackbarStart: .fromRight,
+    snackbarEnd: .fromLeft,
+    bottomsheetStart: .fromRight,
+    bottomsheetEnd: .fromLeft,
   );
 }
 
@@ -123,4 +124,3 @@ class AnimationConfig {
     this.bottomsheetEnd,
   });
 }
-

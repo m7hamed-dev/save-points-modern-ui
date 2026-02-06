@@ -20,7 +20,7 @@ class AnimatedWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use different curves for forward (entrance) and reverse (exit)
     final forwardCurve = _getForwardCurve();
-    final reverseCurve = Curves.easeInCubic;
+    const reverseCurve = Curves.easeInCubic;
 
     final curvedAnimation = CurvedAnimation(
       parent: animation,
@@ -35,28 +35,28 @@ class AnimatedWrapper extends StatelessWidget {
 
   Curve _getForwardCurve() {
     switch (animationType) {
-      case SnackbarAnimation.fadeSlide:
+      case .fadeSlide:
         return Curves.easeOutCubic;
-      case SnackbarAnimation.scale:
+      case .scale:
         return Curves.easeOutBack;
-      case SnackbarAnimation.slide:
+      case .slide:
         return Curves.easeOutCubic;
-      case SnackbarAnimation.bounce:
+      case .bounce:
         return Curves.bounceOut;
-      case SnackbarAnimation.rotate:
+      case .rotate:
         return Curves.easeOutBack;
-      case SnackbarAnimation.elastic:
+      case .elastic:
         return Curves.elasticOut;
-      case SnackbarAnimation.slideRotate:
+      case .slideRotate:
         return Curves.easeOutCubic;
-      case SnackbarAnimation.none:
+      case .none:
         return Curves.linear;
     }
   }
 
   Widget _buildAnimation(Animation<double> clampedAnimation) {
     switch (animationType) {
-      case SnackbarAnimation.fadeSlide:
+      case .fadeSlide:
         return FadeTransition(
           opacity: clampedAnimation,
           child: SlideTransition(
@@ -67,12 +67,12 @@ class AnimatedWrapper extends StatelessWidget {
             child: child,
           ),
         );
-      case SnackbarAnimation.scale:
+      case .scale:
         return FadeTransition(
           opacity: clampedAnimation,
           child: ScaleTransition(scale: clampedAnimation, child: child),
         );
-      case SnackbarAnimation.slide:
+      case .slide:
         return SlideTransition(
           position: Tween<Offset>(
             begin: Offset(position == SnackbarPosition.top ? 0 : 0, -1),
@@ -80,18 +80,16 @@ class AnimatedWrapper extends StatelessWidget {
           ).animate(clampedAnimation),
           child: child,
         );
-      case SnackbarAnimation.bounce:
+      case .bounce:
         return FadeTransition(
           opacity: clampedAnimation,
-          child: ScaleTransition(
-            scale: clampedAnimation,
-            child: child,
-          ),
+          child: ScaleTransition(scale: clampedAnimation, child: child),
         );
-      case SnackbarAnimation.rotate:
-        final rotationAnimation = Tween<double>(begin: -0.1, end: 0.0).animate(
-          clampedAnimation,
-        );
+      case .rotate:
+        final rotationAnimation = Tween<double>(
+          begin: -0.1,
+          end: 0.0,
+        ).animate(clampedAnimation);
         return FadeTransition(
           opacity: clampedAnimation,
           child: RotationTransition(
@@ -99,18 +97,16 @@ class AnimatedWrapper extends StatelessWidget {
             child: ScaleTransition(scale: clampedAnimation, child: child),
           ),
         );
-      case SnackbarAnimation.elastic:
+      case .elastic:
         return FadeTransition(
           opacity: clampedAnimation,
-          child: ScaleTransition(
-            scale: clampedAnimation,
-            child: child,
-          ),
+          child: ScaleTransition(scale: clampedAnimation, child: child),
         );
-      case SnackbarAnimation.slideRotate:
-        final rotationAnimation = Tween<double>(begin: 0.1, end: 0.0).animate(
-          clampedAnimation,
-        );
+      case .slideRotate:
+        final rotationAnimation = Tween<double>(
+          begin: 0.1,
+          end: 0.0,
+        ).animate(clampedAnimation);
         return FadeTransition(
           opacity: clampedAnimation,
           child: SlideTransition(
@@ -124,7 +120,7 @@ class AnimatedWrapper extends StatelessWidget {
             child: RotationTransition(turns: rotationAnimation, child: child),
           ),
         );
-      case SnackbarAnimation.none:
+      case .none:
         return child;
     }
   }
