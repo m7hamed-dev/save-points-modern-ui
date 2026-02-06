@@ -92,7 +92,14 @@ class TopSnackbarOverlay {
       ),
     );
 
-    overlayState.insert(_overlayEntry!);
+    // Defer insert to avoid mouse_tracker assertion (_debugDuringDeviceUpdate).
+    // Inserting/removing overlay during build or hit-test can trigger the assertion.
+    final entryToInsert = _overlayEntry!;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_overlayEntry == entryToInsert) {
+        overlayState.insert(entryToInsert);
+      }
+    });
 
     // Auto dismiss after duration
     _timer = Timer(duration, () {
@@ -104,8 +111,14 @@ class TopSnackbarOverlay {
   static void hide() {
     _timer?.cancel();
     _timer = null;
-    _overlayEntry?.remove();
+    final entry = _overlayEntry;
     _overlayEntry = null;
+    if (entry != null) {
+      // Defer remove to avoid mouse_tracker assertion (_debugDuringDeviceUpdate).
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        entry.remove();
+      });
+    }
   }
 }
 
