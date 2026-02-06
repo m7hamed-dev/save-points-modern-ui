@@ -218,7 +218,7 @@ class SavePointsDialog {
       barrierLabel: 'Close dialog',
       barrierColor: useBarrierBlur ? Colors.transparent : Colors.black54,
       transitionDuration: const Duration(milliseconds: 350),
-      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, _) {
         final dialog = HeaderDialog(
           headerTitle: headerTitle,

@@ -717,14 +717,14 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                _PaymentItem(
+                const _PaymentItem(
                   amount: '\$54.04',
                   label: 'Due Today',
                   isActive: true,
                 ),
-                _PaymentItem(amount: '\$54.01', date: 'Feb 19'),
-                _PaymentItem(amount: '\$54.01', date: 'Mar 19'),
-                _PaymentItem(amount: '\$54.01', date: 'Apr 19'),
+                const _PaymentItem(amount: '\$54.01', date: 'Feb 19'),
+                const _PaymentItem(amount: '\$54.01', date: 'Mar 19'),
+                const _PaymentItem(amount: '\$54.01', date: 'Apr 19'),
                 const Divider(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
