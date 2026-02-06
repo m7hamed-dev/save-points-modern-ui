@@ -194,16 +194,18 @@ class SnackbarColorConfig {
     }
   }
 
+  /// Returns the default icon for each snackbar type
+  /// Uses modern Material 3 rounded icons for a softer, contemporary look
   static IconData _getDefaultIcon(SnackbarType type) {
     switch (type) {
       case .success:
-        return Icons.check_circle;
+        return Icons.check_circle_rounded;
       case .error:
-        return Icons.error;
+        return Icons.error_rounded;
       case .warning:
-        return Icons.warning;
+        return Icons.warning_amber_rounded;
       case .info:
-        return Icons.info;
+        return Icons.info_rounded;
     }
   }
 }

@@ -49,6 +49,7 @@ class SnackbarConfig {
   Color? defaultBorderColor;
 
   /// Type-specific configurations
+  /// Uses modern Material 3 rounded icons for a softer, contemporary look
   Map<SnackbarType, SnackbarTypeConfig> typeConfigs = {
     SnackbarType.success: const SnackbarTypeConfig(
       backgroundColor: {
@@ -56,7 +57,7 @@ class SnackbarConfig {
         Brightness.light: Color(0xFF2E7D32),
       },
       iconColor: Colors.greenAccent,
-      defaultIcon: Icons.check_circle,
+      defaultIcon: Icons.check_circle_rounded,
     ),
     SnackbarType.error: const SnackbarTypeConfig(
       backgroundColor: {
@@ -64,7 +65,7 @@ class SnackbarConfig {
         Brightness.light: Color(0xFFD32F2F),
       },
       iconColor: Colors.redAccent,
-      defaultIcon: Icons.error,
+      defaultIcon: Icons.error_rounded,
     ),
     SnackbarType.warning: const SnackbarTypeConfig(
       backgroundColor: {
@@ -72,7 +73,7 @@ class SnackbarConfig {
         Brightness.light: Color(0xFFF57C00),
       },
       iconColor: Colors.orangeAccent,
-      defaultIcon: Icons.warning,
+      defaultIcon: Icons.warning_amber_rounded,
     ),
     SnackbarType.info: const SnackbarTypeConfig(
       backgroundColor: {
@@ -80,7 +81,7 @@ class SnackbarConfig {
         Brightness.light: Color(0xFF222222),
       },
       iconColor: Colors.white,
-      defaultIcon: Icons.info,
+      defaultIcon: Icons.info_rounded,
     ),
   };
 
