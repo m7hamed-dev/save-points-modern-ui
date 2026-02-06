@@ -37,3 +37,6 @@ export 'utils/utils.dart';
 
 // Export snackbar queue
 export 'utils/snackbar_queue.dart';
+
+// Export shared components
+export 'shared/enhanced_icon.dart';

@@ -8,6 +8,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_shadow
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/progress_indicator_bar.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 
 /// Modern snackbar content with enhanced features
 class ModernSnackbarContent extends StatefulWidget {
@@ -405,7 +406,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
         }
       },
-      movementDuration: const Duration(milliseconds: 200),
       dismissThresholds: const {
         DismissDirection.up: 0.2,
         DismissDirection.down: 0.2,
@@ -518,39 +518,19 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           ),
                         ),
                       ),
-                    // Centered icon in circle with enhanced shadow
+                    // Centered icon with enhanced animations
                     Positioned(
                       left: 0,
                       right: 0,
                       bottom: -26,
                       child: Center(
                         child: RepaintBoundary(
-                          child: Container(
-                            width: 52,
-                            height: 52,
-                            decoration: BoxDecoration(
-                              color: iconBgColor,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: widget.iconColor.withValues(
-                                    alpha: 0.2,
-                                  ),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.06),
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              widget.icon,
-                              size: 26,
-                              color: widget.iconColor,
-                            ),
+                          child: EnhancedIcon(
+                            icon: widget.icon,
+                            color: widget.iconColor,
+                            size: 26,
+                            containerSize: 52,
+                            backgroundColor: iconBgColor,
                           ),
                         ),
                       ),

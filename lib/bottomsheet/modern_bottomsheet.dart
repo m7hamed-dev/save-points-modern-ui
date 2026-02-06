@@ -7,6 +7,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_handle.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_loading_indicator.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 
 /// Modern bottom sheet widget
 class ModernBottomsheet extends StatefulWidget {
@@ -403,7 +404,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                             ),
                           ),
                         ),
-                      // Centered icon in circle with enhanced shadow
+                      // Centered icon with enhanced animations
                       if (widget.icon != null)
                         Positioned(
                           left: 0,
@@ -411,34 +412,11 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                           bottom: -30,
                           child: Center(
                             child: RepaintBoundary(
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  color: colorConfig.iconBackgroundColor,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: colorConfig.iconColor.withValues(
-                                        alpha: 0.2,
-                                      ),
-                                      blurRadius: 16,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                    BoxShadow(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.08,
-                                      ),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Icon(
-                                  widget.icon,
-                                  size: 28,
-                                  color: colorConfig.iconColor,
-                                ),
+                              child: EnhancedIcon(
+                                icon: widget.icon!,
+                                color: colorConfig.iconColor,
+                                backgroundColor:
+                                    colorConfig.iconBackgroundColor,
                               ),
                             ),
                           ),
