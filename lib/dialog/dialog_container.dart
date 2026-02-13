@@ -19,7 +19,8 @@ class DialogContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOutlined = colorConfig.borderColor != null;
-    final isLeftAccent = colorConfig.designStyle == ContentDesignStyle.leftAccent;
+    final isLeftAccent =
+        colorConfig.designStyle == ContentDesignStyle.leftAccent;
     final borderRadius = BorderRadius.circular(DialogConstants.borderRadius);
 
     final contentBorderRadius = isLeftAccent
@@ -40,8 +41,8 @@ class DialogContainer extends StatelessWidget {
                 color: isOutlined
                     ? colorConfig.borderColor!
                     : (isDark
-                        ? Colors.white.withValues(alpha: 0.1)
-                        : Colors.black.withValues(alpha: 0.05)),
+                          ? Colors.white.withValues(alpha: 0.1)
+                          : Colors.black.withValues(alpha: 0.05)),
                 width: isOutlined ? 2 : 1.5,
               ),
         boxShadow: DialogShadows.getShadows(
@@ -60,10 +61,7 @@ class DialogContainer extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: 5,
-              color: colorConfig.iconColor,
-            ),
+            Container(width: 5, color: colorConfig.iconColor),
             Expanded(child: content),
           ],
         ),
