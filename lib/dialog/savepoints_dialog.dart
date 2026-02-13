@@ -74,6 +74,7 @@ class SavePointsDialog {
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
+    Widget? child,
   }) {
     // Validate required parameters
     assert(title.isNotEmpty, 'Title cannot be empty');
@@ -145,6 +146,7 @@ class SavePointsDialog {
           designStyle: finalDesignStyle,
           blur: blur,
           backdropFilter: backdropFilter,
+          child: child,
         );
       },
     );

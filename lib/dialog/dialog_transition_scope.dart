@@ -38,6 +38,7 @@ class DialogTransitionScope extends StatefulWidget {
     this.designStyle,
     this.blur,
     this.backdropFilter,
+    this.child,
   });
 
   final Animation<double> animation;
@@ -67,6 +68,7 @@ class DialogTransitionScope extends StatefulWidget {
   final ContentDesignStyle? designStyle;
   final double? blur;
   final ImageFilter? backdropFilter;
+  final Widget? child;
 
   @override
   State<DialogTransitionScope> createState() => _DialogTransitionScopeState();
@@ -105,6 +107,7 @@ class _DialogTransitionScopeState extends State<DialogTransitionScope> {
         designStyle: widget.designStyle,
         blur: widget.blur,
         backdropFilter: widget.backdropFilter,
+        child: widget.child,
       ),
     );
 

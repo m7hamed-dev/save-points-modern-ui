@@ -474,6 +474,56 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       ),
       _buildActionButton(
         context,
+        icon: Icons.star_rate,
+        label: 'Rating Dialog',
+        color: Colors.amber,
+        onPressed: () {
+          int rating = 0;
+          SavePointsDialog.show(
+            context,
+            title: 'Rate Your Experience',
+            message: 'How would you rate our service?',
+            icon: Icons.star_rounded,
+            iconColor: Colors.amber,
+            designStyle: ContentDesignStyle.colorHeader,
+            confirmText: 'Submit Rating',
+            cancelText: 'Skip',
+            showCancelButton: true,
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    return IconButton(
+                      icon: Icon(
+                        index < rating ? Icons.star : Icons.star_border,
+                        size: 40,
+                      ),
+                      color: Colors.amber,
+                      onPressed: () {
+                        setState(() {
+                          rating = index + 1;
+                        });
+                      },
+                    );
+                  }),
+                );
+              },
+            ),
+            onConfirm: () {
+              if (rating > 0) {
+                SavePointsSnackbar.showSuccess(
+                  context,
+                  title: 'Thank You!',
+                  subtitle: 'You rated us $rating star${rating > 1 ? 's' : ''}',
+                );
+              }
+            },
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.border_color,
         label: 'Left Accent',
         color: Colors.teal,
@@ -503,6 +553,73 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.indigo,
             designStyle: ContentDesignStyle.tonal,
             confirmText: 'OK',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.widgets_outlined,
+        label: 'With Custom Child',
+        color: Colors.deepPurple,
+        onPressed: () {
+          final nameController = TextEditingController();
+          final emailController = TextEditingController();
+          SavePointsDialog.show(
+            context,
+            title: 'User Information',
+            message: 'Please fill in your details below:',
+            icon: Icons.person_add,
+            iconColor: Colors.deepPurple,
+            confirmText: 'Submit',
+            cancelText: 'Cancel',
+            showCancelButton: true,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    hintText: 'Enter your name',
+                    prefixIcon: const Icon(Icons.person),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'Enter your email',
+                    prefixIcon: const Icon(Icons.email),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ],
+            ),
+            onConfirm: () {
+              if (nameController.text.isNotEmpty &&
+                  emailController.text.isNotEmpty) {
+                SavePointsSnackbar.showSuccess(
+                  context,
+                  title: 'Submitted!',
+                  subtitle: 'Name: ${nameController.text}',
+                );
+              }
+              nameController.dispose();
+              emailController.dispose();
+            },
+            onCancel: () {
+              nameController.dispose();
+              emailController.dispose();
+            },
           );
         },
       ),

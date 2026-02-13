@@ -33,6 +33,7 @@ class ModernDialog extends StatefulWidget {
   final double? blur;
   final ImageFilter? backdropFilter;
   final ContentDesignStyle? designStyle;
+  final Widget? child;
 
   const ModernDialog({
     super.key,
@@ -55,6 +56,7 @@ class ModernDialog extends StatefulWidget {
     this.blur,
     this.backdropFilter,
     this.designStyle,
+    this.child,
   });
 
   @override
@@ -199,6 +201,11 @@ class _ModernDialogState extends State<ModernDialog> {
                       const SizedBox(
                         height: DialogConstants.contentSpacingAfterMessage,
                       ),
+                      // Optional custom child widget
+                      if (widget.child != null) ...[
+                        widget.child!,
+                        const SizedBox(height: 16),
+                      ],
                       // Main content: loading indicator or action buttons
                       if (_isLoading)
                         RepaintBoundary(
@@ -393,6 +400,11 @@ class _ModernDialogState extends State<ModernDialog> {
                             ),
                           ),
                           const SizedBox(height: 28),
+                          // Optional custom child widget
+                          if (widget.child != null) ...[
+                            widget.child!,
+                            const SizedBox(height: 20),
+                          ],
                           // Action button(s) with enhanced styling
                           if (_isLoading)
                             RepaintBoundary(
