@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.6] - 2026-02-13
+
+### Added
+
+- **Dialog Custom Content**: New optional `child` parameter for all dialog types
+  - `SavePointsDialog.show()`: Add custom widgets between message and action buttons
+  - `ModernDialog`: Support for custom child widget with proper spacing
+  - `DialogTransitionScope`: Pass-through support for child parameter
+  - Works with all design styles (solid, outlined, colorHeader, leftAccent, tonal)
+  - Example app: Added "With Custom Child" dialog showing form inputs (name and email fields)
+  - Example app: Added "Rating Dialog" with interactive 5-star rating widget using colorHeader style
+
+### Use Cases
+
+- Form inputs within dialogs (text fields, dropdowns, etc.)
+- Interactive widgets (rating systems, sliders, switches)
+- Custom content layouts (images, charts, custom UI elements)
+- Rich content presentation (formatted text, lists, cards)
+
 ## [1.1.5] - 2026-02-07
 
 ### Added

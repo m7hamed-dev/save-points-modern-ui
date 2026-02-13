@@ -40,6 +40,7 @@ All components feature automatic dark mode support, extensive customization opti
 - **🌓 Dark Mode Support** - Automatic theme adaptation
 - **📱 Loading States** - Built-in support for async operations with loading indicators
 - **🎯 Flexible Actions** - Single or dual button configurations
+- **🧩 Custom Content** - Add custom widgets (forms, ratings, etc.) with the optional `child` parameter
 - **📳 Haptic Feedback** - Enhanced user experience with tactile responses
 - **🔄 Async Support** - Handle asynchronous confirm callbacks with loading states
 
@@ -75,7 +76,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.1.5
+  save_points_snackbar_dialog_bottomsheet: ^1.1.6
 ```
 
 Install the package:
@@ -202,6 +203,7 @@ static Future<bool?> show(
   ContentDesignStyle? designStyle,
   double? blur,
   ImageFilter? backdropFilter,
+  Widget? child,
 })
 ```
 
@@ -232,6 +234,7 @@ static Future<bool?> show(
 | `designStyle` | `ContentDesignStyle?` | No | `solid` | Design: `solid` (filled) or `outlined` (light bg + border) |
 | `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
+| `child` | `Widget?` | No | `null` | Custom widget displayed between message and buttons |
 
 #### Examples
 
@@ -356,6 +359,111 @@ SavePointsDialog.show(
   icon: Icons.blur_on,
 );
 // Or disable blur: blur: 0
+```
+
+**8. Dialog with Custom Child Widget (Form)**
+
+```dart
+final nameController = TextEditingController();
+final emailController = TextEditingController();
+
+SavePointsDialog.show(
+  context,
+  title: 'User Information',
+  message: 'Please fill in your details below:',
+  icon: Icons.person_add,
+  iconColor: Colors.deepPurple,
+  confirmText: 'Submit',
+  cancelText: 'Cancel',
+  showCancelButton: true,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      TextField(
+        controller: nameController,
+        decoration: InputDecoration(
+          labelText: 'Name',
+          hintText: 'Enter your name',
+          prefixIcon: const Icon(Icons.person),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          filled: true,
+        ),
+      ),
+      const SizedBox(height: 12),
+      TextField(
+        controller: emailController,
+        decoration: InputDecoration(
+          labelText: 'Email',
+          hintText: 'Enter your email',
+          prefixIcon: const Icon(Icons.email),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          filled: true,
+        ),
+        keyboardType: TextInputType.emailAddress,
+      ),
+    ],
+  ),
+  onConfirm: () {
+    if (nameController.text.isNotEmpty && emailController.text.isNotEmpty) {
+      // Process form data
+      print('Name: ${nameController.text}, Email: ${emailController.text}');
+    }
+    nameController.dispose();
+    emailController.dispose();
+  },
+  onCancel: () {
+    nameController.dispose();
+    emailController.dispose();
+  },
+);
+```
+
+**9. Dialog with Interactive Rating Widget**
+
+```dart
+int rating = 0;
+
+SavePointsDialog.show(
+  context,
+  title: 'Rate Your Experience',
+  message: 'How would you rate our service?',
+  icon: Icons.star_rounded,
+  iconColor: Colors.amber,
+  designStyle: ContentDesignStyle.colorHeader,
+  confirmText: 'Submit Rating',
+  cancelText: 'Skip',
+  showCancelButton: true,
+  child: StatefulBuilder(
+    builder: (context, setState) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(5, (index) {
+          return IconButton(
+            icon: Icon(
+              index < rating ? Icons.star : Icons.star_border,
+              size: 40,
+            ),
+            color: Colors.amber,
+            onPressed: () {
+              setState(() {
+                rating = index + 1;
+              });
+            },
+          );
+        }),
+      );
+    },
+  ),
+  onConfirm: () {
+    if (rating > 0) {
+      print('User rated: $rating stars');
+    }
+  },
+);
 ```
 
 ### 🍞 SavePointsSnackbar
