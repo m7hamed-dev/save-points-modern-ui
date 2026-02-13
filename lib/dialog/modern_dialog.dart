@@ -128,6 +128,9 @@ class _ModernDialogState extends State<ModernDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // Debug: Print child status
+    debugPrint('ModernDialog build - child is null: ${widget.child == null}');
+    
     final colorConfig =
         _cachedColorConfig ??
         DialogColorConfig(
@@ -203,7 +206,10 @@ class _ModernDialogState extends State<ModernDialog> {
                       ),
                       // Optional custom child widget
                       if (widget.child != null) ...[
-                        widget.child!,
+                        Container(
+                          color: Colors.blue.withValues(alpha: 0.1),
+                          child: widget.child!,
+                        ),
                         const SizedBox(height: 16),
                       ],
                       // Main content: loading indicator or action buttons
@@ -402,7 +408,10 @@ class _ModernDialogState extends State<ModernDialog> {
                           const SizedBox(height: 28),
                           // Optional custom child widget
                           if (widget.child != null) ...[
-                            widget.child!,
+                            Container(
+                              color: Colors.blue.withValues(alpha: 0.1),
+                              child: widget.child!,
+                            ),
                             const SizedBox(height: 20),
                           ],
                           // Action button(s) with enhanced styling

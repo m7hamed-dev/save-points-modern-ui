@@ -562,8 +562,6 @@ class _ExampleHomePageState extends State<ExampleHomePage>
         label: 'With Custom Child',
         color: Colors.deepPurple,
         onPressed: () {
-          final nameController = TextEditingController();
-          final emailController = TextEditingController();
           SavePointsDialog.show(
             context,
             title: 'User Information',
@@ -573,53 +571,79 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             confirmText: 'Submit',
             cancelText: 'Cancel',
             showCancelButton: true,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    hintText: 'Enter your name',
-                    prefixIcon: const Icon(Icons.person),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+            child: Container(
+              color: Colors.red.withValues(alpha: 0.2),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'CUSTOM CHILD WIDGET HERE',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
                     ),
-                    filled: true,
                   ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
-                    prefixIcon: const Icon(Icons.email),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 16),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      hintText: 'Enter your name',
+                      prefixIcon: const Icon(Icons.person),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
                     ),
-                    filled: true,
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-              ],
+                  const SizedBox(height: 12),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'Enter your email',
+                      prefixIcon: const Icon(Icons.email),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                ],
+              ),
             ),
-            onConfirm: () {
-              if (nameController.text.isNotEmpty &&
-                  emailController.text.isNotEmpty) {
-                SavePointsSnackbar.showSuccess(
-                  context,
-                  title: 'Submitted!',
-                  subtitle: 'Name: ${nameController.text}',
-                );
-              }
-              nameController.dispose();
-              emailController.dispose();
-            },
-            onCancel: () {
-              nameController.dispose();
-              emailController.dispose();
-            },
+            onConfirm: () {},
+            onCancel: () {},
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.science,
+        label: 'Simple Child Test',
+        color: Colors.orange,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Child Test',
+            message: 'Testing if child widget appears',
+            icon: Icons.bug_report,
+            iconColor: Colors.orange,
+            confirmText: 'OK',
+            child: Container(
+              height: 100,
+              color: Colors.yellow,
+              alignment: Alignment.center,
+              child: const Text(
+                '🎉 CHILD IS VISIBLE! 🎉',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
           );
         },
       ),

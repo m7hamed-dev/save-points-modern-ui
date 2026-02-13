@@ -108,6 +108,9 @@ class SavePointsDialog {
     final useBarrierBlur = barrierFilter != null;
     final finalDesignStyle = designStyle ?? config.defaultDesignStyle;
 
+    // Capture child parameter before it's shadowed by transitionBuilder
+    final customChild = child;
+    
     return showGeneralDialog<bool>(
       context: context,
       barrierDismissible: finalBarrierDismissible,
@@ -146,7 +149,7 @@ class SavePointsDialog {
           designStyle: finalDesignStyle,
           blur: blur,
           backdropFilter: backdropFilter,
-          child: child,
+          child: customChild,
         );
       },
     );
