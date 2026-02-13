@@ -76,7 +76,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.1.6
+  save_points_snackbar_dialog_bottomsheet: ^1.1.7
 ```
 
 Install the package:
