@@ -194,16 +194,18 @@ class _ModernDialogState extends State<ModernDialog> {
                       const SizedBox(
                         height: DialogConstants.contentSpacingAfterTitle,
                       ),
-                      RepaintBoundary(
-                        child: DialogMessage(
-                          message: widget.message,
-                          isDark: widget.isDark,
-                          color: colorConfig.messageColor,
+                      if (widget.message.isNotEmpty)
+                        RepaintBoundary(
+                          child: DialogMessage(
+                            message: widget.message,
+                            isDark: widget.isDark,
+                            color: colorConfig.messageColor,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: DialogConstants.contentSpacingAfterMessage,
-                      ),
+                      if (widget.message.isNotEmpty)
+                        const SizedBox(
+                          height: DialogConstants.contentSpacingAfterMessage,
+                        ),
                       // Optional custom child widget
                       if (widget.child != null) ...[
                         Container(
@@ -392,20 +394,21 @@ class _ModernDialogState extends State<ModernDialog> {
                           ),
                           const SizedBox(height: 10),
                           // Message with better readability
-                          RepaintBoundary(
-                            child: Text(
-                              widget.message,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                color: colorConfig.messageColor,
-                                height: 1.55,
-                                letterSpacing: 0.1,
+                          if (widget.message.isNotEmpty)
+                            RepaintBoundary(
+                              child: Text(
+                                widget.message,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                  color: colorConfig.messageColor,
+                                  height: 1.55,
+                                  letterSpacing: 0.1,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 28),
+                          if (widget.message.isNotEmpty) const SizedBox(height: 28),
                           // Optional custom child widget
                           if (widget.child != null) ...[
                             Container(

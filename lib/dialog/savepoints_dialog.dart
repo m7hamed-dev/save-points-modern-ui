@@ -78,7 +78,7 @@ class SavePointsDialog {
   }) {
     // Validate required parameters
     assert(title.isNotEmpty, 'Title cannot be empty');
-    assert(message.isNotEmpty, 'Message cannot be empty');
+    // Message can be empty if a custom child is provided
 
     // Dismiss keyboard when showing dialog to prevent UI overlap
     _dismissKeyboard(context);
