@@ -13,7 +13,19 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?logo=Flutter&logoColor=white)](https://flutter.dev)
 
-**[🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/)** • [📦 Pub.dev](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet) • [📚 Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
+**[🌐 Live Demo](https://snackbar-dialog-bottomsheet.netlify.app/)** • [📦 Pub.dev](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet) • [📚 Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
+
+
+
+# InfoGraphic
+<img width="1200"  alt="Image" src="https://github.com/user-attachments/assets/05a6eb09-54c2-4e49-8447-14aef43b28ea" />
+
+# Real Screenshots
+<img width="1200"   alt="Image" src="https://github.com/user-attachments/assets/de97592d-503e-4595-a8fd-6e0602c75535" />
+<img width="1200"   alt="Image" src="https://github.com/user-attachments/assets/f60ce6c6-ee79-4eaa-b638-d0af32fe4eae" />
+<img width="1200"   alt="Image" src="https://github.com/user-attachments/assets/bd6102c0-15dc-4026-9309-ebb9f1245653" />
+
+
 
 </div>
 
@@ -76,7 +88,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.1.7
+  save_points_snackbar_dialog_bottomsheet: ^1.1.8
 ```
 
 Install the package:
