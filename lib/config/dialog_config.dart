@@ -5,8 +5,8 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.
 
 /// Configuration for dialog appearance and behavior
 class DialogConfig {
-  /// Default design style: solid (filled) or outlined (light bg + border).
-  ContentDesignStyle defaultDesignStyle = .solid;
+  /// Default design style: bold gradient-header card.
+  ContentDesignStyle defaultDesignStyle = .colorHeader;
 
   /// Default confirm button text
   String defaultConfirmText = 'OK';

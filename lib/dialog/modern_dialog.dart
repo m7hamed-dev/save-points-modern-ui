@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_buttons.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_shadows.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_container.dart';
@@ -269,13 +271,11 @@ class _ModernDialogState extends State<ModernDialog> {
             decoration: BoxDecoration(
               color: colorConfig.backgroundColor,
               borderRadius: .circular(DialogConstants.borderRadius),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
+              boxShadow: DialogShadows.getShadows(
+                widget.isDark,
+                designStyle: ContentDesignStyle.colorHeader,
+                accentColor: colorConfig.iconColor,
+              ),
             ),
             child: ClipRRect(
               borderRadius: .circular(DialogConstants.borderRadius),
@@ -333,17 +333,14 @@ class _ModernDialogState extends State<ModernDialog> {
                                 width: 28,
                                 height: 28,
                                 decoration: BoxDecoration(
-                                  color: widget.isDark
-                                      ? Colors.white.withValues(alpha: 0.1)
-                                      : Colors.black.withValues(alpha: 0.06),
+                                  // Frosted chip on the vivid header band.
+                                  color: Colors.white.withValues(alpha: 0.22),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   Icons.close_rounded,
                                   size: 16,
-                                  color: widget.isDark
-                                      ? Colors.white.withValues(alpha: 0.7)
-                                      : const Color(0xFF6B7280),
+                                  color: Colors.white.withValues(alpha: 0.95),
                                 ),
                               ),
                             ),
@@ -385,11 +382,11 @@ class _ModernDialogState extends State<ModernDialog> {
                               widget.title,
                               textAlign: .center,
                               style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
+                                fontSize: SpType.displaySize,
+                                fontWeight: SpType.displayWeight,
                                 color: colorConfig.titleColor,
-                                letterSpacing: -0.3,
-                                height: 1.2,
+                                letterSpacing: SpType.displayTracking,
+                                height: SpType.displayHeight,
                               ),
                             ),
                           ),

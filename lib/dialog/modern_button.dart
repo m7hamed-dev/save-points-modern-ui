@@ -123,9 +123,9 @@ class ModernButtonState extends State<ModernButton>
                 widget.text,
                 style: TextStyle(
                   fontSize: 15,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                   color: widget.foregroundColor,
-                  letterSpacing: 0.3,
+                  letterSpacing: 0.2,
                 ),
               ),
             ),

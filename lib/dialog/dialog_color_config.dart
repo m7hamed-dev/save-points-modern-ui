@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 
 /// Professional dialog color configuration with enhanced palettes
 class DialogColorConfig {
@@ -68,7 +69,9 @@ class DialogColorConfig {
              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
          isDark: isDark,
        ),
-       buttonColor = isDark ? const Color(0xFF374151) : const Color(0xFF1F2937),
+       buttonColor =
+           iconColor ??
+           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
        buttonTextColor = Colors.white,
        iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
 
@@ -83,23 +86,14 @@ class DialogColorConfig {
     switch (designStyle) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.leftAccent:
-        return isDark ? const Color(0xFF1F2937) : Colors.white;
-      case ContentDesignStyle.colorHeader:
-        return isDark ? const Color(0xFF111827) : const Color(0xFFFAFAFA);
-      case ContentDesignStyle.tonal:
-        if (iconColor != null) {
-          final hsl = HSLColor.fromColor(iconColor);
-          return isDark
-              ? hsl.withSaturation(0.2).withLightness(0.18).toColor()
-              : hsl.withSaturation(0.25).withLightness(0.95).toColor();
-        }
-        return isDark
-            ? const Color(0xFF1F2937).withValues(alpha: 0.98)
-            : Colors.white.withValues(alpha: 0.98);
       case ContentDesignStyle.solid:
-        return isDark
-            ? const Color(0xFF1F2937).withValues(alpha: 0.98)
-            : Colors.white.withValues(alpha: 0.98);
+        return SpSurface.background(isDark);
+      case ContentDesignStyle.colorHeader:
+        return SpSurface.elevated(isDark);
+      case ContentDesignStyle.tonal:
+        return iconColor != null
+            ? SpPalette.tonalFrom(iconColor, isDark)
+            : SpSurface.background(isDark);
     }
   }
 
@@ -122,52 +116,26 @@ class DialogColorConfig {
   static Color _computeTitleColor({
     required ContentDesignStyle designStyle,
     required bool isDark,
-  }) {
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.solid:
-        return isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
-    }
-  }
+  }) =>
+      SpSurface.onSurface(isDark);
 
   static Color _computeMessageColor({
     required ContentDesignStyle designStyle,
     required bool isDark,
-  }) {
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.solid:
-        return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
-    }
-  }
+  }) =>
+      SpSurface.onSurfaceMuted(isDark);
 
+  /// Bold gradient header band — the vivid accent gradient derived from the
+  /// icon color. White header content sits on top of this.
   static Color _computeHeaderColor({
     required Color iconColor,
     required bool isDark,
-  }) {
-    final hsl = HSLColor.fromColor(iconColor);
-    if (isDark) {
-      // Darker, more saturated header for dark mode
-      return hsl.withSaturation(0.4).withLightness(0.15).toColor();
-    }
-    // Light, pastel header for light mode
-    return hsl.withSaturation(0.35).withLightness(0.94).toColor();
-  }
+  }) =>
+      SpPalette.gradientFrom(iconColor).colors.first;
 
   static Color _computeHeaderColorEnd({
     required Color iconColor,
     required bool isDark,
-  }) {
-    final hsl = HSLColor.fromColor(iconColor);
-    if (isDark) {
-      return hsl.withSaturation(0.3).withLightness(0.08).toColor();
-    }
-    return hsl.withSaturation(0.2).withLightness(0.98).toColor();
-  }
+  }) =>
+      SpPalette.gradientFrom(iconColor).colors.last;
 }

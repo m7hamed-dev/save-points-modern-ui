@@ -50,37 +50,39 @@ class SnackbarConfig {
 
   /// Type-specific configurations
   /// Uses modern Material 3 rounded icons for a softer, contemporary look
+  /// Vivid intent palette (matches the shared [SpPalette] tokens). Backgrounds
+  /// are only used as a flat fallback — the bold default renders a gradient.
   Map<SnackbarType, SnackbarTypeConfig> typeConfigs = {
     SnackbarType.success: const SnackbarTypeConfig(
       backgroundColor: {
-        Brightness.dark: Color(0xFF1B5E20),
-        Brightness.light: Color(0xFF2E7D32),
+        Brightness.dark: Color(0xFF10B981),
+        Brightness.light: Color(0xFF10B981),
       },
-      iconColor: Colors.greenAccent,
+      iconColor: Color(0xFF10B981),
       defaultIcon: Icons.check_circle_rounded,
     ),
     SnackbarType.error: const SnackbarTypeConfig(
       backgroundColor: {
-        Brightness.dark: Color(0xFFB71C1C),
-        Brightness.light: Color(0xFFD32F2F),
+        Brightness.dark: Color(0xFFEF4444),
+        Brightness.light: Color(0xFFEF4444),
       },
-      iconColor: Colors.redAccent,
+      iconColor: Color(0xFFEF4444),
       defaultIcon: Icons.error_rounded,
     ),
     SnackbarType.warning: const SnackbarTypeConfig(
       backgroundColor: {
-        Brightness.dark: Color(0xFFE65100),
-        Brightness.light: Color(0xFFF57C00),
+        Brightness.dark: Color(0xFFF59E0B),
+        Brightness.light: Color(0xFFF59E0B),
       },
-      iconColor: Colors.orangeAccent,
+      iconColor: Color(0xFFF59E0B),
       defaultIcon: Icons.warning_amber_rounded,
     ),
     SnackbarType.info: const SnackbarTypeConfig(
       backgroundColor: {
-        Brightness.dark: Color(0xFF2C2C2C),
-        Brightness.light: Color(0xFF222222),
+        Brightness.dark: Color(0xFF6366F1),
+        Brightness.light: Color(0xFF6366F1),
       },
-      iconColor: Colors.white,
+      iconColor: Color(0xFF6366F1),
       defaultIcon: Icons.info_rounded,
     ),
   };

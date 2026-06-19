@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 
 /// Dialog message widget
 class DialogMessage extends StatelessWidget {
@@ -15,17 +16,16 @@ class DialogMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor =
-        color ?? (isDark ? Colors.grey[400] : Colors.grey[700]);
+    final effectiveColor = color ?? SpSurface.onSurfaceMuted(isDark);
     return Text(
       message,
       textAlign: .center,
       style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
+        fontSize: SpType.bodySize,
+        fontWeight: SpType.bodyWeight,
         color: effectiveColor,
-        height: 1.5,
-        letterSpacing: 0.1,
+        height: SpType.bodyHeight,
+        letterSpacing: SpType.bodyTracking,
       ),
     );
   }
