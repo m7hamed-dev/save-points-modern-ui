@@ -59,7 +59,10 @@ class BottomsheetContainer extends StatelessWidget {
           designStyle: colorConfig.designStyle,
         ),
       ),
-      child: SafeArea(top: false, child: child),
+      child: Material(
+        type: MaterialType.transparency,
+        child: SafeArea(top: false, child: child),
+      ),
     );
 
     if (isLeftAccent) {
