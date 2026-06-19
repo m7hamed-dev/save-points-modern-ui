@@ -143,10 +143,10 @@ class SpAccent {
 
   /// Diagonal bold gradient (top-left → bottom-right).
   LinearGradient get gradient => LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [gradientStart, gradientEnd],
-      );
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [gradientStart, gradientEnd],
+  );
 }
 
 /// Vivid, expressive palette per intent for light and dark themes.
@@ -243,8 +243,8 @@ abstract final class SpPalette {
         .withSaturation((hsl.saturation + 0.08).clamp(0.0, 1.0))
         .toColor();
     return LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
+      begin: .topLeft,
+      end: .bottomRight,
       colors: [start, end],
     );
   }
