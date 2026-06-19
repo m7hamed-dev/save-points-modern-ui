@@ -24,14 +24,11 @@ class BottomsheetContainer extends StatelessWidget {
     final isDark = Theme.of(context).brightness == .dark;
     final isOutlined = colorConfig.borderColor != null;
     final isLeftAccent = colorConfig.designStyle == .leftAccent;
+    const topRadius = BottomsheetConstants.topBorderRadius;
 
     final borderRadius = BorderRadius.only(
-      topLeft: Radius.circular(
-        showTopRadius ? BottomsheetConstants.topBorderRadius : 0,
-      ),
-      topRight: Radius.circular(
-        showTopRadius ? BottomsheetConstants.topBorderRadius : 0,
-      ),
+      topLeft: Radius.circular(showTopRadius ? topRadius : 0),
+      topRight: Radius.circular(showTopRadius ? topRadius : 0),
       bottomLeft: const Radius.circular(BottomsheetConstants.borderRadius),
       bottomRight: const Radius.circular(BottomsheetConstants.borderRadius),
     );
