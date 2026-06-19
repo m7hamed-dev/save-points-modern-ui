@@ -7,7 +7,9 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_container.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_handle.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_loading_indicator.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 
 /// Modern bottom sheet widget
@@ -297,16 +299,11 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
               topLeft: Radius.circular(BottomsheetConstants.borderRadius),
               topRight: Radius.circular(BottomsheetConstants.borderRadius),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(
-                  alpha: widget.isDark ? 0.3 : 0.12,
-                ),
-                blurRadius: 24,
-                offset: const Offset(0, -8),
-                spreadRadius: -4,
-              ),
-            ],
+            boxShadow: BottomsheetShadows.getShadows(
+              widget.isDark,
+              designStyle: ContentDesignStyle.colorHeader,
+              accentColor: colorConfig.iconColor,
+            ),
           ),
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
@@ -367,9 +364,8 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                               width: 44,
                               height: 5,
                               decoration: BoxDecoration(
-                                color: widget.isDark
-                                    ? Colors.white.withValues(alpha: 0.2)
-                                    : Colors.black.withValues(alpha: 0.12),
+                                // On the vivid header band the handle is white.
+                                color: Colors.white.withValues(alpha: 0.55),
                                 borderRadius: .circular(2.5),
                               ),
                             ),
@@ -389,17 +385,14 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                                 width: 28,
                                 height: 28,
                                 decoration: BoxDecoration(
-                                  color: widget.isDark
-                                      ? Colors.white.withValues(alpha: 0.1)
-                                      : Colors.black.withValues(alpha: 0.06),
+                                  // Frosted chip on the vivid header band.
+                                  color: Colors.white.withValues(alpha: 0.22),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   Icons.close_rounded,
                                   size: 16,
-                                  color: widget.isDark
-                                      ? Colors.white.withValues(alpha: 0.7)
-                                      : const Color(0xFF6B7280),
+                                  color: Colors.white.withValues(alpha: 0.95),
                                 ),
                               ),
                             ),
@@ -443,11 +436,11 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                                 widget.title!,
                                 textAlign: .center,
                                 style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700,
+                                  fontSize: SpType.displaySize,
+                                  fontWeight: SpType.displayWeight,
                                   color: colorConfig.textColor,
-                                  letterSpacing: -0.3,
-                                  height: 1.2,
+                                  letterSpacing: SpType.displayTracking,
+                                  height: SpType.displayHeight,
                                 ),
                               ),
                             ),
