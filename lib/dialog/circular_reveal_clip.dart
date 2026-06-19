@@ -1,18 +1,18 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// Widget that applies a circular reveal/hide animation
 class CircularRevealClip extends StatelessWidget {
-  final Animation<double> animation;
-  final Widget child;
-  final AlignmentGeometry alignment;
-
   const CircularRevealClip({
     super.key,
     required this.animation,
     required this.child,
     this.alignment = Alignment.center,
   });
+  final Animation<double> animation;
+  final Widget child;
+  final AlignmentGeometry alignment;
 
   @override
   Widget build(BuildContext context) {

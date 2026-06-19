@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/config/snackbar_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/config/dialog_config.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/config/snackbar_config.dart';
 
 /// Global configuration for SavePoints snackbars and dialogs
 class SnackDiaBottomConfig {
