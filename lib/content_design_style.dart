@@ -24,4 +24,16 @@ enum ContentDesignStyle {
   /// Material 3 filled tonal: light tinted background (e.g. light green for success),
   /// dark text, medium elevation. Softer than [solid].
   tonal,
+
+  /// Frosted glassmorphism: translucent surface over a backdrop blur with a
+  /// hairline highlight border and soft elevation.
+  glass,
+
+  /// Neon: deep near-black surface with a glowing vivid accent border and an
+  /// intense colored bloom. Loud and futuristic.
+  neon,
+
+  /// Minimal: opaque surface, single hairline border, flat (no shadow).
+  /// Clean and understated.
+  minimal,
 }

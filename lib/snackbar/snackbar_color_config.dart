@@ -38,6 +38,7 @@ class SnackbarColorConfig {
     final resolvedIcon =
         iconColor ?? config.getIconColor(type) ?? accent.base;
     final isSolid = style == ContentDesignStyle.solid;
+    final isNeon = style == ContentDesignStyle.neon;
 
     // The vivid gradient is the signature of the bold default.
     final Gradient? resolvedGradient = gradient ??
@@ -55,10 +56,14 @@ class SnackbarColorConfig {
       gradient: resolvedGradient,
       iconColor: resolvedIcon,
       defaultIcon: config.getDefaultIcon(type) ?? _getDefaultIcon(type),
-      titleColor: isSolid ? Colors.white : SpSurface.onSurface(isDark),
-      subtitleColor: isSolid
-          ? Colors.white.withValues(alpha: 0.85)
-          : SpSurface.onSurfaceMuted(isDark),
+      titleColor: isNeon
+          ? SpSurface.neonText
+          : (isSolid ? Colors.white : SpSurface.onSurface(isDark)),
+      subtitleColor: isNeon
+          ? SpSurface.neonTextMuted(resolvedIcon)
+          : (isSolid
+              ? Colors.white.withValues(alpha: 0.85)
+              : SpSurface.onSurfaceMuted(isDark)),
       borderColor: resolvedIcon,
       headerColor: accent.gradientStart,
       headerColorEnd: accent.gradientEnd,
@@ -102,11 +107,16 @@ class SnackbarColorConfig {
     switch (style) {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.minimal:
         return SpSurface.background(isDark);
       case ContentDesignStyle.colorHeader:
         return SpSurface.elevated(isDark);
       case ContentDesignStyle.tonal:
         return accent.tonalFill;
+      case ContentDesignStyle.glass:
+        return SpSurface.glassFill(isDark);
+      case ContentDesignStyle.neon:
+        return SpSurface.neonSurface(isDark);
       case ContentDesignStyle.solid:
         // Solid without a gradient (caller forced a flat look).
         return accent.base;

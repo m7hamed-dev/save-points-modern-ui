@@ -202,10 +202,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   }
 
   Color get _effectiveTitleColor {
-    if ((widget.designStyle == ContentDesignStyle.outlined ||
-            widget.designStyle == ContentDesignStyle.colorHeader ||
-            widget.designStyle == ContentDesignStyle.leftAccent ||
-            widget.designStyle == ContentDesignStyle.tonal) &&
+    if (widget.designStyle != ContentDesignStyle.solid &&
         widget.titleColor != null) {
       return widget.titleColor!;
     }
@@ -222,10 +219,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   bool get _isDark => Theme.of(context).brightness == Brightness.dark;
 
   Color get _effectiveSubtitleColor {
-    if ((widget.designStyle == ContentDesignStyle.outlined ||
-            widget.designStyle == ContentDesignStyle.colorHeader ||
-            widget.designStyle == ContentDesignStyle.leftAccent ||
-            widget.designStyle == ContentDesignStyle.tonal) &&
+    if (widget.designStyle != ContentDesignStyle.solid &&
         widget.subtitleColor != null) {
       return widget.subtitleColor!;
     }
@@ -257,10 +251,30 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     return _buildDefaultLayout();
   }
 
+  /// Per-variant border for the default layout.
+  BoxBorder? _variantBorder() {
+    switch (widget.designStyle) {
+      case ContentDesignStyle.outlined:
+        return widget.borderColor != null
+            ? Border.all(color: widget.borderColor!, width: 2)
+            : null;
+      case ContentDesignStyle.neon:
+        return Border.all(color: widget.iconColor, width: 2);
+      case ContentDesignStyle.glass:
+        return Border.all(color: SpSurface.glassBorder(_isDark), width: 1.5);
+      case ContentDesignStyle.minimal:
+        return Border.all(color: SpSurface.hairline(_isDark));
+      case ContentDesignStyle.solid:
+      case ContentDesignStyle.tonal:
+      case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+        return null;
+    }
+  }
+
   Widget _buildDefaultLayout() {
-    final hasBorder =
-        widget.designStyle == ContentDesignStyle.outlined &&
-        widget.borderColor != null;
+    final border = _variantBorder();
+    final isGlass = widget.designStyle == ContentDesignStyle.glass;
 
     final isBottom = widget.position == SnackbarPosition.bottom;
     final constraints = BoxConstraints(
@@ -276,9 +290,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
           color: widget.gradient == null ? widget.backgroundColor : null,
           gradient: widget.gradient,
           borderRadius: widget.borderRadius,
-          border: hasBorder
-              ? Border.all(color: widget.borderColor!, width: 2)
-              : null,
+          border: border,
           boxShadow: SnackbarShadows.getShadows(
             widget.designStyle,
             widget.iconColor,
@@ -317,6 +329,18 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
               ),
       ),
     );
+    if (isGlass) {
+      content = ClipRRect(
+        borderRadius: widget.borderRadius,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: SpSurface.glassBlur,
+            sigmaY: SpSurface.glassBlur,
+          ),
+          child: content,
+        ),
+      );
+    }
     content = _wrapWithBackdrop(content);
     content = _wrapWithSwipeDismiss(content);
 

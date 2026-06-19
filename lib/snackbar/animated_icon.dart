@@ -139,7 +139,10 @@ class AnimatedIconState extends State<AnimatedIcon>
     final isOutlined =
         widget.designStyle == ContentDesignStyle.outlined ||
         widget.designStyle == ContentDesignStyle.leftAccent ||
-        widget.designStyle == ContentDesignStyle.tonal;
+        widget.designStyle == ContentDesignStyle.tonal ||
+        widget.designStyle == ContentDesignStyle.glass ||
+        widget.designStyle == ContentDesignStyle.neon ||
+        widget.designStyle == ContentDesignStyle.minimal;
     final isColorHeader = widget.designStyle == ContentDesignStyle.colorHeader;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 

@@ -20,14 +20,23 @@ class BottomsheetShadows {
         designStyle ??
         (isOutlined ? ContentDesignStyle.outlined : ContentDesignStyle.solid);
 
-    final level = switch (style) {
-      ContentDesignStyle.colorHeader || ContentDesignStyle.solid => 1.0,
-      ContentDesignStyle.tonal => 0.85,
-      ContentDesignStyle.outlined || ContentDesignStyle.leftAccent => 0.7,
-    };
-
     // Sheets sit at the bottom edge, so the elevation rises upward.
     const up = Offset(0, -1);
+
+    if (style == ContentDesignStyle.minimal) return SpShadows.flat;
+    if (style == ContentDesignStyle.neon) {
+      return accentColor != null
+          ? SpShadows.neon(color: accentColor, direction: up)
+          : SpShadows.ambient(isDark: isDark, direction: up);
+    }
+
+    final level = switch (style) {
+      ContentDesignStyle.colorHeader || ContentDesignStyle.solid => 1.0,
+      ContentDesignStyle.tonal || ContentDesignStyle.glass => 0.85,
+      ContentDesignStyle.outlined || ContentDesignStyle.leftAccent => 0.7,
+      ContentDesignStyle.minimal || ContentDesignStyle.neon => 1.0,
+    };
+
     if (accentColor != null) {
       return SpShadows.glow(
         color: accentColor,

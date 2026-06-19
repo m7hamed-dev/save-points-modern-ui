@@ -455,6 +455,59 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       ),
       _buildActionButton(
         context,
+        icon: Icons.blur_on,
+        label: 'Dialog Glass',
+        color: Colors.cyan,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Frosted Glass',
+            message: 'Translucent surface over a backdrop blur with a '
+                'hairline highlight border.',
+            icon: Icons.ac_unit_rounded,
+            iconColor: Colors.cyan,
+            designStyle: ContentDesignStyle.glass,
+            confirmText: 'Nice',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.bolt,
+        label: 'Dialog Neon',
+        color: Colors.purpleAccent,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Neon Glow',
+            message: 'Deep near-black surface with a glowing accent border '
+                'and an intense colored bloom.',
+            icon: Icons.flash_on_rounded,
+            iconColor: Colors.purpleAccent,
+            designStyle: ContentDesignStyle.neon,
+            confirmText: 'Whoa',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.crop_square,
+        label: 'Dialog Minimal',
+        color: Colors.blueGrey,
+        onPressed: () {
+          SavePointsDialog.show(
+            context,
+            title: 'Minimal',
+            message: 'Opaque surface, single hairline border, perfectly flat.',
+            icon: Icons.remove_rounded,
+            iconColor: Colors.blueGrey,
+            designStyle: ContentDesignStyle.minimal,
+            confirmText: 'OK',
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.warning_amber,
         label: 'Color Header Cancel',
         color: Colors.red,
@@ -1096,6 +1149,50 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       ),
       _buildActionButton(
         context,
+        icon: Icons.blur_on,
+        label: 'Toast Glass',
+        color: Colors.cyan,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Frosted Glass',
+            subtitle: 'Translucent surface over a backdrop blur.',
+            type: SnackbarType.info,
+            designStyle: ContentDesignStyle.glass,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.bolt,
+        label: 'Toast Neon',
+        color: Colors.purpleAccent,
+        onPressed: () {
+          SavePointsSnackbar.showSuccess(
+            context,
+            title: 'Neon Glow',
+            subtitle: 'Dark surface with a glowing accent border.',
+            designStyle: ContentDesignStyle.neon,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.crop_square,
+        label: 'Toast Minimal',
+        color: Colors.blueGrey,
+        onPressed: () {
+          SavePointsSnackbar.show(
+            context,
+            title: 'Minimal',
+            subtitle: 'Hairline border, flat — clean and quiet.',
+            type: SnackbarType.info,
+            designStyle: ContentDesignStyle.minimal,
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
         icon: Icons.tonality,
         label: 'Tonal',
         color: Colors.indigo,
@@ -1590,6 +1687,74 @@ class _ExampleHomePageState extends State<ExampleHomePage>
               padding: .all(24.0),
               child: Text(
                 'Material 3 tonal style — light tinted surface.',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.blur_on,
+        label: 'Sheet Glass',
+        color: Colors.cyan,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Frosted Glass',
+            icon: Icons.ac_unit_rounded,
+            iconColor: Colors.cyan,
+            designStyle: ContentDesignStyle.glass,
+            child: const Padding(
+              padding: .all(24.0),
+              child: Text(
+                'Translucent surface over a backdrop blur with a hairline '
+                'highlight border.',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.bolt,
+        label: 'Sheet Neon',
+        color: Colors.purpleAccent,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Neon Glow',
+            icon: Icons.flash_on_rounded,
+            iconColor: Colors.purpleAccent,
+            designStyle: ContentDesignStyle.neon,
+            child: const Padding(
+              padding: .all(24.0),
+              child: Text(
+                'Deep near-black surface with a glowing accent border and an '
+                'intense colored bloom.',
+                style: TextStyle(fontSize: 16, color: Colors.white70),
+              ),
+            ),
+          );
+        },
+      ),
+      _buildActionButton(
+        context,
+        icon: Icons.crop_square,
+        label: 'Sheet Minimal',
+        color: Colors.blueGrey,
+        onPressed: () {
+          SavePointsBottomsheet.show(
+            context: context,
+            title: 'Minimal',
+            icon: Icons.remove_rounded,
+            iconColor: Colors.blueGrey,
+            designStyle: ContentDesignStyle.minimal,
+            child: const Padding(
+              padding: .all(24.0),
+              child: Text(
+                'Opaque surface, single hairline border, perfectly flat.',
                 style: TextStyle(fontSize: 16),
               ),
             ),

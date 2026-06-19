@@ -93,7 +93,10 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
     final isOutlined =
         widget.designStyle == ContentDesignStyle.outlined ||
         widget.designStyle == ContentDesignStyle.leftAccent ||
-        widget.designStyle == ContentDesignStyle.tonal;
+        widget.designStyle == ContentDesignStyle.tonal ||
+        widget.designStyle == ContentDesignStyle.glass ||
+        widget.designStyle == ContentDesignStyle.neon ||
+        widget.designStyle == ContentDesignStyle.minimal;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(

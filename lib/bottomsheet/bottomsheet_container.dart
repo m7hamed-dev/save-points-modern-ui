@@ -1,10 +1,14 @@
 /// Bottom sheet container widget with styling and safe area handling.
 library;
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 
 /// Bottom sheet container with decoration
 class BottomsheetContainer extends StatelessWidget {
@@ -45,9 +49,18 @@ class BottomsheetContainer extends StatelessWidget {
             : borderRadius,
         border: isOutlined && !isLeftAccent
             ? Border(
-                top: BorderSide(color: colorConfig.borderColor!, width: 2),
-                left: BorderSide(color: colorConfig.borderColor!, width: 2),
-                right: BorderSide(color: colorConfig.borderColor!, width: 2),
+                top: BorderSide(
+                  color: colorConfig.borderColor!,
+                  width: colorConfig.borderWidth ?? 2,
+                ),
+                left: BorderSide(
+                  color: colorConfig.borderColor!,
+                  width: colorConfig.borderWidth ?? 2,
+                ),
+                right: BorderSide(
+                  color: colorConfig.borderColor!,
+                  width: colorConfig.borderWidth ?? 2,
+                ),
               )
             : null,
         boxShadow: BottomsheetShadows.getShadows(
@@ -62,6 +75,19 @@ class BottomsheetContainer extends StatelessWidget {
         child: SafeArea(top: false, child: child),
       ),
     );
+
+    if (colorConfig.designStyle == ContentDesignStyle.glass) {
+      content = ClipRRect(
+        borderRadius: borderRadius,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: SpSurface.glassBlur,
+            sigmaY: SpSurface.glassBlur,
+          ),
+          child: content,
+        ),
+      );
+    }
 
     if (isLeftAccent) {
       content = ClipRRect(

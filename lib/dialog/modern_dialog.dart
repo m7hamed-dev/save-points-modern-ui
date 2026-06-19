@@ -239,7 +239,11 @@ class _ModernDialogState extends State<ModernDialog> {
                                 colorConfig.designStyle ==
                                     ContentDesignStyle.leftAccent ||
                                 colorConfig.designStyle ==
-                                    ContentDesignStyle.tonal,
+                                    ContentDesignStyle.tonal ||
+                                colorConfig.designStyle ==
+                                    ContentDesignStyle.glass ||
+                                colorConfig.designStyle ==
+                                    ContentDesignStyle.minimal,
                             onConfirm: () => _handleConfirm(context),
                             onCancel: () => _handleCancel(context),
                           ),

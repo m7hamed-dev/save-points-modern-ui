@@ -14,11 +14,19 @@ class SnackbarShadows {
     Color? accentColor,
     bool isDark = false,
   ]) {
+    if (style == ContentDesignStyle.minimal) return SpShadows.flat;
+    if (style == ContentDesignStyle.neon) {
+      return accentColor != null
+          ? SpShadows.neon(color: accentColor)
+          : SpShadows.ambient(isDark: isDark);
+    }
+
     // Bolder styles float higher.
     final level = switch (style) {
       ContentDesignStyle.colorHeader || ContentDesignStyle.solid => 1.0,
-      ContentDesignStyle.tonal => 0.85,
+      ContentDesignStyle.tonal || ContentDesignStyle.glass => 0.85,
       ContentDesignStyle.outlined || ContentDesignStyle.leftAccent => 0.7,
+      ContentDesignStyle.minimal || ContentDesignStyle.neon => 1.0,
     };
 
     if (accentColor != null) {

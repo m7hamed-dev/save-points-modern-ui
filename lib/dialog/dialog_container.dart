@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_shadows.dart';
@@ -36,12 +40,8 @@ class DialogContainer extends StatelessWidget {
         border: isLeftAccent
             ? null
             : Border.all(
-                color: isOutlined
-                    ? colorConfig.borderColor!
-                    : (isDark
-                          ? Colors.white.withValues(alpha: 0.1)
-                          : Colors.black.withValues(alpha: 0.05)),
-                width: isOutlined ? 2 : 1.5,
+                color: colorConfig.borderColor ?? SpSurface.hairline(isDark),
+                width: colorConfig.borderWidth ?? 1.5,
               ),
         boxShadow: DialogShadows.getShadows(
           isDark,
@@ -52,6 +52,19 @@ class DialogContainer extends StatelessWidget {
       ),
       child: child,
     );
+
+    if (colorConfig.designStyle == ContentDesignStyle.glass) {
+      content = ClipRRect(
+        borderRadius: contentBorderRadius,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: SpSurface.glassBlur,
+            sigmaY: SpSurface.glassBlur,
+          ),
+          child: content,
+        ),
+      );
+    }
 
     if (isLeftAccent) {
       content = ClipRRect(

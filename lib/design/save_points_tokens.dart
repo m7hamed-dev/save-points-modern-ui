@@ -115,6 +115,31 @@ abstract final class SpSurface {
   static Color handle(bool isDark) => isDark
       ? Colors.white.withValues(alpha: 0.28)
       : Colors.black.withValues(alpha: 0.16);
+
+  // ---- glass (frosted) variant ----------------------------------------
+
+  /// Translucent fill that sits in front of a [BackdropFilter] blur.
+  static Color glassFill(bool isDark) => isDark
+      ? const Color(0xFF151B26).withValues(alpha: 0.55)
+      : Colors.white.withValues(alpha: 0.58);
+
+  /// Hairline highlight border that gives frosted glass its edge.
+  static Color glassBorder(bool isDark) => isDark
+      ? Colors.white.withValues(alpha: 0.18)
+      : Colors.white.withValues(alpha: 0.65);
+
+  /// Blur strength for the glass variant's backdrop.
+  static const double glassBlur = 22.0;
+
+  // ---- neon variant ---------------------------------------------------
+
+  /// Deep, near-black surface that makes a neon accent border glow.
+  static Color neonSurface(bool isDark) =>
+      isDark ? const Color(0xFF0B1020) : const Color(0xFF111827);
+
+  /// Foreground used on the dark neon surface.
+  static const Color neonText = Color(0xFFF8FAFC);
+  static Color neonTextMuted(Color accent) => accent.withValues(alpha: 0.85);
 }
 
 /// The vivid accent + gradient + tonal fill for a single intent.
@@ -321,4 +346,36 @@ abstract final class SpShadows {
       ),
     ];
   }
+
+  /// Intense double-glow halo for the neon variant — a tight inner ring plus a
+  /// wide diffuse bloom in the accent color.
+  static List<BoxShadow> neon({
+    required Color color,
+    Offset direction = const Offset(0, 1),
+  }) {
+    final dy = direction.dy;
+    final dx = direction.dx;
+    return [
+      BoxShadow(
+        color: color.withValues(alpha: 0.55),
+        blurRadius: 12,
+        spreadRadius: -2,
+      ),
+      BoxShadow(
+        color: color.withValues(alpha: 0.35),
+        offset: Offset(dx * 4, dy * 10),
+        blurRadius: 32,
+        spreadRadius: -6,
+      ),
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.4),
+        offset: Offset(dx * 6, dy * 14),
+        blurRadius: 28,
+        spreadRadius: -10,
+      ),
+    ];
+  }
+
+  /// Flat — no elevation (the minimal variant).
+  static const List<BoxShadow> flat = <BoxShadow>[];
 }

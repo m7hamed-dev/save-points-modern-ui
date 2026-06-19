@@ -10,6 +10,9 @@ class DialogColorConfig {
   final Color cancelColor;
   final ContentDesignStyle designStyle;
   final Color? borderColor;
+
+  /// Stroke width for [borderColor] (null = let the container choose).
+  final double? borderWidth;
   final Color titleColor;
   final Color messageColor;
   final Color headerColor;
@@ -49,6 +52,7 @@ class DialogColorConfig {
          theme: theme,
          isDark: isDark,
        ),
+       borderWidth = _computeBorderWidth(designStyle ?? ContentDesignStyle.solid),
        titleColor = _computeTitleColor(
          designStyle: designStyle ?? ContentDesignStyle.solid,
          isDark: isDark,
@@ -87,9 +91,14 @@ class DialogColorConfig {
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.leftAccent:
       case ContentDesignStyle.solid:
+      case ContentDesignStyle.minimal:
         return SpSurface.background(isDark);
       case ContentDesignStyle.colorHeader:
         return SpSurface.elevated(isDark);
+      case ContentDesignStyle.glass:
+        return SpSurface.glassFill(isDark);
+      case ContentDesignStyle.neon:
+        return SpSurface.neonSurface(isDark);
       case ContentDesignStyle.tonal:
         return iconColor != null
             ? SpPalette.tonalFrom(iconColor, isDark)
@@ -103,27 +112,59 @@ class DialogColorConfig {
     required ThemeData theme,
     required bool isDark,
   }) {
-    if (designStyle == ContentDesignStyle.outlined) {
-      final baseColor =
-          iconColor ??
-          (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
-      return baseColor.withValues(alpha: isDark ? 0.5 : 0.3);
+    final baseColor =
+        iconColor ??
+        (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
+    switch (designStyle) {
+      case ContentDesignStyle.outlined:
+        return baseColor.withValues(alpha: isDark ? 0.5 : 0.3);
+      case ContentDesignStyle.neon:
+        return baseColor;
+      case ContentDesignStyle.glass:
+        return SpSurface.glassBorder(isDark);
+      case ContentDesignStyle.minimal:
+        return SpSurface.hairline(isDark);
+      case ContentDesignStyle.solid:
+      case ContentDesignStyle.tonal:
+      case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+        // leftAccent uses a left bar; tonal/solid/colorHeader have no border.
+        return null;
     }
-    // leftAccent uses a left bar, not full border; tonal has no border
-    return null;
+  }
+
+  static double? _computeBorderWidth(ContentDesignStyle designStyle) {
+    switch (designStyle) {
+      case ContentDesignStyle.outlined:
+      case ContentDesignStyle.neon:
+        return 2.0;
+      case ContentDesignStyle.glass:
+        return 1.5;
+      case ContentDesignStyle.minimal:
+        return 1.0;
+      case ContentDesignStyle.solid:
+      case ContentDesignStyle.tonal:
+      case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+        return null;
+    }
   }
 
   static Color _computeTitleColor({
     required ContentDesignStyle designStyle,
     required bool isDark,
   }) =>
-      SpSurface.onSurface(isDark);
+      designStyle == ContentDesignStyle.neon
+          ? SpSurface.neonText
+          : SpSurface.onSurface(isDark);
 
   static Color _computeMessageColor({
     required ContentDesignStyle designStyle,
     required bool isDark,
   }) =>
-      SpSurface.onSurfaceMuted(isDark);
+      designStyle == ContentDesignStyle.neon
+          ? Colors.white.withValues(alpha: 0.7)
+          : SpSurface.onSurfaceMuted(isDark);
 
   /// Bold gradient header band — the vivid accent gradient derived from the
   /// icon color. White header content sits on top of this.
