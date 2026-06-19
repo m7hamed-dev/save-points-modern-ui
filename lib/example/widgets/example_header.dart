@@ -52,7 +52,7 @@ class _ExampleHeaderState extends State<ExampleHeader>
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const .all(24),
           child: Column(
             children: [
               AnimatedBuilder(

@@ -130,7 +130,7 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                       },
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const .all(16),
                       child: Column(
                         mainAxisSize: .min,
                         children: [

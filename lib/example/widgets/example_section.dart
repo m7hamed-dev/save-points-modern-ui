@@ -61,14 +61,14 @@ class _ExampleSectionState extends State<ExampleSection> {
                   : null,
             ),
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const .all(20),
               child: Column(
                 children: [
                   Row(
                     children: [
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.all(8),
+                        padding: const .all(8),
                         decoration: BoxDecoration(
                           color: _isHovered
                               ? Theme.of(
@@ -95,9 +95,9 @@ class _ExampleSectionState extends State<ExampleSection> {
                   Wrap(
                     spacing: 12,
                     runSpacing: 12,
-                    alignment: WrapAlignment.center,
-                    runAlignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
+                    alignment: .center,
+                    runAlignment: .center,
+                    crossAxisAlignment: .center,
                     children: widget.children,
                   ),
                 ],

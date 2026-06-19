@@ -106,7 +106,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
+            padding: const .all(20),
             child: Column(
               crossAxisAlignment: .stretch,
               children: [
@@ -144,7 +144,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
   Widget _buildHeader() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const .all(24),
         child: Column(
           children: [
             Icon(
@@ -181,7 +181,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
   }) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const .all(20),
         child: Column(
           children: [
             Row(
@@ -573,7 +573,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             context: context,
             title: 'Bottom Sheet',
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'This is a modern bottom sheet with glassmorphism design. '
                 'It features beautiful backdrop blur effects and smooth animations.',
@@ -636,7 +636,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             startAnimation: BottomsheetAnimationDirection.fromLeft,
             endAnimation: BottomsheetAnimationDirection.fromRight,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'This bottom sheet slides in from the left and exits to the right.',
                 style: TextStyle(fontSize: 16),
@@ -752,7 +752,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             title: 'Circular Reveal',
             hideLikeCircle: true,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'This bottom sheet reveals/hides like a circle expanding!',
                 style: TextStyle(fontSize: 16),
@@ -780,7 +780,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
           onTap: onPressed,
           borderRadius: .circular(12),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const .all(16),
             child: Column(
               mainAxisSize: .min,
               children: [

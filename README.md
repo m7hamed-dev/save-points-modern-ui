@@ -769,7 +769,7 @@ SavePointsBottomsheet.show(
   context: context,
   title: 'Bottom Sheet',
   child: const Padding(
-    padding: EdgeInsets.all(24.0),
+    padding: .all(24.0),
     child: Text(
       'This is a modern bottom sheet with glassmorphism design. '
       'It features beautiful backdrop blur effects and smooth animations.',
@@ -823,7 +823,7 @@ SavePointsBottomsheet.show(
   startAnimation: BottomsheetAnimationDirection.fromLeft,
   endAnimation: BottomsheetAnimationDirection.fromRight,
   child: const Padding(
-    padding: EdgeInsets.all(24.0),
+    padding: .all(24.0),
     child: Text(
       'This bottom sheet slides in from the left and exits to the right.',
       style: TextStyle(fontSize: 16),
@@ -934,7 +934,7 @@ SavePointsBottomsheet.show(
   icon: Icons.blur_on,
   blur: 16.0,
   child: const Padding(
-    padding: EdgeInsets.all(24.0),
+    padding: .all(24.0),
     child: Text(
       'Backdrop blur can be customized with the blur parameter.',
       style: TextStyle(fontSize: 16),

@@ -128,10 +128,7 @@ class HeaderDialog extends StatelessWidget {
                             mainAxisSize: .min,
                             children: [
                               // Custom content
-                              Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: child,
-                              ),
+                              Padding(padding: const .all(20), child: child),
                               // Action buttons
                               if (primaryButtonText != null ||
                                   secondaryButtonText != null)

@@ -135,7 +135,7 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
 
   Widget _buildOutlinedIcon(bool isDark, double glowIntensity) {
     return Container(
-      padding: const EdgeInsets.all(DialogConstants.iconPadding),
+      padding: const .all(DialogConstants.iconPadding),
       decoration: BoxDecoration(
         color: widget.color.withValues(alpha: isDark ? 0.1 : 0.05),
         shape: BoxShape.circle,
@@ -164,7 +164,7 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
 
   Widget _buildSolidIcon(bool isDark, double glowIntensity) {
     return Container(
-      padding: const EdgeInsets.all(DialogConstants.iconPadding),
+      padding: const .all(DialogConstants.iconPadding),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,

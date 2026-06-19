@@ -230,7 +230,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             ),
             child: SafeArea(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(_SpacingConstants.contentPadding),
+                padding: const .all(_SpacingConstants.contentPadding),
                 child: Column(
                   crossAxisAlignment: .stretch,
                   children: [
@@ -1465,7 +1465,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Solid Style',
             designStyle: ContentDesignStyle.solid,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'Classic filled background with shadow. '
                 'The default bottom sheet style.',
@@ -1486,7 +1486,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Outlined Style',
             designStyle: ContentDesignStyle.outlined,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'Light background with colored border and dark text. '
                 'Clean, minimal look.',
@@ -1509,7 +1509,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.green,
             designStyle: ContentDesignStyle.colorHeader,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'Card style with colored header gradient, centered icon in circle, '
                 'and modern design. Perfect for success states and confirmations.',
@@ -1565,7 +1565,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.teal,
             designStyle: ContentDesignStyle.leftAccent,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'Bottom sheet with a colored vertical bar on the left.',
                 style: TextStyle(fontSize: 16),
@@ -1587,7 +1587,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.indigo,
             designStyle: ContentDesignStyle.tonal,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'Material 3 tonal style — light tinted surface.',
                 style: TextStyle(fontSize: 16),
@@ -1606,7 +1606,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context: context,
             title: 'Bottom Sheet',
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'This is a modern bottom sheet with glassmorphism design. '
                 'It features beautiful backdrop blur effects and smooth animations.',
@@ -1670,7 +1670,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             startAnimation: BottomsheetAnimationDirection.fromLeft,
             endAnimation: BottomsheetAnimationDirection.fromRight,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'This bottom sheet slides in from the left and exits to the right.',
                 style: TextStyle(fontSize: 16),
@@ -1790,7 +1790,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             startAnimation: BottomsheetAnimationDirection.fromBottom,
             endAnimation: BottomsheetAnimationDirection.fade,
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'Backdrop blur with slide animation. Frosted glass effect behind the sheet!',
                 style: TextStyle(fontSize: 16),
@@ -2044,7 +2044,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context: context,
             title: 'Final Step',
             child: const Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: .all(24.0),
               child: Text(
                 'This completes the story flow!',
                 style: TextStyle(fontSize: 16),

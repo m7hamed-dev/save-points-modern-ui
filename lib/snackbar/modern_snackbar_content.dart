@@ -408,7 +408,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                         _animateDismiss();
                       }
                     },
-                    padding: const EdgeInsets.all(12),
+                    padding: const .all(12),
                     constraints: const BoxConstraints(
                       minWidth: SnackbarConstants.minTouchTargetSize,
                       minHeight: SnackbarConstants.minTouchTargetSize,
