@@ -11,7 +11,7 @@ class SnackbarCircularRevealClip extends StatelessWidget {
     super.key,
     required this.animation,
     required this.child,
-    this.alignment = Alignment.center,
+    this.alignment = .center,
   });
 
   @override

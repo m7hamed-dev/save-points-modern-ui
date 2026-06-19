@@ -322,7 +322,7 @@ class _OutsideCloseButton extends StatelessWidget {
         child: Container(
           width: 44,
           height: 44,
-          alignment: Alignment.center,
+          alignment: .center,
           child: Icon(Icons.close, color: iconColor, size: 22),
         ),
       ),
