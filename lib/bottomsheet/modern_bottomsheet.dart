@@ -194,7 +194,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                 colorConfig: colorConfig,
                 showTopRadius: false,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     if (widget.showHandle)
                       RepaintBoundary(
@@ -317,7 +317,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
               blur: widget.blur,
               backdropFilter: widget.backdropFilter,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   // Colored header with icon - enhanced gradient
                   Stack(
@@ -434,7 +434,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                         bottom: 28,
                       ),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: [
                           // Title with enhanced typography
                           if (widget.title != null) ...[

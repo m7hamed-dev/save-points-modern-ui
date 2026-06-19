@@ -282,8 +282,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         ),
         child: showLeftAccent
             ? Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: .min,
+                crossAxisAlignment: .stretch,
                 children: [
                   Container(
                     width: 5,
@@ -332,7 +332,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
 
   Widget _buildDefaultLayoutContent() {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         GestureDetector(
           onTap: widget.dismissOnTap || widget.onTap != null
@@ -361,7 +361,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                     child: RepaintBoundary(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: [
                           Text(
                             widget.title,
@@ -485,7 +485,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                 ? _handleTap
                 : null,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 // Colored header with icon - enhanced gradient
                 Stack(
@@ -591,7 +591,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                   child: DefaultTextStyle(
                     style: const TextStyle(decoration: TextDecoration.none),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
                         // Title with enhanced typography
                         Text(

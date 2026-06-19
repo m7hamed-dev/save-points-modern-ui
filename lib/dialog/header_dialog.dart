@@ -113,7 +113,7 @@ class HeaderDialog extends StatelessWidget {
                     blur: blur,
                     backdropFilter: backdropFilter,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
                         // Header bar
                         _buildHeader(
@@ -125,7 +125,7 @@ class HeaderDialog extends StatelessWidget {
                           width: double.infinity,
                           color: backgroundColor,
                           child: Column(
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisSize: .min,
                             children: [
                               // Custom content
                               Padding(

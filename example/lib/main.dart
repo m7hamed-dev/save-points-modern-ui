@@ -108,7 +108,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 _buildHeader(),
                 const SizedBox(height: 32),
@@ -594,7 +594,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             title: 'Options',
             icon: Icons.more_vert,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.edit),
@@ -688,7 +688,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             icon: Icons.swap_vert,
             isScrollControlled: true,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: List.generate(
                 15,
                 (index) => ListTile(
@@ -713,7 +713,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             title: 'Settings',
             icon: Icons.settings,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 SwitchListTile(
                   title: const Text('Enable Notifications'),
@@ -782,7 +782,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 Icon(icon, size: 32, color: color),
                 const SizedBox(height: 8),

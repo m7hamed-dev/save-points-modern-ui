@@ -66,7 +66,7 @@ class BottomsheetContainer extends StatelessWidget {
       content = ClipRRect(
         borderRadius: borderRadius,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Container(width: 5, color: colorConfig.iconColor),
             Expanded(child: content),

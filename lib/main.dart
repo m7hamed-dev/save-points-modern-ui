@@ -232,7 +232,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(_SpacingConstants.contentPadding),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: .stretch,
                   children: [
                     _buildHeader(),
                     const SizedBox(
@@ -572,7 +572,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             cancelText: 'Cancel',
             showCancelButton: true,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 TextField(
                   decoration: InputDecoration(
@@ -1538,7 +1538,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.blue,
             designStyle: ContentDesignStyle.colorHeader,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.description),
@@ -1634,7 +1634,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Options',
             icon: Icons.more_vert,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.edit),
@@ -1728,7 +1728,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             icon: Icons.swap_vert,
             isScrollControlled: true,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: List.generate(
                 15,
                 (index) => ListTile(
@@ -1753,7 +1753,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Settings',
             icon: Icons.settings,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 SwitchListTile(
                   title: const Text('Enable Notifications'),
@@ -1917,7 +1917,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context: context,
             title: 'Choose Action',
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.delete),
@@ -2069,7 +2069,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context: context,
             title: 'Quick Actions',
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.add_circle),

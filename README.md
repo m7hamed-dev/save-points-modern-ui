@@ -389,7 +389,7 @@ SavePointsDialog.show(
   cancelText: 'Cancel',
   showCancelButton: true,
   child: Column(
-    mainAxisSize: MainAxisSize.min,
+    mainAxisSize: .min,
     children: [
       TextField(
         controller: nameController,
@@ -787,7 +787,7 @@ SavePointsBottomsheet.show(
   title: 'Options',
   icon: Icons.more_vert,
   child: Column(
-    mainAxisSize: MainAxisSize.min,
+    mainAxisSize: .min,
     children: [
       ListTile(
         leading: const Icon(Icons.edit),
@@ -871,7 +871,7 @@ SavePointsBottomsheet.show(
   icon: Icons.swap_vert,
   isScrollControlled: true,
   child: Column(
-    mainAxisSize: MainAxisSize.min,
+    mainAxisSize: .min,
     children: List.generate(
       15,
       (index) => ListTile(
@@ -895,7 +895,7 @@ SavePointsBottomsheet.show(
   title: 'Settings',
   icon: Icons.settings,
   child: Column(
-    mainAxisSize: MainAxisSize.min,
+    mainAxisSize: .min,
     children: [
       SwitchListTile(
         title: const Text('Enable Notifications'),

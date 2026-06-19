@@ -56,8 +56,8 @@ class DialogContainer extends StatelessWidget {
       content = ClipRRect(
         borderRadius: borderRadius,
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: .min,
+          crossAxisAlignment: .stretch,
           children: [
             Container(width: 5, color: colorConfig.iconColor),
             Expanded(child: content),

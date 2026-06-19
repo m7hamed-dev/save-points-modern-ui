@@ -175,7 +175,7 @@ class _ModernDialogState extends State<ModernDialog> {
                 child: DialogContainer(
                   colorConfig: colorConfig,
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
                     children: [
                       if (widget.icon != null)
                         RepaintBoundary(
@@ -283,7 +283,7 @@ class _ModernDialogState extends State<ModernDialog> {
                 blur: widget.blur,
                 backdropFilter: widget.backdropFilter,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     // Colored header with icon
                     Stack(
@@ -377,7 +377,7 @@ class _ModernDialogState extends State<ModernDialog> {
                         bottom: 28,
                       ),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: [
                           // Title with enhanced typography
                           RepaintBoundary(
