@@ -57,7 +57,7 @@ class BottomsheetContainer extends StatelessWidget {
         ),
       ),
       child: Material(
-        type: MaterialType.transparency,
+        type: .transparency,
         child: SafeArea(top: false, child: child),
       ),
     );
