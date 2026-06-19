@@ -173,7 +173,7 @@ class HeaderDialog extends StatelessWidget {
   Widget _buildHeader(Color headerColor, Color textColor) {
     return Container(
       width: .infinity,
-      padding: const .symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       decoration: BoxDecoration(color: headerColor),
       child: Text(
         headerTitle,
@@ -212,7 +212,7 @@ class HeaderDialog extends StatelessWidget {
                   backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
                   elevation: 0,
-                  padding: const .symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: .circular(DialogConstants.buttonBorderRadius),
                   ),
@@ -249,7 +249,7 @@ class HeaderDialog extends StatelessWidget {
                   side: BorderSide(
                     color: secondaryColor.withValues(alpha: 0.5),
                   ),
-                  padding: const .symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: .circular(DialogConstants.buttonBorderRadius),
                   ),

@@ -12,7 +12,7 @@ class BottomsheetLoadingIndicator extends StatelessWidget {
     final indicatorColor = color ?? (isDark ? Colors.white70 : Colors.black54);
 
     return Padding(
-      padding: const .symmetric(vertical: 24.0),
+      padding: const EdgeInsets.symmetric(vertical: 24.0),
       child: Center(
         child: SizedBox(
           width: size,

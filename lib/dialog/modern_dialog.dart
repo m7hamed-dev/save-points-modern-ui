@@ -452,7 +452,7 @@ class _ModernDialogState extends State<ModernDialog> {
                                             colorConfig.buttonColor,
                                         foregroundColor:
                                             colorConfig.buttonTextColor,
-                                        padding: const .symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                           vertical: 14,
                                           horizontal: 28,
                                         ),
@@ -483,7 +483,7 @@ class _ModernDialogState extends State<ModernDialog> {
                                       style: TextButton.styleFrom(
                                         foregroundColor:
                                             colorConfig.cancelColor,
-                                        padding: const .symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                           vertical: 10,
                                           horizontal: 24,
                                         ),

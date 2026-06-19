@@ -9,9 +9,12 @@ class DialogConstants {
   static const buttonBorderRadius = 16.0;
   static const iconSize = 48.0;
   static const iconPadding = 16.0;
-  static const dialogMargin = .symmetric(horizontal: 24);
+  static const dialogMargin = EdgeInsets.symmetric(horizontal: 24);
   static const dialogPadding = EdgeInsets.all(28);
-  static const buttonPadding = .symmetric(vertical: 16, horizontal: 24);
+  static const buttonPadding = EdgeInsets.symmetric(
+    vertical: 16,
+    horizontal: 24,
+  );
 
   /// Minimum button height for accessibility (Material 48dp)
   static const buttonMinHeight = 48.0;
