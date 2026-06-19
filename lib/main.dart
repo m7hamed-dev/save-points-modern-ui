@@ -178,7 +178,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       appBar: AppBar(
         title: const Text(
           'SavePoints Modern UI',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: .bold),
         ),
         centerTitle: true,
         elevation: 0,
@@ -622,7 +622,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                 '🎉 CHILD IS VISIBLE! 🎉',
                 style: TextStyle(
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   color: Colors.black,
                 ),
               ),
@@ -908,7 +908,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
               children: [
                 const Text(
                   '4 Installments',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: .bold),
                 ),
                 const SizedBox(height: 16),
                 const _PaymentItem(
@@ -928,10 +928,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                       children: [
                         const Text(
                           'Total Amount',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(fontWeight: .bold, fontSize: 16),
                         ),
                         Text(
                           'Including \$2.47 fees',
@@ -944,10 +941,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                     ),
                     const Text(
                       '\$216.07',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontSize: 20, fontWeight: .bold),
                     ),
                   ],
                 ),
@@ -2176,9 +2170,7 @@ class _PaymentItem extends StatelessWidget {
           ),
           Text(
             amount,
-            style: TextStyle(
-              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-            ),
+            style: TextStyle(fontWeight: isActive ? .bold : FontWeight.normal),
           ),
         ],
       ),

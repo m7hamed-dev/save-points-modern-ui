@@ -85,9 +85,9 @@ class _ExampleSectionState extends State<ExampleSection> {
                       const SizedBox(width: 12),
                       Text(
                         widget.title,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleLarge?.copyWith(fontWeight: .bold),
                       ),
                     ],
                   ),

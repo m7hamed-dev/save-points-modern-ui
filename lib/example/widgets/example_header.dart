@@ -74,9 +74,9 @@ class _ExampleHeaderState extends State<ExampleHeader>
               const SizedBox(height: 16),
               Text(
                 'SavePoints Modern UI',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineSmall?.copyWith(fontWeight: .bold),
               ),
               const SizedBox(height: 8),
               Text(

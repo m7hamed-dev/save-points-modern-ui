@@ -74,13 +74,13 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = theme.brightness == .dark;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'SavePoints Modern UI',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: .bold),
         ),
         centerTitle: true,
         elevation: 0,
@@ -157,7 +157,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
               'SavePoints Modern UI',
               style: Theme.of(
                 context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              ).textTheme.headlineSmall?.copyWith(fontWeight: .bold),
             ),
             const SizedBox(height: 8),
             Text(
@@ -192,7 +192,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
                   title,
                   style: Theme.of(
                     context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ).textTheme.titleLarge?.copyWith(fontWeight: .bold),
                 ),
               ],
             ),
