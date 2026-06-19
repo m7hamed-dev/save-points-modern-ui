@@ -383,7 +383,7 @@ class _ModernDialogState extends State<ModernDialog> {
                           RepaintBoundary(
                             child: Text(
                               widget.title,
-                              textAlign: TextAlign.center,
+                              textAlign: .center,
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w700,
@@ -399,7 +399,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             RepaintBoundary(
                               child: Text(
                                 widget.message,
-                                textAlign: TextAlign.center,
+                                textAlign: .center,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w400,

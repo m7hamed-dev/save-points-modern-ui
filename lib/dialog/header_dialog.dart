@@ -177,7 +177,7 @@ class HeaderDialog extends StatelessWidget {
       decoration: BoxDecoration(color: headerColor),
       child: Text(
         headerTitle,
-        textAlign: TextAlign.center,
+        textAlign: .center,
         style: TextStyle(
           color: textColor,
           fontSize: 20,

@@ -596,7 +596,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                         // Title with enhanced typography
                         Text(
                           widget.title,
-                          textAlign: TextAlign.center,
+                          textAlign: .center,
                           style: TextStyle(
                             fontSize: 20,
                             color: _effectiveTitleColor,
@@ -611,7 +611,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           const SizedBox(height: 8),
                           Text(
                             widget.subtitle!,
-                            textAlign: TextAlign.center,
+                            textAlign: .center,
                             style: TextStyle(
                               fontSize: 14,
                               color: _effectiveSubtitleColor,

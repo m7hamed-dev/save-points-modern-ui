@@ -162,7 +162,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             const SizedBox(height: 8),
             Text(
               'Beautiful, customizable UI components with glassmorphism effects',
-              textAlign: TextAlign.center,
+              textAlign: .center,
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
@@ -788,7 +788,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
                 const SizedBox(height: 8),
                 Text(
                   label,
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,

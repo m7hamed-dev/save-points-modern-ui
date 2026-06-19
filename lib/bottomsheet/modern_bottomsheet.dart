@@ -441,7 +441,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                             RepaintBoundary(
                               child: Text(
                                 widget.title!,
-                                textAlign: TextAlign.center,
+                                textAlign: .center,
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w700,

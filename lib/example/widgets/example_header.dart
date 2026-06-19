@@ -81,7 +81,7 @@ class _ExampleHeaderState extends State<ExampleHeader>
               const SizedBox(height: 8),
               Text(
                 'Beautiful, customizable UI components with glassmorphism effects',
-                textAlign: TextAlign.center,
+                textAlign: .center,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),

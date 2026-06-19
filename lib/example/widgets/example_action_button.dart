@@ -153,7 +153,7 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                           const SizedBox(height: 8),
                           Text(
                             widget.label,
-                            textAlign: TextAlign.center,
+                            textAlign: .center,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,

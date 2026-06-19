@@ -19,7 +19,7 @@ class DialogMessage extends StatelessWidget {
         color ?? (isDark ? Colors.grey[400] : Colors.grey[700]);
     return Text(
       message,
-      textAlign: TextAlign.center,
+      textAlign: .center,
       style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w400,

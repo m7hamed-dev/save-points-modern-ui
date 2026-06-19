@@ -18,7 +18,7 @@ class DialogTitle extends StatelessWidget {
     final effectiveColor = color ?? (isDark ? Colors.white : Colors.grey[900]);
     return Text(
       title,
-      textAlign: TextAlign.center,
+      textAlign: .center,
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w700,
