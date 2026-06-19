@@ -39,6 +39,8 @@
 - **🍞 Snackbars** - Enhanced notifications with rich animations and customization
 - **📱 Bottom Sheets** - Modern bottom sheets with drag handles and scroll support
 
+All three share one **bold & expressive** design language and the same 8 visual styles — `solid`, `outlined`, `tonal`, `colorHeader`, `leftAccent`, plus the new `glass`, `neon` and `minimal` variants — driven by unified design tokens (vivid palette, display typography, colored-glow elevation).
+
 All components feature automatic dark mode support, extensive customization options, and are optimized for performance with built-in repaint boundaries and efficient animations. The codebase follows professional Flutter best practices with comprehensive documentation, well-organized structure, and maintainable code.
 
 ## ✨ Key Features
@@ -46,7 +48,7 @@ All components feature automatic dark mode support, extensive customization opti
 ### 🎭 SavePointsDialog
 
 - **✨ Glassmorphism Design** - Beautiful frosted glass effects with backdrop blur
-- **🎨 Two design styles** - `solid` (filled) or `outlined` (light bg + colored border); both support light and dark themes
+- **🎨 8 design styles** - `solid`, `outlined`, `tonal`, `colorHeader` (default), `leftAccent`, `glass`, `neon`, `minimal`; all with light & dark themes
 - **🎨 Fully Customizable** - Colors, icons, buttons, and animations
 - **⚡ Smooth Animations** - Multiple animation types including fade, slide, scale, bounce, and more
 - **🌓 Dark Mode Support** - Automatic theme adaptation
@@ -59,7 +61,7 @@ All components feature automatic dark mode support, extensive customization opti
 ### 🍞 SavePointsSnackbar
 
 - **📊 Multiple Types** - Success, Error, Warning, and Info variants with predefined styling
-- **🎨 Two design styles** - `solid` (filled) or `outlined` (light bg + border, close button); both support light and dark themes
+- **🎨 8 design styles** - `solid` (default, vivid gradient), `outlined`, `tonal`, `colorHeader`, `leftAccent`, `glass`, `neon`, `minimal`; all with light & dark themes
 - **🎬 Rich Animations** - 7+ animation types: fade, slide, scale, bounce, rotate, elastic, slideRotate
 - **📈 Progress Indicators** - Optional progress bars for timed notifications
 - **🎨 Gradient Backgrounds** - Support for custom gradient designs
@@ -72,7 +74,7 @@ All components feature automatic dark mode support, extensive customization opti
 ### 📱 SavePointsBottomsheet
 
 - **✨ Modern Design** - Glassmorphism effects with backdrop blur
-- **🎨 Two design styles** - `solid` (filled) or `outlined` (light bg + colored border); both support light and dark themes
+- **🎨 8 design styles** - `solid`, `outlined`, `tonal`, `colorHeader` (default), `leftAccent`, `glass`, `neon`, `minimal`; all with light & dark themes
 - **🎚️ Drag Handle** - Optional drag indicator for better UX
 - **📜 Scrollable Content** - Built-in support for scrollable content with proper constraints
 - **⌨️ Keyboard Aware** - Automatically positions above keyboard when TextFormField is focused
@@ -88,7 +90,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.1.9
+  save_points_snackbar_dialog_bottomsheet: ^1.1.10
 ```
 
 Install the package:
@@ -142,46 +144,53 @@ SavePointsBottomsheet.show(
 );
 ```
 
-### Design styles (solid & outlined)
+### Design styles
 
-All components support two visual styles via `ContentDesignStyle`:
+All three components share one **bold & expressive** design language and the same
+set of visual styles via `ContentDesignStyle`. Every style adapts to light and
+dark themes.
 
-- **`solid`** (default) – Filled background, shadow, light text on colored background (snackbar/dialog).
-- **`outlined`** – Light/dark surface with colored border and dark/light text; works in both light and dark themes.
+| Style | Look |
+|-------|------|
+| `solid` | Vivid gradient fill with white content and a same-hue colored glow — **snackbar default** |
+| `colorHeader` | Card with a vivid gradient header band and a circular icon chip — **dialog & bottom sheet default** |
+| `outlined` | Surface with a colored border, subtle elevation |
+| `tonal` | Soft, tinted background (Material 3 tonal) |
+| `leftAccent` | Surface with a colored vertical bar on the left edge |
+| `glass` | Frosted glassmorphism — translucent surface over a backdrop blur with a hairline border |
+| `neon` | Deep near-black surface with a glowing accent border and an intense colored bloom |
+| `minimal` | Opaque surface, single hairline border, perfectly flat (no shadow) |
+
+Pick any style per call:
 
 ```dart
-import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar.dart';
-
-// Solid (default)
+// Snackbar — solid vivid gradient (default)
 SavePointsSnackbar.showSuccess(context, title: 'Done!', subtitle: 'Saved.');
 
-// Outlined (light bg + border, close button for snackbar)
-SavePointsSnackbar.showSuccess(
-  context,
-  title: 'Done!',
-  subtitle: 'Saved.',
-  designStyle: ContentDesignStyle.outlined,
-);
-
-// Dialog outlined
+// Dialog — frosted glass
 SavePointsDialog.show(
   context,
-  title: 'Confirm',
-  message: 'Proceed?',
-  designStyle: ContentDesignStyle.outlined,
-  showCancelButton: true,
+  title: 'Frosted',
+  message: 'Glassmorphism dialog.',
+  designStyle: ContentDesignStyle.glass,
 );
 
-// Bottom sheet outlined
+// Bottom sheet — neon
 SavePointsBottomsheet.show(
   context: context,
-  title: 'Options',
-  designStyle: ContentDesignStyle.outlined,
+  title: 'Neon',
+  designStyle: ContentDesignStyle.neon,
   child: YourContentWidget(),
 );
 ```
 
-Default style can be set in config: `SnackbarConfig.defaultDesignStyle`, `DialogConfig.defaultDesignStyle`.
+Or set a global default per surface:
+
+```dart
+SnackDiaBottomConfig().snackbar.defaultDesignStyle = ContentDesignStyle.solid;
+SnackDiaBottomConfig().dialog.defaultDesignStyle = ContentDesignStyle.colorHeader;
+SavePointsBottomsheet.defaultDesignStyle = ContentDesignStyle.colorHeader;
+```
 
 ## 📚 Complete Documentation
 
@@ -243,7 +252,7 @@ static Future<bool?> show(
 | `isLoading` | `bool` | No | `false` | Initial loading state |
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading state control |
 | `hideLikeCircle` | `bool` | No | `false` | Disable circular reveal exit animation |
-| `designStyle` | `ContentDesignStyle?` | No | `solid` | Design: `solid` (filled) or `outlined` (light bg + border) |
+| `designStyle` | `ContentDesignStyle?` | No | `colorHeader` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
 | `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 | `child` | `Widget?` | No | `null` | Custom widget displayed between message and buttons |
@@ -541,7 +550,7 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 | `dismissOnTap` | `bool?` | No | `false` | Dismiss when tapped |
 | `onTap` | `VoidCallback?` | No | `null` | Custom tap handler |
 | `onDismissed` | `VoidCallback?` | No | `null` | Callback when dismissed |
-| `designStyle` | `ContentDesignStyle?` | No | `solid` | Design: `solid` (filled) or `outlined` (light bg + border) |
+| `designStyle` | `ContentDesignStyle?` | No | `solid` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
 | `blur` | `double?` | No | `null` | Backdrop blur sigma (glassmorphism); no blur when null |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
@@ -756,7 +765,7 @@ static Future<T?> show<T>({
 | `isLoading` | `bool` | No | `false` | Initial loading state |
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading control |
 | `hideLikeCircle` | `bool` | No | `false` | Disable circular reveal exit animation |
-| `designStyle` | `ContentDesignStyle?` | No | `solid` | Design: `solid` (filled) or `outlined` (light bg + border) |
+| `designStyle` | `ContentDesignStyle?` | No | `colorHeader` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
 | `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
@@ -1051,21 +1060,24 @@ DialogPresets.showFeatureNotAvailable(context);
 
 ## ⚙️ Configuration
 
-SavePoints Modern UI provides a centralized configuration system through `SavePointsConfig`:
+SavePoints Modern UI provides a centralized configuration system through `SnackDiaBottomConfig`:
 
 ```dart
 // Configure global defaults
-final config = SavePointsConfig();
+final config = SnackDiaBottomConfig();
 config.snackbar
   ..defaultDuration = Duration(seconds: 5)
   ..defaultType = SnackbarType.info
   ..defaultShowProgressIndicator = true
-  ..defaultDesignStyle = ContentDesignStyle.outlined; // or .solid
+  ..defaultDesignStyle = ContentDesignStyle.solid; // any ContentDesignStyle
 
 config.dialog
   ..defaultConfirmText = 'Continue'
   ..defaultShowCancelButton = true
-  ..defaultDesignStyle = ContentDesignStyle.outlined; // or .solid
+  ..defaultDesignStyle = ContentDesignStyle.colorHeader; // any ContentDesignStyle
+
+// Bottom sheets expose their own global default:
+SavePointsBottomsheet.defaultDesignStyle = ContentDesignStyle.colorHeader;
 ```
 
 See the [Configuration Guide](https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet/wiki/Configuration) for more details.
