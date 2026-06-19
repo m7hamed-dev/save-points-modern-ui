@@ -9,7 +9,7 @@ class BottomsheetConstants {
   static const double handleWidth = 44.0;
   static const double handleBorderRadius = 2.5;
   static const EdgeInsets padding = .all(24);
-  static const EdgeInsets contentPadding = EdgeInsets.symmetric(horizontal: 24);
+  static const EdgeInsets contentPadding = .symmetric(horizontal: 24);
   static const double maxHeight = 0.9; // 90% of screen height
   static const double minHeight = 200.0;
   static const double handleSpacing = 12.0;

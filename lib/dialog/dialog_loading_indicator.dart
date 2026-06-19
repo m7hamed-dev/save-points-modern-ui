@@ -13,7 +13,7 @@ class DialogLoadingIndicator extends StatelessWidget {
     final indicatorColor = color ?? (isDark ? Colors.white70 : Colors.black54);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      padding: const .symmetric(vertical: 16.0),
       child: SizedBox(
         width: size,
         height: size,

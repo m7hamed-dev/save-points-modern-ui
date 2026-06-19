@@ -339,7 +339,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
               ? _handleTap
               : null,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
+            padding: const .symmetric(
               horizontal: SnackbarConstants.horizontalPadding,
               vertical: SnackbarConstants.verticalPadding,
             ),
@@ -648,7 +648,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: buttonColor,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
+                                padding: const .symmetric(
                                   vertical: 12,
                                   horizontal: 28,
                                 ),
