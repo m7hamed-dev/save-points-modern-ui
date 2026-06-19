@@ -426,7 +426,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             subtitle: 'Displayed at the top of the screen',
             position: SnackbarPosition.top,
             showProgressIndicator: true,
-            startAnimation: SnackbarAnimationDirection.fromTop,
+            startAnimation: .fromTop,
           );
         },
       ),
