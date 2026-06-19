@@ -1,15 +1,16 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_buttons.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_color_config.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_container.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_icon.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_title.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_message.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_buttons.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_loading_indicator.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_constants.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_message.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_title.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 
 /// Modern dialog widget with loading support
@@ -130,7 +131,7 @@ class _ModernDialogState extends State<ModernDialog> {
   Widget build(BuildContext context) {
     // Debug: Print child status
     debugPrint('ModernDialog build - child is null: ${widget.child == null}');
-    
+
     final colorConfig =
         _cachedColorConfig ??
         DialogColorConfig(
@@ -167,7 +168,7 @@ class _ModernDialogState extends State<ModernDialog> {
               maxWidth: DialogConstants.maxDialogWidth,
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
+              borderRadius: .circular(DialogConstants.borderRadius),
               child: _buildContent(
                 blur: widget.blur,
                 backdropFilter: widget.backdropFilter,
@@ -267,7 +268,7 @@ class _ModernDialogState extends State<ModernDialog> {
             ),
             decoration: BoxDecoration(
               color: colorConfig.backgroundColor,
-              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
+              borderRadius: .circular(DialogConstants.borderRadius),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.15),
@@ -277,7 +278,7 @@ class _ModernDialogState extends State<ModernDialog> {
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
+              borderRadius: .circular(DialogConstants.borderRadius),
               child: _buildContent(
                 blur: widget.blur,
                 backdropFilter: widget.backdropFilter,
@@ -327,7 +328,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () => Navigator.of(context).pop(),
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: .circular(14),
                               child: Container(
                                 width: 28,
                                 height: 28,
@@ -408,7 +409,8 @@ class _ModernDialogState extends State<ModernDialog> {
                                 ),
                               ),
                             ),
-                          if (widget.message.isNotEmpty) const SizedBox(height: 28),
+                          if (widget.message.isNotEmpty)
+                            const SizedBox(height: 28),
                           // Optional custom child widget
                           if (widget.child != null) ...[
                             Container(
@@ -433,7 +435,7 @@ class _ModernDialogState extends State<ModernDialog> {
                                   height: 52,
                                   child: DecoratedBox(
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(26),
+                                      borderRadius: .circular(26),
                                       boxShadow: [
                                         BoxShadow(
                                           color: colorConfig.buttonColor
@@ -455,9 +457,7 @@ class _ModernDialogState extends State<ModernDialog> {
                                           horizontal: 28,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            26,
-                                          ),
+                                          borderRadius: .circular(26),
                                         ),
                                         elevation: 0,
                                       ),
@@ -488,9 +488,7 @@ class _ModernDialogState extends State<ModernDialog> {
                                           horizontal: 24,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            22,
-                                          ),
+                                          borderRadius: .circular(22),
                                         ),
                                       ),
                                       child: Text(

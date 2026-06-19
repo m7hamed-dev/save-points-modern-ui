@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_animation_direction.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/modern_snackbar_content.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animation.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/circular_reveal_clip.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animation.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/modern_snackbar_content.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_animation_direction.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
 /// Overlay-based snackbar for top positioning
 class TopSnackbarOverlay {
@@ -70,9 +71,7 @@ class TopSnackbarOverlay {
         dismissOnTap: dismissOnTap,
         showProgressIndicator: showProgressIndicator,
         duration: duration,
-        borderRadius:
-            borderRadius ??
-            BorderRadius.circular(SnackbarConstants.borderRadius),
+        borderRadius: borderRadius ?? .circular(SnackbarConstants.borderRadius),
         maxWidth: maxWidth ?? SnackbarConstants.maxWidth,
         topMargin: topMargin,
         borderColor: borderColor,

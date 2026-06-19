@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:flutter/material.dart' hide AnimatedIcon;
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_shadows.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/progress_indicator_bar.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/progress_indicator_bar.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_shadows.dart';
 
 /// Modern snackbar content with enhanced features
 class ModernSnackbarContent extends StatefulWidget {
@@ -265,8 +266,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
       maxWidth: widget.maxWidth,
       minWidth: isBottom ? SnackbarConstants.minWidthBottom : 0,
     );
-    final showLeftAccent =
-        widget.designStyle == ContentDesignStyle.leftAccent;
+    final showLeftAccent = widget.designStyle == ContentDesignStyle.leftAccent;
 
     Widget content = RepaintBoundary(
       child: Container(
@@ -332,110 +332,106 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
 
   Widget _buildDefaultLayoutContent() {
     return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: widget.dismissOnTap || widget.onTap != null
-                    ? _handleTap
-                    : null,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: SnackbarConstants.horizontalPadding,
-                    vertical: SnackbarConstants.verticalPadding,
-                  ),
-                  child: Row(
-                    children: [
-                      RepaintBoundary(
-                        child: AnimatedIcon(
-                          icon: widget.icon,
-                          iconColor: widget.iconColor,
-                          type: widget.type,
-                          animation: widget.animation,
-                          designStyle: widget.designStyle,
-                        ),
-                      ),
-                      const SizedBox(width: SnackbarConstants.iconSpacing),
-                      Expanded(
-                        child: DefaultTextStyle(
-                          style: const TextStyle(
-                            decoration: TextDecoration.none,
-                          ),
-                          child: RepaintBoundary(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  widget.title,
-                                  style: TextStyle(
-                                    fontSize: SnackbarConstants.titleFontSize,
-                                    color: _effectiveTitleColor,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.2,
-                                    height: SnackbarConstants.titleLineHeight,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                ),
-                                if (widget.subtitle != null) ...[
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    widget.subtitle!,
-                                    style: TextStyle(
-                                      fontSize:
-                                          SnackbarConstants.subtitleFontSize,
-                                      color: _effectiveSubtitleColor,
-                                      fontWeight: FontWeight.w400,
-                                      height:
-                                          SnackbarConstants.subtitleLineHeight,
-                                      letterSpacing: SnackbarConstants
-                                          .subtitleLetterSpacing,
-                                      decoration: TextDecoration.none,
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      if (widget.showCloseButton)
-                        IconButton(
-                          icon: Icon(
-                            Icons.close,
-                            size: 20,
-                            color: _effectiveTitleColor,
-                          ),
-                          onPressed: () {
-                            if (widget.onCloseButtonPressed != null) {
-                              widget.onCloseButtonPressed!();
-                            } else {
-                              _animateDismiss();
-                            }
-                          },
-                          padding: const EdgeInsets.all(12),
-                          constraints: const BoxConstraints(
-                            minWidth: SnackbarConstants.minTouchTargetSize,
-                            minHeight: SnackbarConstants.minTouchTargetSize,
-                          ),
-                          style: IconButton.styleFrom(
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-              if (widget.showProgressIndicator)
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          onTap: widget.dismissOnTap || widget.onTap != null
+              ? _handleTap
+              : null,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: SnackbarConstants.horizontalPadding,
+              vertical: SnackbarConstants.verticalPadding,
+            ),
+            child: Row(
+              children: [
                 RepaintBoundary(
-                  child: ProgressIndicatorBar(
-                    animation: _progressController,
-                    color: widget.iconColor,
+                  child: AnimatedIcon(
+                    icon: widget.icon,
+                    iconColor: widget.iconColor,
+                    type: widget.type,
+                    animation: widget.animation,
+                    designStyle: widget.designStyle,
                   ),
                 ),
-            ],
+                const SizedBox(width: SnackbarConstants.iconSpacing),
+                Expanded(
+                  child: DefaultTextStyle(
+                    style: const TextStyle(decoration: TextDecoration.none),
+                    child: RepaintBoundary(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            widget.title,
+                            style: TextStyle(
+                              fontSize: SnackbarConstants.titleFontSize,
+                              color: _effectiveTitleColor,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.2,
+                              height: SnackbarConstants.titleLineHeight,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                          if (widget.subtitle != null) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              widget.subtitle!,
+                              style: TextStyle(
+                                fontSize: SnackbarConstants.subtitleFontSize,
+                                color: _effectiveSubtitleColor,
+                                fontWeight: FontWeight.w400,
+                                height: SnackbarConstants.subtitleLineHeight,
+                                letterSpacing:
+                                    SnackbarConstants.subtitleLetterSpacing,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                if (widget.showCloseButton)
+                  IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      size: 20,
+                      color: _effectiveTitleColor,
+                    ),
+                    onPressed: () {
+                      if (widget.onCloseButtonPressed != null) {
+                        widget.onCloseButtonPressed!();
+                      } else {
+                        _animateDismiss();
+                      }
+                    },
+                    padding: const EdgeInsets.all(12),
+                    constraints: const BoxConstraints(
+                      minWidth: SnackbarConstants.minTouchTargetSize,
+                      minHeight: SnackbarConstants.minTouchTargetSize,
+                    ),
+                    style: IconButton.styleFrom(
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: .circular(12),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (widget.showProgressIndicator)
+          RepaintBoundary(
+            child: ProgressIndicatorBar(
+              animation: _progressController,
+              color: widget.iconColor,
+            ),
+          ),
+      ],
     );
   }
 
@@ -544,7 +540,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                 _animateDismiss();
                               }
                             },
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: .circular(12),
                             child: Container(
                               width: 26,
                               height: 26,
@@ -633,7 +629,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           height: 48,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: .circular(24),
                               boxShadow: [
                                 BoxShadow(
                                   color: buttonColor.withValues(alpha: 0.25),
@@ -657,7 +653,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                   horizontal: 28,
                                 ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
+                                  borderRadius: .circular(24),
                                 ),
                                 elevation: 0,
                               ),

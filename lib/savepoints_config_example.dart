@@ -15,7 +15,7 @@ void configureSavePoints() {
   config.snackbar.defaultShowProgressIndicator = true;
   config.snackbar.defaultEnableHapticFeedback = false;
   config.snackbar.maxWidth = 400.0;
-  config.snackbar.defaultBorderRadius = BorderRadius.circular(20.0);
+  config.snackbar.defaultBorderRadius = .circular(20.0);
 
   // Customize specific snackbar types
   config.snackbar.customizeType(

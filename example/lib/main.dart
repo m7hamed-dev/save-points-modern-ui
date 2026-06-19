@@ -33,9 +33,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
         cardTheme: CardThemeData(
           elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: .circular(16)),
         ),
       ),
       darkTheme: ThemeData(
@@ -46,9 +44,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
         cardTheme: CardThemeData(
           elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: .circular(16)),
         ),
       ),
       themeMode: _themeMode,
@@ -509,7 +505,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             subtitle: 'With custom border styling',
             borderColor: Colors.orange,
             borderWidth: 2,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: .circular(12),
             type: SnackbarType.warning,
           );
         },
@@ -779,10 +775,10 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
       width: 140,
       child: Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: .circular(12)),
         child: InkWell(
           onTap: onPressed,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: .circular(12),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

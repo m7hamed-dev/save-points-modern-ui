@@ -41,12 +41,10 @@ class _ExampleSectionState extends State<ExampleSection> {
         curve: Curves.easeInOut,
         child: Card(
           elevation: _isHovered ? 6 : 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: .circular(16)),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: .circular(16),
               gradient: _isHovered
                   ? LinearGradient(
                       begin: Alignment.topLeft,
@@ -77,7 +75,7 @@ class _ExampleSectionState extends State<ExampleSection> {
                                   context,
                                 ).colorScheme.primary.withValues(alpha: 0.1)
                               : Colors.transparent,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: .circular(8),
                         ),
                         child: Icon(
                           widget.icon,

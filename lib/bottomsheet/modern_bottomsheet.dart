@@ -370,7 +370,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                                 color: widget.isDark
                                     ? Colors.white.withValues(alpha: 0.2)
                                     : Colors.black.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(2.5),
+                                borderRadius: .circular(2.5),
                               ),
                             ),
                           ),
@@ -384,7 +384,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () => Navigator.of(context).pop(),
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: .circular(14),
                               child: Container(
                                 width: 28,
                                 height: 28,

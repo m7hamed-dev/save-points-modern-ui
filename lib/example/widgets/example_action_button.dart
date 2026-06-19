@@ -100,12 +100,10 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
               ),
             child: Card(
               elevation: _isHovered ? 6 : 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: .circular(12)),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: .circular(12),
                   gradient: _isHovered
                       ? LinearGradient(
                           begin: Alignment.topLeft,
@@ -161,7 +159,9 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                               fontWeight: FontWeight.w500,
                               color: _isHovered
                                   ? widget.color
-                                  : Theme.of(context).textTheme.bodyMedium?.color,
+                                  : Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.color,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -188,10 +188,7 @@ class RipplePainter extends CustomPainter {
   /// Color of the ripple effect
   final Color color;
 
-  RipplePainter({
-    required this.progress,
-    required this.color,
-  });
+  RipplePainter({required this.progress, required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -215,4 +212,3 @@ class RipplePainter extends CustomPainter {
     return oldDelegate.progress != progress || oldDelegate.color != color;
   }
 }
-

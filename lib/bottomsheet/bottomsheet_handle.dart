@@ -24,9 +24,7 @@ class BottomsheetHandle extends StatelessWidget {
       height: BottomsheetConstants.handleHeight,
       decoration: BoxDecoration(
         color: handleColor,
-        borderRadius: BorderRadius.circular(
-          BottomsheetConstants.handleBorderRadius,
-        ),
+        borderRadius: .circular(BottomsheetConstants.handleBorderRadius),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_constants.dart';
@@ -107,7 +108,7 @@ class HeaderDialog extends StatelessWidget {
               children: [
                 // Main dialog content
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(effectiveBorderRadius),
+                  borderRadius: .circular(effectiveBorderRadius),
                   child: _buildContent(
                     blur: blur,
                     backdropFilter: backdropFilter,
@@ -216,9 +217,7 @@ class HeaderDialog extends StatelessWidget {
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      DialogConstants.buttonBorderRadius,
-                    ),
+                    borderRadius: .circular(DialogConstants.buttonBorderRadius),
                   ),
                   minimumSize: const Size(
                     double.infinity,
@@ -255,9 +254,7 @@ class HeaderDialog extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      DialogConstants.buttonBorderRadius,
-                    ),
+                    borderRadius: .circular(DialogConstants.buttonBorderRadius),
                   ),
                   minimumSize: const Size(
                     double.infinity,

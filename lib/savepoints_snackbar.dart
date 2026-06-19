@@ -123,7 +123,7 @@ class SavePointsSnackbar {
     final finalBorderRadius =
         borderRadius ??
         config.defaultBorderRadius ??
-        BorderRadius.circular(SnackbarConstants.borderRadius);
+        .circular(SnackbarConstants.borderRadius);
     final finalMaxWidth =
         maxWidth ?? config.maxWidth ?? SnackbarConstants.maxWidth;
     final finalShowProgressIndicator =

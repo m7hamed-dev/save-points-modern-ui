@@ -398,7 +398,7 @@ SavePointsDialog.show(
           hintText: 'Enter your name',
           prefixIcon: const Icon(Icons.person),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: .circular(12),
           ),
           filled: true,
         ),
@@ -411,7 +411,7 @@ SavePointsDialog.show(
           hintText: 'Enter your email',
           prefixIcon: const Icon(Icons.email),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: .circular(12),
           ),
           filled: true,
         ),
@@ -664,7 +664,7 @@ SavePointsSnackbar.show(
   subtitle: 'With custom border styling',
   borderColor: Colors.orange,
   borderWidth: 2,
-  borderRadius: BorderRadius.circular(12),
+  borderRadius: .circular(12),
   type: SnackbarType.warning,
 );
 ```

@@ -21,7 +21,7 @@ class DialogContainer extends StatelessWidget {
     final isOutlined = colorConfig.borderColor != null;
     final isLeftAccent =
         colorConfig.designStyle == ContentDesignStyle.leftAccent;
-    final borderRadius = BorderRadius.circular(DialogConstants.borderRadius);
+    final borderRadius = .circular(DialogConstants.borderRadius);
 
     final contentBorderRadius = isLeftAccent
         ? BorderRadius.only(

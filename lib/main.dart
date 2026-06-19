@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
       useMaterial3: true,
       cardTheme: CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: .circular(16)),
       ),
     );
   }
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
       useMaterial3: true,
       cardTheme: CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: .circular(16)),
       ),
     );
   }
@@ -579,9 +579,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                     labelText: 'Name',
                     hintText: 'Enter your name',
                     prefixIcon: const Icon(Icons.person),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    border: OutlineInputBorder(borderRadius: .circular(12)),
                     filled: true,
                   ),
                 ),
@@ -591,9 +589,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                     labelText: 'Email',
                     hintText: 'Enter your email',
                     prefixIcon: const Icon(Icons.email),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    border: OutlineInputBorder(borderRadius: .circular(12)),
                     filled: true,
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -1266,7 +1262,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             subtitle: 'With custom border styling',
             borderColor: Colors.orange,
             borderWidth: 2,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: .circular(12),
             type: SnackbarType.warning,
           );
         },
