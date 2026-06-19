@@ -164,7 +164,7 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                                     ).textTheme.bodyMedium?.color,
                             ),
                             maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                           ),
                         ],
                       ),

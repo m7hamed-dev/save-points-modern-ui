@@ -791,7 +791,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
                   textAlign: .center,
                   style: const TextStyle(fontSize: 12, fontWeight: .w500),
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               ],
             ),
