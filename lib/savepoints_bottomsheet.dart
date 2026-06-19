@@ -32,6 +32,12 @@ export 'bottomsheet/bottomsheet_animation_direction.dart';
 /// );
 /// ```
 class SavePointsBottomsheet {
+  /// Global fallback design style used when a [show] call doesn't pass its own
+  /// `designStyle`. Mirrors `SnackDiaBottomConfig().snackbar.defaultDesignStyle`
+  /// and `.dialog.defaultDesignStyle` so all three surfaces can share one
+  /// default. When null, the bottom sheet's built-in default is used.
+  static ContentDesignStyle? defaultDesignStyle;
+
   /// Shows a modern bottom sheet.
   ///
   /// Returns the result value when the bottom sheet is dismissed,
@@ -115,7 +121,7 @@ class SavePointsBottomsheet {
           enableDrag: finalEnableDrag,
           maxHeight: maxHeight,
           isScrollControlled: isScrollControlled,
-          designStyle: designStyle,
+          designStyle: designStyle ?? defaultDesignStyle,
           blur: blur,
           backdropFilter: backdropFilter,
           child: child,

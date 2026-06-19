@@ -9,6 +9,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/example/widgets/widgets.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/presets/dialog_presets.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
@@ -112,11 +113,30 @@ class _ExampleHomePageState extends State<ExampleHomePage>
   late List<AnimationController> _sectionControllers;
   int _currentIndex = 0;
 
+  /// The new bold variants the AppBar switcher cycles through.
+  static const List<ContentDesignStyle> _switchableVariants = [
+    ContentDesignStyle.glass,
+    ContentDesignStyle.neon,
+    ContentDesignStyle.minimal,
+  ];
+
+  /// Currently selected variant shown by the AppBar switcher.
+  ContentDesignStyle _variant = ContentDesignStyle.glass;
+
   @override
   void initState() {
     super.initState();
     _initializeAnimationControllers();
     _startStaggeredAnimations();
+    _applyVariant(_variant);
+  }
+
+  /// Makes [variant] the global default for snackbars, dialogs and bottom
+  /// sheets so the whole demo follows the AppBar switcher.
+  void _applyVariant(ContentDesignStyle variant) {
+    SnackDiaBottomConfig().snackbar.defaultDesignStyle = variant;
+    SnackDiaBottomConfig().dialog.defaultDesignStyle = variant;
+    SavePointsBottomsheet.defaultDesignStyle = variant;
   }
 
   /// Initializes all animation controllers
@@ -183,6 +203,21 @@ class _ExampleHomePageState extends State<ExampleHomePage>
         centerTitle: true,
         elevation: 0,
         actions: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) {
+              return RotationTransition(
+                turns: animation,
+                child: ScaleTransition(scale: animation, child: child),
+              );
+            },
+            child: IconButton(
+              key: ValueKey(_variant),
+              icon: Icon(_variantIcon(_variant)),
+              tooltip: '${_variantLabel(_variant)} — tap to switch variant',
+              onPressed: _cycleVariant,
+            ),
+          ),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, animation) {
@@ -318,6 +353,58 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     );
   }
 
+  /// Icon representing a switchable variant.
+  IconData _variantIcon(ContentDesignStyle variant) {
+    switch (variant) {
+      case ContentDesignStyle.glass:
+        return Icons.blur_on;
+      case ContentDesignStyle.neon:
+        return Icons.bolt;
+      case ContentDesignStyle.minimal:
+        return Icons.crop_square;
+      case ContentDesignStyle.solid:
+      case ContentDesignStyle.outlined:
+      case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
+        return Icons.style;
+    }
+  }
+
+  /// Human-readable name for a switchable variant.
+  String _variantLabel(ContentDesignStyle variant) {
+    switch (variant) {
+      case ContentDesignStyle.glass:
+        return 'Glass';
+      case ContentDesignStyle.neon:
+        return 'Neon';
+      case ContentDesignStyle.minimal:
+        return 'Minimal';
+      case ContentDesignStyle.solid:
+      case ContentDesignStyle.outlined:
+      case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
+        return variant.name;
+    }
+  }
+
+  /// Cycles glass → neon → minimal and previews the newly selected variant.
+  void _cycleVariant() {
+    final next =
+        _switchableVariants[(_switchableVariants.indexOf(_variant) + 1) %
+            _switchableVariants.length];
+    setState(() => _variant = next);
+    _applyVariant(next);
+    SavePointsSnackbar.show(
+      context,
+      title: '${_variantLabel(next)} variant',
+      subtitle: 'Switched — this preview uses the ${_variantLabel(next)} style.',
+      type: SnackbarType.info,
+      designStyle: next,
+    );
+  }
+
   /// Handles navigation bar selection and shows appropriate snackbar
   void _handleNavigationSelection(int index) {
     setState(() {
@@ -412,7 +499,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             message: 'Classic filled background with shadow.',
             icon: Icons.check_circle,
             iconColor: Colors.green,
-            designStyle: ContentDesignStyle.solid,
+            designStyle: _variant,
             confirmText: 'OK',
           );
         },
@@ -429,7 +516,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             message: 'Light background with colored border and dark text.',
             icon: Icons.info,
             iconColor: Theme.of(context).colorScheme.primary,
-            designStyle: ContentDesignStyle.outlined,
+            designStyle: _variant,
             confirmText: 'OK',
             showCancelButton: true,
             cancelText: 'Cancel',
@@ -448,7 +535,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             message: 'The device has been created successfully.',
             icon: Icons.check_circle,
             iconColor: Colors.green,
-            designStyle: ContentDesignStyle.colorHeader,
+            designStyle: _variant,
             confirmText: 'Continue',
           );
         },
@@ -466,7 +553,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                 'hairline highlight border.',
             icon: Icons.ac_unit_rounded,
             iconColor: Colors.cyan,
-            designStyle: ContentDesignStyle.glass,
+            designStyle: _variant,
             confirmText: 'Nice',
           );
         },
@@ -484,7 +571,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                 'and an intense colored bloom.',
             icon: Icons.flash_on_rounded,
             iconColor: Colors.purpleAccent,
-            designStyle: ContentDesignStyle.neon,
+            designStyle: _variant,
             confirmText: 'Whoa',
           );
         },
@@ -501,7 +588,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             message: 'Opaque surface, single hairline border, perfectly flat.',
             icon: Icons.remove_rounded,
             iconColor: Colors.blueGrey,
-            designStyle: ContentDesignStyle.minimal,
+            designStyle: _variant,
             confirmText: 'OK',
           );
         },
@@ -518,7 +605,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             message: 'Are you sure you want to cancel? This can\'t be undone.',
             icon: Icons.warning,
             iconColor: Colors.red,
-            designStyle: ContentDesignStyle.colorHeader,
+            designStyle: _variant,
             confirmText: 'Continue',
             showCancelButton: true,
             cancelText: 'Go Back',
@@ -538,7 +625,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             message: 'How would you rate our service?',
             icon: Icons.star_rounded,
             iconColor: Colors.amber,
-            designStyle: ContentDesignStyle.colorHeader,
+            designStyle: _variant,
             confirmText: 'Submit Rating',
             cancelText: 'Skip',
             showCancelButton: true,
@@ -587,7 +674,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             message: 'Dialog with a colored vertical bar on the left edge.',
             icon: Icons.check_circle_rounded,
             iconColor: Colors.teal,
-            designStyle: ContentDesignStyle.leftAccent,
+            designStyle: _variant,
             confirmText: 'OK',
           );
         },
@@ -604,7 +691,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             message: 'Material 3 filled tonal — light tinted background.',
             icon: Icons.info_rounded,
             iconColor: Colors.indigo,
-            designStyle: ContentDesignStyle.tonal,
+            designStyle: _variant,
             confirmText: 'OK',
           );
         },
@@ -1027,7 +1114,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Yuhu! Download Success',
             subtitle: 'Lorem ipsum dolor sit amet...',
-            designStyle: ContentDesignStyle.solid,
+            designStyle: _variant,
           );
         },
       ),
@@ -1041,7 +1128,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Yuhu! Download Success',
             subtitle: 'Lorem ipsum dolor sit amet...',
-            designStyle: ContentDesignStyle.outlined,
+            designStyle: _variant,
           );
         },
       ),
@@ -1055,7 +1142,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Oops! Error System',
             subtitle: 'Lorem ipsum dolor sit amet...',
-            designStyle: ContentDesignStyle.outlined,
+            designStyle: _variant,
           );
         },
       ),
@@ -1069,7 +1156,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Warning: System Disruption',
             subtitle: 'Lorem ipsum dolor sit amet...',
-            designStyle: ContentDesignStyle.outlined,
+            designStyle: _variant,
           );
         },
       ),
@@ -1084,7 +1171,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Update Found',
             subtitle: 'Lorem ipsum dolor sit amet...',
             type: SnackbarType.info,
-            designStyle: ContentDesignStyle.outlined,
+            designStyle: _variant,
           );
         },
       ),
@@ -1098,7 +1185,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Done',
             subtitle: 'The device has been created successfully.',
-            designStyle: ContentDesignStyle.colorHeader,
+            designStyle: _variant,
             position: SnackbarPosition.top,
           );
         },
@@ -1113,7 +1200,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Cancel',
             subtitle: 'Are you sure you want to cancel? This can\'t be undone.',
-            designStyle: ContentDesignStyle.colorHeader,
+            designStyle: _variant,
             position: SnackbarPosition.top,
           );
         },
@@ -1128,7 +1215,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Warning',
             subtitle: 'Please review your changes before proceeding.',
-            designStyle: ContentDesignStyle.colorHeader,
+            designStyle: _variant,
             position: SnackbarPosition.top,
           );
         },
@@ -1143,7 +1230,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Left Accent',
             subtitle: 'Snackbar with a colored bar on the left.',
-            designStyle: ContentDesignStyle.leftAccent,
+            designStyle: _variant,
           );
         },
       ),
@@ -1158,7 +1245,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Frosted Glass',
             subtitle: 'Translucent surface over a backdrop blur.',
             type: SnackbarType.info,
-            designStyle: ContentDesignStyle.glass,
+            designStyle: _variant,
           );
         },
       ),
@@ -1172,7 +1259,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context,
             title: 'Neon Glow',
             subtitle: 'Dark surface with a glowing accent border.',
-            designStyle: ContentDesignStyle.neon,
+            designStyle: _variant,
           );
         },
       ),
@@ -1187,7 +1274,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Minimal',
             subtitle: 'Hairline border, flat — clean and quiet.',
             type: SnackbarType.info,
-            designStyle: ContentDesignStyle.minimal,
+            designStyle: _variant,
           );
         },
       ),
@@ -1202,7 +1289,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Tonal Style',
             subtitle: 'Light tinted background, dark text.',
             type: SnackbarType.info,
-            designStyle: ContentDesignStyle.tonal,
+            designStyle: _variant,
           );
         },
       ),
@@ -1540,7 +1627,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             subtitle: 'Tap close button or swipe to see exit animation',
             type: SnackbarType.info,
             animation: SnackbarAnimation.bounce,
-            designStyle: ContentDesignStyle.outlined,
+            designStyle: _variant,
             duration: const Duration(seconds: 10),
           );
         },
@@ -1560,7 +1647,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
           SavePointsBottomsheet.show(
             context: context,
             title: 'Solid Style',
-            designStyle: ContentDesignStyle.solid,
+            designStyle: _variant,
             child: const Padding(
               padding: .all(24.0),
               child: Text(
@@ -1581,7 +1668,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
           SavePointsBottomsheet.show(
             context: context,
             title: 'Outlined Style',
-            designStyle: ContentDesignStyle.outlined,
+            designStyle: _variant,
             child: const Padding(
               padding: .all(24.0),
               child: Text(
@@ -1604,7 +1691,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Success',
             icon: Icons.check_circle,
             iconColor: Colors.green,
-            designStyle: ContentDesignStyle.colorHeader,
+            designStyle: _variant,
             child: const Padding(
               padding: .all(24.0),
               child: Text(
@@ -1627,7 +1714,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Information',
             icon: Icons.info,
             iconColor: Colors.blue,
-            designStyle: ContentDesignStyle.colorHeader,
+            designStyle: _variant,
             child: Column(
               mainAxisSize: .min,
               children: [
@@ -1660,7 +1747,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Left Accent Sheet',
             icon: Icons.check_circle_rounded,
             iconColor: Colors.teal,
-            designStyle: ContentDesignStyle.leftAccent,
+            designStyle: _variant,
             child: const Padding(
               padding: .all(24.0),
               child: Text(
@@ -1682,7 +1769,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Tonal Sheet',
             icon: Icons.info_rounded,
             iconColor: Colors.indigo,
-            designStyle: ContentDesignStyle.tonal,
+            designStyle: _variant,
             child: const Padding(
               padding: .all(24.0),
               child: Text(
@@ -1704,7 +1791,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Frosted Glass',
             icon: Icons.ac_unit_rounded,
             iconColor: Colors.cyan,
-            designStyle: ContentDesignStyle.glass,
+            designStyle: _variant,
             child: const Padding(
               padding: .all(24.0),
               child: Text(
@@ -1727,7 +1814,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Neon Glow',
             icon: Icons.flash_on_rounded,
             iconColor: Colors.purpleAccent,
-            designStyle: ContentDesignStyle.neon,
+            designStyle: _variant,
             child: const Padding(
               padding: .all(24.0),
               child: Text(
@@ -1750,7 +1837,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Minimal',
             icon: Icons.remove_rounded,
             iconColor: Colors.blueGrey,
-            designStyle: ContentDesignStyle.minimal,
+            designStyle: _variant,
             child: const Padding(
               padding: .all(24.0),
               child: Text(
