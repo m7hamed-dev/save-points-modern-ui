@@ -156,7 +156,7 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                             textAlign: .center,
                             style: TextStyle(
                               fontSize: 12,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: .w500,
                               color: _isHovered
                                   ? widget.color
                                   : Theme.of(

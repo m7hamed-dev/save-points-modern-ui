@@ -495,7 +495,7 @@ class _ModernDialogState extends State<ModernDialog> {
                                         widget.cancelText,
                                         style: const TextStyle(
                                           fontSize: 15,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: .w500,
                                           letterSpacing: 0.2,
                                         ),
                                       ),

@@ -789,10 +789,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
                 Text(
                   label,
                   textAlign: .center,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: const TextStyle(fontSize: 12, fontWeight: .w500),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
