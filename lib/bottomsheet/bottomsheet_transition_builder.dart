@@ -1,16 +1,11 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animation.dart';
 
 /// Bottom sheet transition builder with animation support
 class BottomsheetTransitionBuilder extends StatelessWidget {
-  final Animation<double> animation;
-  final Widget bottomsheet;
-  final BottomsheetAnimationDirection? startAnimation;
-  final BottomsheetAnimationDirection? endAnimation;
-  final bool hideLikeCircle;
-
   const BottomsheetTransitionBuilder({
     super.key,
     required this.animation,
@@ -19,6 +14,11 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
     this.endAnimation,
     this.hideLikeCircle = false,
   });
+  final Animation<double> animation;
+  final Widget bottomsheet;
+  final BottomsheetAnimationDirection? startAnimation;
+  final BottomsheetAnimationDirection? endAnimation;
+  final bool hideLikeCircle;
 
   @override
   Widget build(BuildContext context) {

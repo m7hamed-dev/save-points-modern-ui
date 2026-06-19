@@ -50,7 +50,7 @@ class BottomsheetColorConfig {
          isDark: isDark,
        ),
        borderColor = _computeBorderColor(
-         designStyle: designStyle ?? ContentDesignStyle.solid,
+         designStyle: designStyle ?? .solid,
          icon: icon,
          theme: theme,
          isDark: isDark,
@@ -100,11 +100,11 @@ class BottomsheetColorConfig {
     if (text != null) return text;
 
     switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.solid:
+      case .outlined:
+      case .colorHeader:
+      case .leftAccent:
+      case .tonal:
+      case .solid:
         return isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
     }
   }
@@ -118,12 +118,12 @@ class BottomsheetColorConfig {
     if (icon != null) return icon;
 
     switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-      case ContentDesignStyle.tonal:
+      case .outlined:
+      case .colorHeader:
+      case .leftAccent:
+      case .tonal:
         return isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary;
-      case ContentDesignStyle.solid:
+      case .solid:
         return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
     }
   }
@@ -134,7 +134,7 @@ class BottomsheetColorConfig {
     required ThemeData theme,
     required bool isDark,
   }) {
-    if (designStyle == ContentDesignStyle.outlined) {
+    if (designStyle == .outlined) {
       final baseColor =
           icon ??
           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);

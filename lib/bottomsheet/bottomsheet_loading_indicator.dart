@@ -8,7 +8,7 @@ class BottomsheetLoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == .dark;
     final indicatorColor = color ?? (isDark ? Colors.white70 : Colors.black54);
 
     return Padding(

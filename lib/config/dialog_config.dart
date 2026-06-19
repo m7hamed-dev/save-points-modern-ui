@@ -30,7 +30,7 @@ class DialogConfig {
   Duration transitionDuration = const Duration(milliseconds: 350);
 
   /// Default animation type
-  DialogAnimationType defaultAnimation = DialogAnimationType.fadeSlide;
+  DialogAnimationType defaultAnimation = .fadeSlide;
 
   /// Default icon colors for different types (optional)
   Map<SnackbarType, Color>? defaultIconColors;

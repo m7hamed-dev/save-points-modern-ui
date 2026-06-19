@@ -1,6 +1,6 @@
+import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_animation_direction.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 
 /// Predefined animation configurations for common use cases
 class AnimationPresets {

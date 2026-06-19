@@ -2,7 +2,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
@@ -22,10 +21,9 @@ class BottomsheetContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == .dark;
     final isOutlined = colorConfig.borderColor != null;
-    final isLeftAccent =
-        colorConfig.designStyle == ContentDesignStyle.leftAccent;
+    final isLeftAccent = colorConfig.designStyle == .leftAccent;
 
     final borderRadius = BorderRadius.only(
       topLeft: Radius.circular(
@@ -70,10 +68,7 @@ class BottomsheetContainer extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: 5,
-              color: colorConfig.iconColor,
-            ),
+            Container(width: 5, color: colorConfig.iconColor),
             Expanded(child: content),
           ],
         ),
