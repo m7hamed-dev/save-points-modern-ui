@@ -9,6 +9,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/example/widgets/widgets.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/presets/dialog_presets.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
@@ -112,11 +113,32 @@ class _ExampleHomePageState extends State<ExampleHomePage>
   late List<AnimationController> _sectionControllers;
   int _currentIndex = 0;
 
+  /// The new bold variants the AppBar switcher cycles through.
+  static const List<ContentDesignStyle> _switchableVariants = [
+    ContentDesignStyle.glass,
+    ContentDesignStyle.neon,
+    ContentDesignStyle.minimal,
+  ];
+
+  /// Currently selected variant shown by the AppBar switcher. Drives the global
+  /// default style so feature demos (those without an explicit style) follow it,
+  /// while the labelled style-showcase buttons keep their pinned styles.
+  ContentDesignStyle _variant = ContentDesignStyle.glass;
+
   @override
   void initState() {
     super.initState();
     _initializeAnimationControllers();
     _startStaggeredAnimations();
+    _applyVariant(_variant);
+  }
+
+  /// Makes [variant] the global default for snackbars, dialogs and bottom
+  /// sheets so the feature demos follow the AppBar switcher.
+  void _applyVariant(ContentDesignStyle variant) {
+    SnackDiaBottomConfig().snackbar.defaultDesignStyle = variant;
+    SnackDiaBottomConfig().dialog.defaultDesignStyle = variant;
+    SavePointsBottomsheet.defaultDesignStyle = variant;
   }
 
   /// Initializes all animation controllers
@@ -183,6 +205,21 @@ class _ExampleHomePageState extends State<ExampleHomePage>
         centerTitle: true,
         elevation: 0,
         actions: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) {
+              return RotationTransition(
+                turns: animation,
+                child: ScaleTransition(scale: animation, child: child),
+              );
+            },
+            child: IconButton(
+              key: ValueKey(_variant),
+              icon: Icon(_variantIcon(_variant)),
+              tooltip: '${_variantLabel(_variant)} — tap to switch variant',
+              onPressed: _cycleVariant,
+            ),
+          ),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, animation) {
@@ -315,6 +352,59 @@ class _ExampleHomePageState extends State<ExampleHomePage>
           label: 'Sheets',
         ),
       ],
+    );
+  }
+
+  /// Icon representing a switchable variant.
+  IconData _variantIcon(ContentDesignStyle variant) {
+    switch (variant) {
+      case ContentDesignStyle.glass:
+        return Icons.blur_on;
+      case ContentDesignStyle.neon:
+        return Icons.bolt;
+      case ContentDesignStyle.minimal:
+        return Icons.crop_square;
+      case ContentDesignStyle.solid:
+      case ContentDesignStyle.outlined:
+      case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
+        return Icons.style;
+    }
+  }
+
+  /// Human-readable name for a switchable variant.
+  String _variantLabel(ContentDesignStyle variant) {
+    switch (variant) {
+      case ContentDesignStyle.glass:
+        return 'Glass';
+      case ContentDesignStyle.neon:
+        return 'Neon';
+      case ContentDesignStyle.minimal:
+        return 'Minimal';
+      case ContentDesignStyle.solid:
+      case ContentDesignStyle.outlined:
+      case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
+        return variant.name;
+    }
+  }
+
+  /// Cycles glass → neon → minimal, updates the global default, and previews
+  /// the newly selected variant.
+  void _cycleVariant() {
+    final next =
+        _switchableVariants[(_switchableVariants.indexOf(_variant) + 1) %
+            _switchableVariants.length];
+    setState(() => _variant = next);
+    _applyVariant(next);
+    SavePointsSnackbar.show(
+      context,
+      title: '${_variantLabel(next)} variant',
+      subtitle: 'Feature demos now use the ${_variantLabel(next)} style.',
+      type: SnackbarType.info,
+      designStyle: next,
     );
   }
 
