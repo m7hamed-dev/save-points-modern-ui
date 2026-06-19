@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_shadows.dart';
@@ -19,9 +18,8 @@ class DialogContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOutlined = colorConfig.borderColor != null;
-    final isLeftAccent =
-        colorConfig.designStyle == ContentDesignStyle.leftAccent;
-    final borderRadius = .circular(DialogConstants.borderRadius);
+    final isLeftAccent = colorConfig.designStyle == .leftAccent;
+    final borderRadius = BorderRadius.circular(DialogConstants.borderRadius);
 
     final contentBorderRadius = isLeftAccent
         ? BorderRadius.only(
