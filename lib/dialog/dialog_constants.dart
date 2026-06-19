@@ -10,7 +10,7 @@ class DialogConstants {
   static const iconSize = 48.0;
   static const iconPadding = 16.0;
   static const dialogMargin = EdgeInsets.symmetric(horizontal: 24);
-  static const dialogPadding = .all(28);
+  static const dialogPadding = EdgeInsets.all(28);
   static const buttonPadding = EdgeInsets.symmetric(
     vertical: 16,
     horizontal: 24,
