@@ -12,10 +12,10 @@ import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/top_snackbar_overlay.dart';
 
+export 'content_design_style.dart';
+export 'snackbar/snackbar_animation_direction.dart';
 // Export enums for public use
 export 'snackbar/snackbar_enums.dart';
-export 'snackbar/snackbar_animation_direction.dart';
-export 'content_design_style.dart';
 
 /// Modern, customizable snackbar widget with enhanced UI/UX.
 ///
@@ -177,9 +177,9 @@ class SavePointsSnackbar {
         subtitleColor: colorConfig.subtitleColor,
         showCloseButton:
             finalDesignStyle == ContentDesignStyle.outlined ||
-                finalDesignStyle == ContentDesignStyle.leftAccent ||
-                finalDesignStyle == ContentDesignStyle.tonal ||
-                finalDismissible,
+            finalDesignStyle == ContentDesignStyle.leftAccent ||
+            finalDesignStyle == ContentDesignStyle.tonal ||
+            finalDismissible,
       );
       // Return a dummy controller for top position. The overlay shows the real
       // toast at top; we show a minimal SnackBar on-screen (required by Flutter
@@ -247,9 +247,9 @@ class SavePointsSnackbar {
               : null,
           showCloseButton:
               finalDesignStyle == ContentDesignStyle.outlined ||
-                  finalDesignStyle == ContentDesignStyle.leftAccent ||
-                  finalDesignStyle == ContentDesignStyle.tonal ||
-                  finalDismissible,
+              finalDesignStyle == ContentDesignStyle.leftAccent ||
+              finalDesignStyle == ContentDesignStyle.tonal ||
+              finalDismissible,
         ),
         action: onActionPressed != null && actionLabel != null
             ? SnackBarAction(

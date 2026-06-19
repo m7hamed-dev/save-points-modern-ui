@@ -89,24 +89,24 @@ class SnackbarColorConfig {
   static Color _getTonalBackgroundColor(SnackbarType type, bool isDark) {
     if (isDark) {
       switch (type) {
-        case SnackbarType.success:
+        case .success:
           return const Color(0xFF064E3B);
-        case SnackbarType.error:
+        case .error:
           return const Color(0xFF7F1D1D);
-        case SnackbarType.warning:
+        case .warning:
           return const Color(0xFF78350F);
-        case SnackbarType.info:
+        case .info:
           return const Color(0xFF1E3A5F);
       }
     }
     switch (type) {
-      case SnackbarType.success:
+      case .success:
         return const Color(0xFFDCFCE7);
-      case SnackbarType.error:
+      case .error:
         return const Color(0xFFFEE2E2);
-      case SnackbarType.warning:
+      case .warning:
         return const Color(0xFFFEF3C7);
-      case SnackbarType.info:
+      case .info:
         return const Color(0xFFDBEAFE);
     }
   }
@@ -131,12 +131,12 @@ class SnackbarColorConfig {
     required bool isDark,
   }) {
     switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-      case ContentDesignStyle.tonal:
+      case .outlined:
+      case .colorHeader:
+      case .leftAccent:
+      case .tonal:
         return isDark ? Colors.grey[400]! : const Color(0xFF616161);
-      case ContentDesignStyle.solid:
+      case .solid:
         return Colors.white.withValues(alpha: 0.8);
     }
   }
@@ -161,13 +161,13 @@ class SnackbarColorConfig {
     }
     // Light, pastel header colors for light mode
     switch (type) {
-      case SnackbarType.success:
+      case .success:
         return const Color(0xFFDCFCE7); // Soft mint green
-      case SnackbarType.error:
+      case .error:
         return const Color(0xFFFEE2E2); // Soft rose
-      case SnackbarType.warning:
+      case .warning:
         return const Color(0xFFFEF3C7); // Soft amber
-      case SnackbarType.info:
+      case .info:
         return const Color(0xFFDBEAFE); // Soft blue
     }
   }

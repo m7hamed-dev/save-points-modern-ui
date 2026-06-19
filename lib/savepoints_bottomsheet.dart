@@ -6,9 +6,9 @@ library;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_scope.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 
 // Export animation direction for public use
 export 'bottomsheet/bottomsheet_animation_direction.dart';

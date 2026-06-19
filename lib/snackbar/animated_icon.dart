@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
 /// Professional animated icon widget with multiple animation effects.
 ///
@@ -136,7 +136,8 @@ class AnimatedIconState extends State<AnimatedIcon>
 
   @override
   Widget build(BuildContext context) {
-    final isOutlined = widget.designStyle == ContentDesignStyle.outlined ||
+    final isOutlined =
+        widget.designStyle == ContentDesignStyle.outlined ||
         widget.designStyle == ContentDesignStyle.leftAccent ||
         widget.designStyle == ContentDesignStyle.tonal;
     final isColorHeader = widget.designStyle == ContentDesignStyle.colorHeader;
