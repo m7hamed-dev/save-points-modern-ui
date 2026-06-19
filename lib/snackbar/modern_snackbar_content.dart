@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart' hide AnimatedIcon;
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
@@ -278,7 +279,11 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
           border: hasBorder
               ? Border.all(color: widget.borderColor!, width: 2)
               : null,
-          boxShadow: SnackbarShadows.getShadows(widget.designStyle),
+          boxShadow: SnackbarShadows.getShadows(
+            widget.designStyle,
+            widget.iconColor,
+            _isDark,
+          ),
         ),
         child: showLeftAccent
             ? Row(
@@ -368,8 +373,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                             style: TextStyle(
                               fontSize: SnackbarConstants.titleFontSize,
                               color: _effectiveTitleColor,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.2,
+                              fontWeight: SpType.titleWeight,
+                              letterSpacing: SpType.titleTracking,
                               height: SnackbarConstants.titleLineHeight,
                               decoration: TextDecoration.none,
                             ),
@@ -476,7 +481,11 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         decoration: BoxDecoration(
           color: widget.backgroundColor,
           borderRadius: widget.borderRadius,
-          boxShadow: SnackbarShadows.getShadows(widget.designStyle),
+          boxShadow: SnackbarShadows.getShadows(
+            widget.designStyle,
+            widget.iconColor,
+            _isDark,
+          ),
         ),
         child: ClipRRect(
           borderRadius: widget.borderRadius,

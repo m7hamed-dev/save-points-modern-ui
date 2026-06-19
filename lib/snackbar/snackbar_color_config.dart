@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
-/// Professional snackbar color configuration with enhanced palettes
+/// Bold & expressive snackbar colors, driven by the shared [SpPalette] tokens.
+///
+/// The default `solid` style is a *vivid gradient* card with white content and
+/// a same-hue colored glow; the other styles (outlined / tonal / leftAccent /
+/// colorHeader) share the same vivid accent so the family stays cohesive.
 class SnackbarColorConfig {
   final Color backgroundColor;
   final Color iconColor;
@@ -18,225 +23,106 @@ class SnackbarColorConfig {
   final Color buttonColor;
   final Color buttonTextColor;
 
-  SnackbarColorConfig({
+  factory SnackbarColorConfig({
     required ThemeData theme,
     required bool isDark,
     Color? background,
-    this.gradient,
+    Gradient? gradient,
     Color? iconColor,
     required SnackbarType type,
     required SnackbarConfig config,
     ContentDesignStyle? designStyle,
-  }) : designStyle = designStyle ?? config.defaultDesignStyle,
-       backgroundColor = _computeBackgroundColor(
-         background: background,
-         gradient: gradient,
-         designStyle: designStyle ?? config.defaultDesignStyle,
-         isDark: isDark,
-         type: type,
-         config: config,
-       ),
-       iconColor =
-           iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
-       defaultIcon = config.getDefaultIcon(type) ?? _getDefaultIcon(type),
-       titleColor = _computeTitleColor(
-         designStyle: designStyle ?? config.defaultDesignStyle,
-         isDark: isDark,
-       ),
-       subtitleColor = _computeSubtitleColor(
-         designStyle: designStyle ?? config.defaultDesignStyle,
-         isDark: isDark,
-       ),
-       borderColor =
-           iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
-       headerColor = _computeHeaderColor(
-         type: type,
-         iconColor:
-             iconColor ?? config.getIconColor(type) ?? _getIconColor(type),
-         isDark: isDark,
-       ),
-       headerColorEnd = _computeHeaderColorEnd(type: type, isDark: isDark),
-       buttonColor = isDark ? const Color(0xFF374151) : const Color(0xFF1F2937),
-       buttonTextColor = Colors.white;
+  }) {
+    final style = designStyle ?? config.defaultDesignStyle;
+    final accent = SpPalette.of(_intentOf(type), isDark);
+    final resolvedIcon =
+        iconColor ?? config.getIconColor(type) ?? accent.base;
+    final isSolid = style == ContentDesignStyle.solid;
+
+    // The vivid gradient is the signature of the bold default.
+    final Gradient? resolvedGradient = gradient ??
+        (isSolid && background == null ? accent.gradient : null);
+
+    return SnackbarColorConfig._(
+      designStyle: style,
+      backgroundColor: _computeBackgroundColor(
+        background: background,
+        gradient: resolvedGradient,
+        style: style,
+        isDark: isDark,
+        accent: accent,
+      ),
+      gradient: resolvedGradient,
+      iconColor: resolvedIcon,
+      defaultIcon: config.getDefaultIcon(type) ?? _getDefaultIcon(type),
+      titleColor: isSolid ? Colors.white : SpSurface.onSurface(isDark),
+      subtitleColor: isSolid
+          ? Colors.white.withValues(alpha: 0.85)
+          : SpSurface.onSurfaceMuted(isDark),
+      borderColor: resolvedIcon,
+      headerColor: accent.gradientStart,
+      headerColorEnd: accent.gradientEnd,
+      buttonColor: accent.base,
+      buttonTextColor: accent.onAccent,
+    );
+  }
+
+  SnackbarColorConfig._({
+    required this.designStyle,
+    required this.backgroundColor,
+    required this.gradient,
+    required this.iconColor,
+    required this.defaultIcon,
+    required this.titleColor,
+    required this.subtitleColor,
+    required this.borderColor,
+    required this.headerColor,
+    required this.headerColorEnd,
+    required this.buttonColor,
+    required this.buttonTextColor,
+  });
+
+  static SpIntent _intentOf(SnackbarType type) => switch (type) {
+        SnackbarType.success => SpIntent.success,
+        SnackbarType.error => SpIntent.error,
+        SnackbarType.warning => SpIntent.warning,
+        SnackbarType.info => SpIntent.info,
+      };
 
   static Color _computeBackgroundColor({
     required Color? background,
     required Gradient? gradient,
-    required ContentDesignStyle designStyle,
+    required ContentDesignStyle style,
     required bool isDark,
-    required SnackbarType type,
-    required SnackbarConfig config,
+    required SpAccent accent,
   }) {
     if (background != null) return background;
     if (gradient != null) return Colors.transparent;
 
-    switch (designStyle) {
+    switch (style) {
       case ContentDesignStyle.outlined:
-      case ContentDesignStyle.colorHeader:
       case ContentDesignStyle.leftAccent:
-        return isDark ? Colors.grey[900]! : Colors.white;
-      case ContentDesignStyle.tonal:
-        return _getTonalBackgroundColor(type, isDark);
-      case ContentDesignStyle.solid:
-        return config.getBackgroundColor(
-              type,
-              isDark ? Brightness.dark : Brightness.light,
-            ) ??
-            _getBackgroundColor(type, isDark);
-    }
-  }
-
-  static Color _getTonalBackgroundColor(SnackbarType type, bool isDark) {
-    if (isDark) {
-      switch (type) {
-        case .success:
-          return const Color(0xFF064E3B);
-        case .error:
-          return const Color(0xFF7F1D1D);
-        case .warning:
-          return const Color(0xFF78350F);
-        case .info:
-          return const Color(0xFF1E3A5F);
-      }
-    }
-    switch (type) {
-      case .success:
-        return const Color(0xFFDCFCE7);
-      case .error:
-        return const Color(0xFFFEE2E2);
-      case .warning:
-        return const Color(0xFFFEF3C7);
-      case .info:
-        return const Color(0xFFDBEAFE);
-    }
-  }
-
-  static Color _computeTitleColor({
-    required ContentDesignStyle designStyle,
-    required bool isDark,
-  }) {
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
+        return SpSurface.background(isDark);
       case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
+        return SpSurface.elevated(isDark);
       case ContentDesignStyle.tonal:
-        return isDark ? Colors.white : const Color(0xFF424242);
+        return accent.tonalFill;
       case ContentDesignStyle.solid:
-        return Colors.white;
+        // Solid without a gradient (caller forced a flat look).
+        return accent.base;
     }
   }
 
-  static Color _computeSubtitleColor({
-    required ContentDesignStyle designStyle,
-    required bool isDark,
-  }) {
-    switch (designStyle) {
-      case .outlined:
-      case .colorHeader:
-      case .leftAccent:
-      case .tonal:
-        return isDark ? Colors.grey[400]! : const Color(0xFF616161);
-      case .solid:
-        return Colors.white.withValues(alpha: 0.8);
-    }
-  }
-
-  static Color _computeHeaderColor({
-    required SnackbarType type,
-    required Color iconColor,
-    bool isDark = false,
-  }) {
-    if (isDark) {
-      // Darker, richer header colors for dark mode
-      switch (type) {
-        case SnackbarType.success:
-          return const Color(0xFF064E3B); // Dark emerald
-        case SnackbarType.error:
-          return const Color(0xFF7F1D1D); // Dark red
-        case SnackbarType.warning:
-          return const Color(0xFF78350F); // Dark amber
-        case SnackbarType.info:
-          return const Color(0xFF1E3A5F); // Dark blue
-      }
-    }
-    // Light, pastel header colors for light mode
-    switch (type) {
-      case .success:
-        return const Color(0xFFDCFCE7); // Soft mint green
-      case .error:
-        return const Color(0xFFFEE2E2); // Soft rose
-      case .warning:
-        return const Color(0xFFFEF3C7); // Soft amber
-      case .info:
-        return const Color(0xFFDBEAFE); // Soft blue
-    }
-  }
-
-  static Color _computeHeaderColorEnd({
-    required SnackbarType type,
-    bool isDark = false,
-  }) {
-    if (isDark) {
-      switch (type) {
-        case SnackbarType.success:
-          return const Color(0xFF022C22);
-        case SnackbarType.error:
-          return const Color(0xFF450A0A);
-        case SnackbarType.warning:
-          return const Color(0xFF451A03);
-        case SnackbarType.info:
-          return const Color(0xFF0C1929);
-      }
-    }
-    switch (type) {
-      case SnackbarType.success:
-        return const Color(0xFFF0FDF4);
-      case SnackbarType.error:
-        return const Color(0xFFFFF5F5);
-      case SnackbarType.warning:
-        return const Color(0xFFFFFBEB);
-      case SnackbarType.info:
-        return const Color(0xFFF0F7FF);
-    }
-  }
-
-  static Color _getBackgroundColor(SnackbarType type, bool isDark) {
-    switch (type) {
-      case .success:
-        return isDark ? const Color(0xFF1B5E20) : const Color(0xFF2E7D32);
-      case .error:
-        return isDark ? const Color(0xFFB71C1C) : const Color(0xFFD32F2F);
-      case .warning:
-        return isDark ? const Color(0xFFE65100) : const Color(0xFFF57C00);
-      case .info:
-        return isDark ? const Color(0xFF2C2C2C) : const Color(0xFF222222);
-    }
-  }
-
-  static Color _getIconColor(SnackbarType type) {
-    switch (type) {
-      case .success:
-        return Colors.greenAccent;
-      case .error:
-        return Colors.redAccent;
-      case .warning:
-        return Colors.orangeAccent;
-      case .info:
-        return Colors.white;
-    }
-  }
-
-  /// Returns the default icon for each snackbar type
-  /// Uses modern Material 3 rounded icons for a softer, contemporary look
+  /// Modern Material 3 rounded icons for a softer, contemporary look.
   static IconData _getDefaultIcon(SnackbarType type) {
     switch (type) {
-      case .success:
+      case SnackbarType.success:
         return Icons.check_circle_rounded;
-      case .error:
+      case SnackbarType.error:
         return Icons.error_rounded;
-      case .warning:
+      case SnackbarType.warning:
         return Icons.warning_amber_rounded;
-      case .info:
+      case SnackbarType.info:
         return Icons.info_rounded;
     }
   }

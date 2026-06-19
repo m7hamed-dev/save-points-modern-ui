@@ -226,31 +226,27 @@ class AnimatedIconState extends State<AnimatedIcon>
   }
 
   Widget _buildSolidIcon(bool isDark, double glowIntensity) {
+    // Bold default: the solid snackbar now sits on a vivid gradient, so the
+    // icon is a crisp frosted-white chip holding the colored glyph for maximum
+    // pop and contrast.
     return Container(
       width: SnackbarConstants.iconContainerSize,
       height: SnackbarConstants.iconContainerSize,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            widget.iconColor.withValues(alpha: 0.28),
-            widget.iconColor.withValues(alpha: 0.15),
-          ],
-        ),
+        color: Colors.white.withValues(alpha: 0.95),
         shape: BoxShape.circle,
         boxShadow: [
-          // Inner glow effect
+          // Soft white halo so the chip reads against the gradient.
           BoxShadow(
-            color: widget.iconColor.withValues(alpha: glowIntensity),
-            blurRadius: 14,
+            color: Colors.white.withValues(alpha: glowIntensity * 0.8),
+            blurRadius: 16,
             spreadRadius: -2,
           ),
-          // Subtle depth
+          // Subtle depth.
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.18),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
       ),

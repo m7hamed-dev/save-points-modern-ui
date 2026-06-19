@@ -54,6 +54,7 @@ class BottomsheetContainer extends StatelessWidget {
           isDark,
           isOutlined: isOutlined,
           designStyle: colorConfig.designStyle,
+          accentColor: colorConfig.iconColor,
         ),
       ),
       child: Material(
