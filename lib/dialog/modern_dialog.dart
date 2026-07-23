@@ -131,9 +131,6 @@ class _ModernDialogState extends State<ModernDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // Debug: Print child status
-    debugPrint('ModernDialog build - child is null: ${widget.child == null}');
-
     final colorConfig =
         _cachedColorConfig ??
         DialogColorConfig(

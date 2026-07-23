@@ -28,9 +28,6 @@ QUICK_PUBLISH.md
 # Banner image is included in package for README display
 # banner.jpeg
 
-# Exclude example app files from lib/ (should be in example/ folder)
-lib/main.dart
-
 # Exclude test files (optional, but can be included)
 # test/
 

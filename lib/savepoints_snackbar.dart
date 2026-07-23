@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/top_snackbar_overlay.dart';
 
@@ -94,10 +95,13 @@ class SavePointsSnackbar {
     assert(title.isNotEmpty, 'Title cannot be empty');
 
     final config = SnackDiaBottomConfig().snackbar;
+    final spTheme = SavePointsTheme.maybeOf(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final finalType = type ?? config.defaultType;
-    final finalDesignStyle = designStyle ?? config.defaultDesignStyle;
+    final finalDesignStyle =
+        designStyle ?? spTheme?.designStyle ?? config.defaultDesignStyle;
+    final finalBlur = blur ?? spTheme?.blur;
 
     final colorConfig = SnackbarColorConfig(
       theme: theme,
@@ -112,12 +116,14 @@ class SavePointsSnackbar {
 
     final finalIcon = icon ?? colorConfig.defaultIcon;
     final finalIconColor = iconColor ?? colorConfig.iconColor;
-    final finalPosition = position ?? config.defaultPosition;
+    final finalPosition =
+        position ?? spTheme?.snackbarPosition ?? config.defaultPosition;
     // Use new animation system if startAnimation or endAnimation is provided
     final finalAnimation = (startAnimation == null && endAnimation == null)
         ? (animation ?? config.defaultAnimation)
         : null;
-    final finalDuration = duration ?? config.defaultDuration;
+    final finalDuration =
+        duration ?? spTheme?.snackbarDuration ?? config.defaultDuration;
     final finalMargin =
         margin ?? config.defaultMargin ?? _getMargin(context, finalPosition);
     final finalBorderRadius =
@@ -129,8 +135,9 @@ class SavePointsSnackbar {
     final finalShowProgressIndicator =
         showProgressIndicator ?? config.defaultShowProgressIndicator;
     final finalDismissible = dismissible ?? config.defaultDismissible;
-    final finalEnableHapticFeedback =
-        enableHapticFeedback ?? config.defaultEnableHapticFeedback;
+    final finalEnableHapticFeedback = enableHapticFeedback ??
+        spTheme?.enableHapticFeedback ??
+        config.defaultEnableHapticFeedback;
     final finalDismissOnTap = dismissOnTap ?? config.defaultDismissOnTap;
     final finalBorderWidth = borderWidth ?? config.defaultBorderWidth;
     final finalBorderColor =
@@ -170,7 +177,7 @@ class SavePointsSnackbar {
             : finalBorderWidth,
         onTap: onTap,
         onDismissed: onDismissed,
-        blur: blur,
+        blur: finalBlur,
         backdropFilter: backdropFilter,
         designStyle: finalDesignStyle,
         titleColor: colorConfig.titleColor,
@@ -237,7 +244,7 @@ class SavePointsSnackbar {
           maxWidth: finalMaxWidth,
           dismissOnTap: finalDismissOnTap,
           onTap: onTap,
-          blur: blur,
+          blur: finalBlur,
           backdropFilter: backdropFilter,
           designStyle: finalDesignStyle,
           titleColor: colorConfig.titleColor,

@@ -90,7 +90,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.1.10
+  save_points_snackbar_dialog_bottomsheet: ^1.2.0
 ```
 
 Install the package:
@@ -1080,7 +1080,51 @@ config.dialog
 SavePointsBottomsheet.defaultDesignStyle = ContentDesignStyle.colorHeader;
 ```
 
-See the [Configuration Guide](https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet/wiki/Configuration) for more details.
+See the [Configuration Guide](https://github.com/m7hamed-dev/save-points-modern-ui/wiki/Configuration) for more details.
+
+### 🎨 Scoped defaults with `SavePointsTheme`
+
+`SnackDiaBottomConfig` sets defaults **globally** by mutating a singleton. When
+you'd rather declare defaults **once in your widget tree** — scoped, overridable
+per subtree, and without touching global state — wrap your app in a
+`SavePointsTheme`:
+
+```dart
+SavePointsTheme(
+  data: const SavePointsThemeData(
+    designStyle: ContentDesignStyle.glass,
+    blur: 24,
+    snackbarPosition: SnackbarPosition.top,
+    enableHapticFeedback: true,
+  ),
+  child: MaterialApp(/* ... */),
+);
+```
+
+Now every dialog, snackbar and bottom sheet below it defaults to the glass style
+with a 24px backdrop blur — no need to repeat those arguments on each call:
+
+```dart
+// Uses the themed glass style + blur automatically.
+SavePointsDialog.show(context, title: 'Saved', message: 'All set!');
+
+// Explicit arguments still win over the theme.
+SavePointsDialog.show(
+  context,
+  title: 'Heads up',
+  message: 'This one is different',
+  designStyle: ContentDesignStyle.neon,
+);
+```
+
+Resolution order for every field is **explicit argument → nearest
+`SavePointsTheme` → built-in default**, so adopting a theme is fully backward
+compatible. Any field left `null` in `SavePointsThemeData` falls through to the
+component's own default. Because it is a standard `InheritedWidget`, a subtree
+can wrap itself in another `SavePointsTheme` to override just that branch.
+
+Supported fields: `designStyle`, `blur`, `snackbarPosition`,
+`snackbarDuration`, `enableHapticFeedback`, `barrierDismissible`.
 
 ## 📱 Platform Support
 
@@ -1107,7 +1151,7 @@ The example app is located in the `lib/main.dart` file and demonstrates all feat
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet.git
+   git clone https://github.com/m7hamed-dev/save-points-modern-ui.git
    cd save_points_snackbar_dialog_bottomsheet
    ```
 
@@ -1134,8 +1178,8 @@ The example app includes:
 
 - [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) - Try the components in your browser
 - [Full API Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
-- [Example App](https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet/tree/main/example)
-- [Issue Tracker](https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet/issues)
+- [Example App](https://github.com/m7hamed-dev/save-points-modern-ui/tree/main/example)
+- [Issue Tracker](https://github.com/m7hamed-dev/save-points-modern-ui/issues)
 
 ## 🤝 Contributing
 
@@ -1167,8 +1211,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 💬 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet/discussions)
+- **Issues**: [GitHub Issues](https://github.com/m7hamed-dev/save-points-modern-ui/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/m7hamed-dev/save-points-modern-ui/discussions)
 - **Email**: support@savepoints.dev
 
 ---
@@ -1177,6 +1221,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by the SavePoints team**
 
-[⭐ Star us on GitHub](https://github.com/yourusername/save_points_snackbar_dialog_bottomsheet) • [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) • [📦 Pub.dev](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet) • [📚 Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
+[⭐ Star us on GitHub](https://github.com/m7hamed-dev/save-points-modern-ui) • [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) • [📦 Pub.dev](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet) • [📚 Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
 
 </div>

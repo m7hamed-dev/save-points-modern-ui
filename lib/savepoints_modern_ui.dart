@@ -12,6 +12,9 @@ export 'bottomsheet/bottomsheet.dart';
 // Export config
 export 'config/config.dart';
 export 'content_design_style.dart';
+// Export the shared design-token layer (radius, spacing, type, motion,
+// palette) so consumers can theme against the same source of truth.
+export 'design/save_points_tokens.dart';
 // Export dialog components
 export 'dialog/dialog.dart';
 // Export extensions
@@ -20,6 +23,8 @@ export 'extensions/context_extensions.dart';
 export 'presets/presets.dart';
 export 'savepoints_bottomsheet.dart';
 export 'savepoints_config.dart';
+// Export the scoped theme provider (declarative, per-subtree defaults).
+export 'savepoints_theme.dart';
 // Export main classes
 export 'savepoints_dialog.dart';
 export 'savepoints_snackbar.dart';

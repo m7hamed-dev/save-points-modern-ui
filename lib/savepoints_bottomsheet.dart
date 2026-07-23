@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
 
 // Export animation direction for public use
 export 'bottomsheet/bottomsheet_animation_direction.dart';
@@ -75,20 +76,23 @@ class SavePointsBottomsheet {
     // Dismiss keyboard when showing bottom sheet to prevent UI overlap
     _dismissKeyboard(context);
 
+    final spTheme = SavePointsTheme.maybeOf(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
     final finalIsDismissible = isDismissible ?? true;
     final finalEnableDrag = enableDrag ?? true;
     final finalShowHandle = showHandle ?? true;
+    final finalBlur = blur ?? spTheme?.blur;
 
     // When using blur/backdropFilter, barrier must be transparent so the route
     // is visible and can be blurred; we paint the blur in the transition.
     final ImageFilter? barrierFilter =
         backdropFilter ??
-        (blur != null && blur <= 0
+        (finalBlur != null && finalBlur <= 0
             ? null
-            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+            : ImageFilter.blur(
+                sigmaX: finalBlur ?? 20.0, sigmaY: finalBlur ?? 20.0));
     final useBarrierBlur = barrierFilter != null;
 
     return showGeneralDialog<T>(
@@ -121,8 +125,9 @@ class SavePointsBottomsheet {
           enableDrag: finalEnableDrag,
           maxHeight: maxHeight,
           isScrollControlled: isScrollControlled,
-          designStyle: designStyle ?? defaultDesignStyle,
-          blur: blur,
+          designStyle:
+              designStyle ?? spTheme?.designStyle ?? defaultDesignStyle,
+          blur: finalBlur,
           backdropFilter: backdropFilter,
           child: child,
         );

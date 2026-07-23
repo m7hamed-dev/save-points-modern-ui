@@ -8,6 +8,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/header_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
 
 /// A modern, customizable dialog with glassmorphism design.
 ///
@@ -84,6 +85,7 @@ class SavePointsDialog {
     _dismissKeyboard(context);
 
     final config = SnackDiaBottomConfig().dialog;
+    final spTheme = SavePointsTheme.maybeOf(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -91,8 +93,10 @@ class SavePointsDialog {
     final finalCancelText = cancelText ?? config.defaultCancelText;
     final finalShowCancelButton =
         showCancelButton ?? config.defaultShowCancelButton;
-    final finalBarrierDismissible =
-        barrierDismissible ?? config.defaultBarrierDismissible;
+    final finalBarrierDismissible = barrierDismissible ??
+        spTheme?.barrierDismissible ??
+        config.defaultBarrierDismissible;
+    final finalBlur = blur ?? spTheme?.blur;
     final finalBackgroundColor =
         backgroundColor ?? config.defaultBackgroundColor;
     final finalConfirmButtonColor =
@@ -102,11 +106,13 @@ class SavePointsDialog {
 
     final ImageFilter? barrierFilter =
         backdropFilter ??
-        (blur != null && blur <= 0
+        (finalBlur != null && finalBlur <= 0
             ? null
-            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+            : ImageFilter.blur(
+                sigmaX: finalBlur ?? 20.0, sigmaY: finalBlur ?? 20.0));
     final useBarrierBlur = barrierFilter != null;
-    final finalDesignStyle = designStyle ?? config.defaultDesignStyle;
+    final finalDesignStyle =
+        designStyle ?? spTheme?.designStyle ?? config.defaultDesignStyle;
 
     // Capture child parameter before it's shadowed by transitionBuilder
     final customChild = child;
@@ -147,7 +153,7 @@ class SavePointsDialog {
           isLoading: isLoading,
           loadingNotifier: loadingNotifier,
           designStyle: finalDesignStyle,
-          blur: blur,
+          blur: finalBlur,
           backdropFilter: backdropFilter,
           child: customChild,
         );

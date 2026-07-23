@@ -7,12 +7,10 @@ library;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/example/widgets/widgets.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/presets/dialog_presets.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
+// One canonical import exposes the entire public API.
+import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar_dialog_bottomsheet.dart';
+
+import 'widgets/widgets.dart';
 
 /// Application entry point
 void main() {
