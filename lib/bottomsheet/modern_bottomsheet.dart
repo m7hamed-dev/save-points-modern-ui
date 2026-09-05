@@ -10,6 +10,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 
 /// Modern bottom sheet widget
@@ -411,6 +412,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                                 color: colorConfig.iconColor,
                                 backgroundColor:
                                     colorConfig.iconBackgroundColor,
+                                enablePulse: resolvePulse(context),
                               ),
                             ),
                           ),

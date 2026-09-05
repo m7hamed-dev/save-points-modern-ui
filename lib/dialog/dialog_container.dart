@@ -70,13 +70,23 @@ class DialogContainer extends StatelessWidget {
     if (isLeftAccent) {
       content = ClipRRect(
         borderRadius: borderRadius,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(width: 5, color: colorConfig.iconColor),
-            Expanded(child: content),
-          ],
+        // IntrinsicHeight so `stretch` sizes the accent bar to the content.
+        // Without it the Row takes every pixel of an unbounded height — which
+        // is what turned the leftAccent dialog into a full-screen-tall card.
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: SpPalette.gradientFrom(colorConfig.iconColor),
+                ),
+                child: const SizedBox(width: 6),
+              ),
+              Expanded(child: content),
+            ],
+          ),
         ),
       );
     }

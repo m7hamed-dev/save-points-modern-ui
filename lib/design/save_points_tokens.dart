@@ -119,14 +119,18 @@ abstract final class SpSurface {
   // ---- glass (frosted) variant ----------------------------------------
 
   /// Translucent fill that sits in front of a [BackdropFilter] blur.
+  ///
+  /// Deliberately thin. At the alpha this used to carry the fill was opaque
+  /// enough to hide its own blur, so `glass` rendered as a plain white card
+  /// and was indistinguishable from `solid` and `minimal`.
   static Color glassFill(bool isDark) => isDark
-      ? const Color(0xFF151B26).withValues(alpha: 0.55)
-      : Colors.white.withValues(alpha: 0.58);
+      ? const Color(0xFF151B26).withValues(alpha: 0.38)
+      : Colors.white.withValues(alpha: 0.30);
 
   /// Hairline highlight border that gives frosted glass its edge.
   static Color glassBorder(bool isDark) => isDark
-      ? Colors.white.withValues(alpha: 0.18)
-      : Colors.white.withValues(alpha: 0.65);
+      ? Colors.white.withValues(alpha: 0.28)
+      : Colors.white.withValues(alpha: 0.90);
 
   /// Blur strength for the glass variant's backdrop.
   static const double glassBlur = 22.0;
@@ -296,8 +300,10 @@ abstract final class SpShadows {
     double level = 1.0,
     Offset direction = const Offset(0, 1),
   }) {
-    final ambient = isDark ? 0.45 : 0.16;
-    final glowAlpha = isDark ? 0.30 : 0.22;
+    final ambient = isDark ? 0.45 : 0.18;
+    // The halo is the whole point of this elevation; at 0.22 over a light
+    // background it was invisible, which flattened `solid` into `minimal`.
+    final glowAlpha = isDark ? 0.34 : 0.34;
     final dy = direction.dy;
     final dx = direction.dx;
     return [
@@ -356,16 +362,17 @@ abstract final class SpShadows {
     final dy = direction.dy;
     final dx = direction.dx;
     return [
+      // Tight inner ring, right up against the border.
       BoxShadow(
-        color: color.withValues(alpha: 0.55),
-        blurRadius: 12,
-        spreadRadius: -2,
+        color: color.withValues(alpha: 0.75),
+        blurRadius: 14,
       ),
+      // Wide diffuse bloom — this is what reads as "neon" from a distance.
       BoxShadow(
-        color: color.withValues(alpha: 0.35),
-        offset: Offset(dx * 4, dy * 10),
-        blurRadius: 32,
-        spreadRadius: -6,
+        color: color.withValues(alpha: 0.45),
+        offset: Offset(dx * 2, dy * 8),
+        blurRadius: 48,
+        spreadRadius: 2,
       ),
       BoxShadow(
         color: Colors.black.withValues(alpha: 0.4),

@@ -93,13 +93,34 @@ class BottomsheetContainer extends StatelessWidget {
     if (isLeftAccent) {
       content = ClipRRect(
         borderRadius: borderRadius,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(width: 5, color: colorConfig.iconColor),
-            Expanded(child: content),
-          ],
+        // IntrinsicHeight so `stretch` sizes the accent bar to the content.
+        // Without it the Row takes every pixel of an unbounded height — which
+        // is what turned the leftAccent dialog into a full-screen-tall card.
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: SpPalette.gradientFrom(colorConfig.iconColor),
+                ),
+                child: const SizedBox(width: 6),
+              ),
+              Expanded(child: content),
+            ],
+          ),
         ),
+      );
+    }
+
+    // A neon sheet paints a near-black surface, but the `child` belongs to the
+    // caller and is styled by *their* ThemeData — on a light theme that means
+    // dark text on a near-black card, i.e. unreadable. Hand the subtree a
+    // matching brightness so consumer content inherits legible colours.
+    if (colorConfig.designStyle == ContentDesignStyle.neon && !isDark) {
+      content = Theme(
+        data: ThemeData.dark(useMaterial3: Theme.of(context).useMaterial3),
+        child: content,
       );
     }
 

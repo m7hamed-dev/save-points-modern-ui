@@ -111,7 +111,7 @@ class DialogColorConfig {
         (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
     switch (designStyle) {
       case ContentDesignStyle.outlined:
-        return baseColor.withValues(alpha: isDark ? 0.5 : 0.3);
+        return baseColor.withValues(alpha: isDark ? 0.62 : 0.55);
       case ContentDesignStyle.neon:
         return baseColor;
       case ContentDesignStyle.glass:

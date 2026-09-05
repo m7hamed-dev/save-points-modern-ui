@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/circular_reveal_clip.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/clamped_animation.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/modern_snackbar_content.dart';
@@ -66,6 +68,10 @@ class TopSnackbarOverlay {
     Color? titleColor,
     Color? subtitleColor,
     bool showCloseButton = false,
+
+    /// One-call override for the icon's looping pulse; null defers to the
+    /// enclosing [SavePointsTheme].
+    bool? enablePulse,
   }) {
     // Hide any existing overlay (this also fires its onDismissed).
     hide();
@@ -115,6 +121,7 @@ class TopSnackbarOverlay {
         titleColor: titleColor,
         subtitleColor: subtitleColor,
         showCloseButton: showCloseButton,
+        enablePulse: enablePulse,
       ),
     );
 
@@ -128,6 +135,18 @@ class TopSnackbarOverlay {
     });
 
     return token;
+  }
+
+  /// Takes the current toast off screen without running its `onDismissed`.
+  ///
+  /// Used when a newer toast is about to claim the slot: the caller then
+  /// retires the outgoing toast's backing placeholder itself (via
+  /// `ScaffoldMessenger.hideCurrentSnackBar`), which is the only safe way to
+  /// do it. Letting the outgoing `onDismissed` close that placeholder instead
+  /// races the messenger and trips `_snackBars.first == controller`.
+  static void dismissSilently() {
+    _onHidden = null;
+    hide();
   }
 
   /// Forgets the current toast without animating or notifying.
@@ -205,6 +224,7 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
   final Color? titleColor;
   final Color? subtitleColor;
   final bool showCloseButton;
+  final bool? enablePulse;
 
   const _TopSnackbarOverlayWidget({
     required this.token,
@@ -237,6 +257,7 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
     this.titleColor,
     this.subtitleColor,
     this.showCloseButton = false,
+    this.enablePulse,
   });
 
   @override
@@ -470,6 +491,12 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
         child: content,
       );
     }
+
+    content = pulseScope(
+      SavePointsTheme.maybeOf(context),
+      widget.enablePulse,
+      content,
+    );
 
     return Positioned(
       top: widget.topMargin,

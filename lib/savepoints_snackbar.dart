@@ -7,6 +7,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
@@ -100,6 +101,13 @@ class SavePointsSnackbar {
 
     /// Optional custom [ImageFilter] for the backdrop. When set, overrides [blur].
     ImageFilter? backdropFilter,
+
+    /// Loops a subtle scale + glow pulse on the icon.
+    ///
+    /// Off by default: the pulse never ends, so it costs a repaint every frame
+    /// for as long as the snackbar is up and makes `pumpAndSettle()` hang in
+    /// tests. Set it here for one call, or via [SavePointsTheme] for a subtree.
+    bool? enablePulse,
   }) {
     // Validate required parameters
     assert(title.isNotEmpty, 'Title cannot be empty');
@@ -166,10 +174,13 @@ class SavePointsSnackbar {
     if (finalPosition == SnackbarPosition.top) {
       final messenger = ScaffoldMessenger.of(context);
 
-      // Retire the previous toast *before* touching the messenger. Its
-      // dismissal closes that toast's placeholder, and a placeholder can only
-      // be closed while it is still the messenger's current snack bar.
-      TopSnackbarOverlay.hide();
+      // Retire the previous toast, then let the messenger retire its
+      // placeholder. Silently, because the outgoing toast must not close that
+      // placeholder itself — `hideCurrentSnackBar` below owns that, and two
+      // parties closing the same snack bar trips an assertion inside
+      // ScaffoldMessenger. The outgoing call's own `onDismissed` still fires,
+      // from the `closed` handler that hideCurrentSnackBar completes.
+      TopSnackbarOverlay.dismissSilently();
       messenger.hideCurrentSnackBar();
 
       // The toast itself is an overlay entry, but Flutter still requires a
@@ -199,6 +210,7 @@ class SavePointsSnackbar {
       final token = TopSnackbarOverlay.show(
         context,
         autoDismiss: false,
+        enablePulse: enablePulse,
         title: title,
         subtitle: subtitle,
         icon: finalIcon,
@@ -279,34 +291,38 @@ class SavePointsSnackbar {
         dismissDirection: finalDismissible
             ? DismissDirection.horizontal
             : DismissDirection.none,
-        content: ModernSnackbarContent(
-          title: title,
-          subtitle: subtitle,
-          icon: finalIcon,
-          iconColor: finalIconColor,
-          backgroundColor: colorConfig.backgroundColor,
-          gradient: colorConfig.gradient,
-          showProgressIndicator: finalShowProgressIndicator,
-          duration: finalDuration,
-          type: finalType,
-          position: finalPosition,
-          animation: finalAnimation ?? SnackbarAnimation.fadeSlide,
-          borderRadius: finalBorderRadius,
-          maxWidth: finalMaxWidth,
-          dismissOnTap: finalDismissOnTap,
-          onTap: onTap,
-          blur: finalBlur,
-          backdropFilter: backdropFilter,
-          designStyle: finalDesignStyle,
-          titleColor: colorConfig.titleColor,
-          subtitleColor: colorConfig.subtitleColor,
-          borderColor: finalDesignStyle == ContentDesignStyle.outlined
-              ? colorConfig.borderColor
-              : null,
-          showCloseButton: finalDesignStyle == ContentDesignStyle.outlined ||
-              finalDesignStyle == ContentDesignStyle.leftAccent ||
-              finalDesignStyle == ContentDesignStyle.tonal ||
-              finalDismissible,
+        content: pulseScope(
+          spTheme,
+          enablePulse,
+          ModernSnackbarContent(
+            title: title,
+            subtitle: subtitle,
+            icon: finalIcon,
+            iconColor: finalIconColor,
+            backgroundColor: colorConfig.backgroundColor,
+            gradient: colorConfig.gradient,
+            showProgressIndicator: finalShowProgressIndicator,
+            duration: finalDuration,
+            type: finalType,
+            position: finalPosition,
+            animation: finalAnimation ?? SnackbarAnimation.fadeSlide,
+            borderRadius: finalBorderRadius,
+            maxWidth: finalMaxWidth,
+            dismissOnTap: finalDismissOnTap,
+            onTap: onTap,
+            blur: finalBlur,
+            backdropFilter: backdropFilter,
+            designStyle: finalDesignStyle,
+            titleColor: colorConfig.titleColor,
+            subtitleColor: colorConfig.subtitleColor,
+            borderColor: finalDesignStyle == ContentDesignStyle.outlined
+                ? colorConfig.borderColor
+                : null,
+            showCloseButton: finalDesignStyle == ContentDesignStyle.outlined ||
+                finalDesignStyle == ContentDesignStyle.leftAccent ||
+                finalDesignStyle == ContentDesignStyle.tonal ||
+                finalDismissible,
+          ),
         ),
         action: onActionPressed != null && actionLabel != null
             ? SnackBarAction(

@@ -8,6 +8,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_scope.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/utils/keyboard_utils.dart';
@@ -93,6 +94,13 @@ class SavePointsBottomsheet {
     /// Note this differs from [SavePointsSnackbar.show]'s `blur`, which has
     /// no barrier to blur and so applies no blur when left unset.
     double? blur,
+
+    /// Loops a subtle scale + glow pulse on the icon.
+    ///
+    /// Off by default: the pulse never ends, so it costs a repaint every frame
+    /// for as long as the sheet is up and makes `pumpAndSettle()` hang in
+    /// tests. Set it here for one call, or via [SavePointsTheme] for a subtree.
+    bool? enablePulse,
     ImageFilter? backdropFilter,
   }) {
     // Dismiss keyboard when showing bottom sheet to prevent UI overlap
@@ -126,31 +134,35 @@ class SavePointsBottomsheet {
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, _) {
-        return BottomsheetTransitionScope(
-          animation: animation,
-          startAnimation: startAnimation,
-          endAnimation: endAnimation,
-          hideLikeCircle: hideLikeCircle,
-          useBarrierBlur: useBarrierBlur,
-          barrierFilter: barrierFilter,
-          barrierDismissible: finalIsDismissible,
-          title: title,
-          icon: icon,
-          iconColor: iconColor,
-          backgroundColor: backgroundColor,
-          isDark: isDark,
-          isLoading: isLoading,
-          loadingNotifier: loadingNotifier,
-          showHandle: finalShowHandle,
-          isDismissible: finalIsDismissible,
-          enableDrag: finalEnableDrag,
-          maxHeight: maxHeight,
-          isScrollControlled: isScrollControlled,
-          designStyle:
-              designStyle ?? spTheme?.designStyle ?? defaultDesignStyle,
-          blur: finalBlur,
-          backdropFilter: backdropFilter,
-          child: child,
+        return pulseScope(
+          spTheme,
+          enablePulse,
+          BottomsheetTransitionScope(
+            animation: animation,
+            startAnimation: startAnimation,
+            endAnimation: endAnimation,
+            hideLikeCircle: hideLikeCircle,
+            useBarrierBlur: useBarrierBlur,
+            barrierFilter: barrierFilter,
+            barrierDismissible: finalIsDismissible,
+            title: title,
+            icon: icon,
+            iconColor: iconColor,
+            backgroundColor: backgroundColor,
+            isDark: isDark,
+            isLoading: isLoading,
+            loadingNotifier: loadingNotifier,
+            showHandle: finalShowHandle,
+            isDismissible: finalIsDismissible,
+            enableDrag: finalEnableDrag,
+            maxHeight: maxHeight,
+            isScrollControlled: isScrollControlled,
+            designStyle:
+                designStyle ?? spTheme?.designStyle ?? defaultDesignStyle,
+            blur: finalBlur,
+            backdropFilter: backdropFilter,
+            child: child,
+          ),
         );
       },
     );

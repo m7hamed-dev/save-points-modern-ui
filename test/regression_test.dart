@@ -386,6 +386,78 @@ void main() {
     await tester.pumpAndSettle(const Duration(milliseconds: 500));
   });
 
+  group('design', () {
+    testWidgets('a consumer can pumpAndSettle a surface', (tester) async {
+      // The icon pulse used to loop forever, so pumpAndSettle() hung in the
+      // tests of anyone using this package — and cost a repaint every frame
+      // for as long as the surface was up.
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.show(
+        ctx,
+        title: 'Settles',
+        message: 'No endless animation.',
+        icon: Icons.info,
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Settles'), findsOneWidget);
+    });
+
+    testWidgets('the pulse is still available, opt-in', (tester) async {
+      late BuildContext ctx;
+      await tester.pumpWidget(
+        SavePointsTheme(
+          data: const SavePointsThemeData(enablePulse: true),
+          child: MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (c) {
+                  ctx = c;
+                  return const SizedBox.expand();
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      SavePointsDialog.show(
+        ctx,
+        title: 'Pulses',
+        message: 'Opted in via the theme.',
+        icon: Icons.info,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+
+      // A looping animation means frames keep being scheduled.
+      expect(tester.binding.hasScheduledFrame, isTrue);
+    });
+
+    testWidgets('leftAccent does not stretch to the full screen', (
+      tester,
+    ) async {
+      // The accent bar sat in a Row with CrossAxisAlignment.stretch and no
+      // height bound, so the dialog grew to fill the viewport.
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.show(
+        ctx,
+        title: 'Bounded',
+        message: 'Short message.',
+        icon: Icons.info,
+        designStyle: ContentDesignStyle.leftAccent,
+      );
+      await tester.pumpAndSettle();
+
+      final dialogHeight = tester.getSize(find.byType(DialogContainer)).height;
+      final screenHeight =
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+      expect(
+        dialogHeight,
+        lessThan(screenHeight * 0.75),
+        reason: 'the dialog should hug its content, not the viewport',
+      );
+    });
+  });
+
   group('SnackbarQueue', () {
     setUp(SnackbarQueue().clear);
 

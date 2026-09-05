@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_type.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition_builder.dart';
@@ -90,6 +91,14 @@ class SavePointsDialog {
     /// Note this differs from [SavePointsSnackbar.show]'s `blur`, which has
     /// no barrier to blur and so applies no blur when left unset.
     double? blur,
+
+    /// Loops a subtle scale + glow pulse on the icon.
+    ///
+    /// Off by default: the pulse never ends, so it costs a repaint every frame
+    /// for as long as the dialog is up and makes `pumpAndSettle()` hang in
+    /// tests. Set it here for one call, or via [SavePointsTheme] for a
+    /// subtree.
+    bool? enablePulse,
     ImageFilter? backdropFilter,
     Widget? child,
   }) {
@@ -140,37 +149,41 @@ class SavePointsDialog {
       transitionDuration: config.transitionDuration,
       pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return DialogTransitionScope(
-          animation: animation,
-          animationType: (startAnimation == null && endAnimation == null)
-              ? (animationType ?? config.defaultAnimation)
-              : null,
-          startAnimation: startAnimation,
-          endAnimation: endAnimation,
-          hideLikeCircle: hideLikeCircle,
-          useBarrierBlur: useBarrierBlur,
-          barrierFilter: barrierFilter,
-          barrierDismissible: finalBarrierDismissible,
-          title: title,
-          message: message,
-          confirmText: finalConfirmText,
-          cancelText: finalCancelText,
-          icon: icon,
-          iconColor: iconColor,
-          backgroundColor: finalBackgroundColor,
-          confirmButtonColor: finalConfirmButtonColor,
-          cancelButtonColor: finalCancelButtonColor,
-          showCancelButton: finalShowCancelButton,
-          onConfirm: onConfirm,
-          onConfirmAsync: onConfirmAsync,
-          onCancel: onCancel,
-          isDark: isDark,
-          isLoading: isLoading,
-          loadingNotifier: loadingNotifier,
-          designStyle: finalDesignStyle,
-          blur: finalBlur,
-          backdropFilter: backdropFilter,
-          child: customChild,
+        return pulseScope(
+          spTheme,
+          enablePulse,
+          DialogTransitionScope(
+            animation: animation,
+            animationType: (startAnimation == null && endAnimation == null)
+                ? (animationType ?? config.defaultAnimation)
+                : null,
+            startAnimation: startAnimation,
+            endAnimation: endAnimation,
+            hideLikeCircle: hideLikeCircle,
+            useBarrierBlur: useBarrierBlur,
+            barrierFilter: barrierFilter,
+            barrierDismissible: finalBarrierDismissible,
+            title: title,
+            message: message,
+            confirmText: finalConfirmText,
+            cancelText: finalCancelText,
+            icon: icon,
+            iconColor: iconColor,
+            backgroundColor: finalBackgroundColor,
+            confirmButtonColor: finalConfirmButtonColor,
+            cancelButtonColor: finalCancelButtonColor,
+            showCancelButton: finalShowCancelButton,
+            onConfirm: onConfirm,
+            onConfirmAsync: onConfirmAsync,
+            onCancel: onCancel,
+            isDark: isDark,
+            isLoading: isLoading,
+            loadingNotifier: loadingNotifier,
+            designStyle: finalDesignStyle,
+            blur: finalBlur,
+            backdropFilter: backdropFilter,
+            child: customChild,
+          ),
         );
       },
     );

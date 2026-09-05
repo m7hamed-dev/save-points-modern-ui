@@ -18,7 +18,7 @@ class AnimatedIcon extends StatefulWidget {
     required this.type,
     required this.animation,
     this.designStyle,
-    this.enablePulse = true,
+    this.enablePulse = false,
   });
 
   final IconData icon;
@@ -28,6 +28,12 @@ class AnimatedIcon extends StatefulWidget {
   final ContentDesignStyle? designStyle;
 
   /// Whether to enable subtle pulse animation after entrance
+  /// Loops a subtle scale + glow pulse for as long as the surface is on
+  /// screen.
+  ///
+  /// Off by default: a never-ending animation keeps the whole app repainting
+  /// for the lifetime of the dialog or snackbar, and it makes
+  /// `pumpAndSettle()` hang in the tests of anyone using this package.
   final bool enablePulse;
 
   @override

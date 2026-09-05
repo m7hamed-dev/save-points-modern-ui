@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2026-09-05
 
+### Design
+
+The eight design styles collapsed to about four looks in practice — `solid`,
+`outlined`, `minimal` and `glass` rendered as near-identical white cards on
+dialogs and sheets. The palette and the bold-and-expressive language are
+unchanged; these are the places where the implementation was not delivering
+what the tokens already described.
+
+- **`leftAccent` was broken.** Its accent bar sat in a `Row` with
+  `CrossAxisAlignment.stretch` and no height bound, so the dialog stretched to
+  fill the viewport instead of hugging its content, and the bar itself was not
+  visible. Bounded with `IntrinsicHeight`, and the bar now carries the accent
+  gradient at 6dp.
+- **`glass` was not translucent.** Its fill sat at 58% alpha — opaque enough to
+  hide its own `BackdropFilter`, which is why it looked like `solid`. Now 30%
+  (light) / 38% (dark) with a brighter highlight edge, so the blurred backdrop
+  actually reads through it.
+- **`solid`'s icon chip was a wash.** It painted the accent gradient at
+  22%/12% alpha, coming out as a pale tint on a white surface. It now uses the
+  gradient at full strength with a white glyph — the element that makes `solid`
+  read as the boldest of the family.
+- **`neon` barely glowed.** The bloom is wider and stronger, so the variant
+  reads as neon rather than as a dark card with a hairline.
+- **`neon` sheets had unreadable content.** The surface is near-black but the
+  caller's `child` inherits the app's own `ThemeData`, so on a light theme
+  consumer content rendered dark-on-dark. The subtree is now handed a matching
+  brightness.
+- **`outlined` borders were nearly invisible** at 25–30% alpha. Raised to 55%
+  (light) / 62% (dark).
+- **Colored-glow elevation is now visible in light mode** (halo alpha 22% →
+  34%), which is what separates `solid` from `minimal` at a glance.
+
+### Changed
+
+- **Icon pulse is opt-in.** Dialog, snackbar and sheet icons looped a scale +
+  glow animation forever, with no way to switch it off from the public API. It
+  kept the app repainting for as long as the surface was on screen, and it made
+  `pumpAndSettle()` hang in the tests of anyone using the package. It is now off
+  by default; turn it on per call with `enablePulse: true` on `show()`, or for a
+  subtree with `SavePointsThemeData(enablePulse: true)`.
+
+
 A correctness release. Three of these were crashes or compile errors in real
 apps, so the fixes are worth the major bump; the rest widen who can install the
 package at all.

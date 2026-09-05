@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_buttons.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_shadows.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_color_config.dart';
@@ -181,6 +182,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             icon: widget.icon!,
                             color: colorConfig.iconColor,
                             designStyle: colorConfig.designStyle,
+                            enablePulse: resolvePulse(context),
                           ),
                         ),
                       RepaintBoundary(
@@ -361,6 +363,7 @@ class _ModernDialogState extends State<ModernDialog> {
                                   color: colorConfig.iconColor,
                                   backgroundColor:
                                       colorConfig.iconBackgroundColor,
+                                  enablePulse: resolvePulse(context),
                                 ),
                               ),
                             ),

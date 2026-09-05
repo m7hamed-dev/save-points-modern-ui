@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart' hide AnimatedIcon;
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
@@ -621,6 +622,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                             size: 26,
                             containerSize: 52,
                             backgroundColor: iconBgColor,
+                            enablePulse: resolvePulse(context),
                           ),
                         ),
                       ),
