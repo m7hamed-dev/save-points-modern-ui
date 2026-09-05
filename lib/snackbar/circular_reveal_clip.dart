@@ -11,7 +11,7 @@ class SnackbarCircularRevealClip extends StatelessWidget {
     super.key,
     required this.animation,
     required this.child,
-    this.alignment = .center,
+    this.alignment = Alignment.center,
   });
 
   @override
@@ -25,7 +25,11 @@ class SnackbarCircularRevealClip extends StatelessWidget {
         final radius = animation.value * maxRadius;
 
         return ClipPath(
-          clipper: _CircularRevealClipper(radius: radius, alignment: alignment),
+          clipper: _CircularRevealClipper(
+            radius: radius,
+            alignment: alignment,
+            textDirection: Directionality.of(context),
+          ),
           child: child,
         );
       },
@@ -47,12 +51,20 @@ class SnackbarCircularRevealClip extends StatelessWidget {
 class _CircularRevealClipper extends CustomClipper<Path> {
   final double radius;
   final AlignmentGeometry alignment;
+  final TextDirection textDirection;
 
-  _CircularRevealClipper({required this.radius, required this.alignment});
+  _CircularRevealClipper({
+    required this.radius,
+    required this.alignment,
+    required this.textDirection,
+  });
 
   @override
   Path getClip(Size size) {
-    final align = alignment.resolve(TextDirection.ltr);
+    // Resolved against the ambient direction rather than a hard-coded
+    // TextDirection.ltr, so a directional alignment (centerStart, topEnd, ...)
+    // mirrors correctly in an RTL app instead of revealing from the wrong side.
+    final align = alignment.resolve(textDirection);
     final center = align.inscribe(Size.zero, Offset.zero & size).center;
 
     final path = Path();
@@ -62,6 +74,8 @@ class _CircularRevealClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(_CircularRevealClipper oldClipper) {
-    return oldClipper.radius != radius || oldClipper.alignment != alignment;
+    return oldClipper.radius != radius ||
+        oldClipper.alignment != alignment ||
+        oldClipper.textDirection != textDirection;
   }
 }

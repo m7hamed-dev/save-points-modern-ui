@@ -19,7 +19,7 @@ class DialogMessage extends StatelessWidget {
     final effectiveColor = color ?? SpSurface.onSurfaceMuted(isDark);
     return Text(
       message,
-      textAlign: .center,
+      textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: SpType.bodySize,
         fontWeight: SpType.bodyWeight,

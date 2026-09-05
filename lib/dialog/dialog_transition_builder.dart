@@ -40,7 +40,7 @@ class DialogTransitionBuilder extends StatelessWidget {
     } else {
       // Fallback to old animationType system for backward compatibility
       final clampedAnimation = ClampedAnimation(animation);
-      final finalAnimationType = animationType ?? .fadeSlide;
+      final finalAnimationType = animationType ?? DialogAnimationType.fadeSlide;
       animatedWidget = _buildLegacyAnimation(
         clampedAnimation,
         finalAnimationType,
@@ -55,37 +55,37 @@ class DialogTransitionBuilder extends StatelessWidget {
     DialogAnimationType finalAnimationType,
   ) {
     switch (finalAnimationType) {
-      case .fadeSlide:
+      case DialogAnimationType.fadeSlide:
         return _buildFadeSlide(clampedAnimation);
-      case .scale:
+      case DialogAnimationType.scale:
         return _buildScale(clampedAnimation);
-      case .slideBottom:
+      case DialogAnimationType.slideBottom:
         return _buildSlide(clampedAnimation, const Offset(0, 0.3));
-      case .slideTop:
+      case DialogAnimationType.slideTop:
         return _buildSlide(clampedAnimation, const Offset(0, -0.3));
-      case .slideLeft:
+      case DialogAnimationType.slideLeft:
         return _buildSlide(clampedAnimation, const Offset(-0.3, 0));
-      case .slideRight:
+      case DialogAnimationType.slideRight:
         return _buildSlide(clampedAnimation, const Offset(0.3, 0));
-      case .bounce:
+      case DialogAnimationType.bounce:
         return _buildBounce(clampedAnimation);
-      case .rotateScale:
+      case DialogAnimationType.rotateScale:
         return _buildRotateScale(clampedAnimation);
-      case .elastic:
+      case DialogAnimationType.elastic:
         return _buildElastic(clampedAnimation);
-      case .none:
+      case DialogAnimationType.none:
         return dialog;
     }
   }
 
   Widget _buildDirectionalAnimation() {
-    final startDir = startAnimation ?? .fade;
-    final endDir = endAnimation ?? .fade;
+    final startDir = startAnimation ?? DialogAnimationDirection.fade;
+    final endDir = endAnimation ?? DialogAnimationDirection.fade;
 
     // Create two separate animations: one for enter, one for exit
     // Use the animation status to determine which one to use
-    final isForward =
-        animation.status == .forward || animation.status == .completed;
+    final isForward = animation.status == AnimationStatus.forward ||
+        animation.status == AnimationStatus.completed;
 
     if (isForward) {
       // Entering - use startAnimation
@@ -103,25 +103,25 @@ class DialogTransitionBuilder extends StatelessWidget {
     final clampedAnim = ClampedAnimation(anim);
 
     switch (dir) {
-      case .fromTop:
+      case DialogAnimationDirection.fromTop:
         return _buildSlide(clampedAnim, const Offset(0, -1));
-      case .fromBottom:
+      case DialogAnimationDirection.fromBottom:
         return _buildSlide(clampedAnim, const Offset(0, 1));
-      case .fromLeft:
+      case DialogAnimationDirection.fromLeft:
         return _buildSlide(clampedAnim, const Offset(-1, 0));
-      case .fromRight:
+      case DialogAnimationDirection.fromRight:
         return _buildSlide(clampedAnim, const Offset(1, 0));
-      case .fade:
+      case DialogAnimationDirection.fade:
         return _buildFadeOnly(clampedAnim);
-      case .scale:
+      case DialogAnimationDirection.scale:
         return _buildScale(clampedAnim);
-      case .rotateScale:
+      case DialogAnimationDirection.rotateScale:
         return _buildRotateScale(clampedAnim);
-      case .bounce:
+      case DialogAnimationDirection.bounce:
         return _buildBounce(clampedAnim);
-      case .elastic:
+      case DialogAnimationDirection.elastic:
         return _buildElastic(clampedAnim);
-      case .none:
+      case DialogAnimationDirection.none:
         return dialog;
     }
   }
@@ -133,25 +133,25 @@ class DialogTransitionBuilder extends StatelessWidget {
     final clampedAnim = ClampedAnimation(anim);
 
     switch (dir) {
-      case .fromTop: // Exit to top
+      case DialogAnimationDirection.fromTop: // Exit to top
         return _buildSlideReverse(clampedAnim, const Offset(0, -1));
-      case .fromBottom: // Exit to bottom
+      case DialogAnimationDirection.fromBottom: // Exit to bottom
         return _buildSlideReverse(clampedAnim, const Offset(0, 1));
-      case .fromLeft: // Exit to left
+      case DialogAnimationDirection.fromLeft: // Exit to left
         return _buildSlideReverse(clampedAnim, const Offset(-1, 0));
-      case .fromRight: // Exit to right
+      case DialogAnimationDirection.fromRight: // Exit to right
         return _buildSlideReverse(clampedAnim, const Offset(1, 0));
-      case .fade:
+      case DialogAnimationDirection.fade:
         return _buildFadeOnly(clampedAnim);
-      case .scale:
+      case DialogAnimationDirection.scale:
         return _buildScale(clampedAnim);
-      case .rotateScale:
+      case DialogAnimationDirection.rotateScale:
         return _buildRotateScale(clampedAnim);
-      case .bounce:
+      case DialogAnimationDirection.bounce:
         return _buildBounce(clampedAnim);
-      case .elastic:
+      case DialogAnimationDirection.elastic:
         return _buildElastic(clampedAnim);
-      case .none:
+      case DialogAnimationDirection.none:
         return dialog;
     }
   }

@@ -136,8 +136,7 @@ class AnimatedIconState extends State<AnimatedIcon>
 
   @override
   Widget build(BuildContext context) {
-    final isOutlined =
-        widget.designStyle == ContentDesignStyle.outlined ||
+    final isOutlined = widget.designStyle == ContentDesignStyle.outlined ||
         widget.designStyle == ContentDesignStyle.leftAccent ||
         widget.designStyle == ContentDesignStyle.tonal ||
         widget.designStyle == ContentDesignStyle.glass ||

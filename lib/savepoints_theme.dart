@@ -122,9 +122,7 @@ class SavePointsTheme extends InheritedWidget {
   /// Components use this so that having no [SavePointsTheme] simply means
   /// "use built-in defaults".
   static SavePointsThemeData? maybeOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<SavePointsTheme>()
-        ?.data;
+    return context.dependOnInheritedWidgetOfExactType<SavePointsTheme>()?.data;
   }
 
   /// Returns the nearest [SavePointsThemeData]; throws if none is in scope.

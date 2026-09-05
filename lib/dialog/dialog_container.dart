@@ -22,7 +22,8 @@ class DialogContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOutlined = colorConfig.borderColor != null;
-    final isLeftAccent = colorConfig.designStyle == .leftAccent;
+    final isLeftAccent =
+        colorConfig.designStyle == ContentDesignStyle.leftAccent;
     final borderRadius = BorderRadius.circular(DialogConstants.borderRadius);
 
     final contentBorderRadius = isLeftAccent
@@ -70,8 +71,8 @@ class DialogContainer extends StatelessWidget {
       content = ClipRRect(
         borderRadius: borderRadius,
         child: Row(
-          mainAxisSize: .min,
-          crossAxisAlignment: .stretch,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(width: 5, color: colorConfig.iconColor),
             Expanded(child: content),

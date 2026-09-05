@@ -37,4 +37,3 @@ class ThemeUtils {
     return baseColor.withValues(alpha: opacity);
   }
 }
-

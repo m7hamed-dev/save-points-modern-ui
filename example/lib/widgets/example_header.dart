@@ -38,10 +38,10 @@ class _ExampleHeaderState extends State<ExampleHeader>
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: .circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: .circular(20),
+          borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -52,7 +52,7 @@ class _ExampleHeaderState extends State<ExampleHeader>
           ),
         ),
         child: Padding(
-          padding: const .all(24),
+          padding: const EdgeInsets.all(24),
           child: Column(
             children: [
               AnimatedBuilder(
@@ -76,12 +76,15 @@ class _ExampleHeaderState extends State<ExampleHeader>
                 'SavePoints Modern UI',
                 style: Theme.of(
                   context,
-                ).textTheme.headlineSmall?.copyWith(fontWeight: .bold),
+                )
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(
                 'Beautiful, customizable UI components with glassmorphism effects',
-                textAlign: .center,
+                textAlign: TextAlign.center,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),

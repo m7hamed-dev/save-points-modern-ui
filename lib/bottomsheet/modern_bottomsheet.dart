@@ -131,8 +131,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colorConfig =
-        _cachedColorConfig ??
+    final colorConfig = _cachedColorConfig ??
         BottomsheetColorConfig(
           theme: Theme.of(context),
           isDark: widget.isDark,
@@ -164,8 +163,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     final availableHeight = screenHeight - keyboardHeight;
 
     // Use the smaller of: configured maxHeight or available height (with some margin)
-    final configuredMaxHeight =
-        _cachedMaxHeight ??
+    final configuredMaxHeight = _cachedMaxHeight ??
         (widget.maxHeight ?? screenHeight * BottomsheetConstants.maxHeight);
 
     // When keyboard is visible, limit max height to available space minus safe margin
@@ -196,7 +194,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                 colorConfig: colorConfig,
                 showTopRadius: false,
                 child: Column(
-                  mainAxisSize: .min,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     if (widget.showHandle)
                       RepaintBoundary(
@@ -273,8 +271,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     final availableHeight = screenHeight - keyboardHeight;
 
     // Use the smaller of: configured maxHeight or available height (with some margin)
-    final configuredMaxHeight =
-        _cachedMaxHeight ??
+    final configuredMaxHeight = _cachedMaxHeight ??
         (widget.maxHeight ?? screenHeight * BottomsheetConstants.maxHeight);
 
     // When keyboard is visible, limit max height to available space minus safe margin
@@ -314,7 +311,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
               blur: widget.blur,
               backdropFilter: widget.backdropFilter,
               child: Column(
-                mainAxisSize: .min,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   // Colored header with icon - enhanced gradient
                   Stack(
@@ -366,7 +363,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                               decoration: BoxDecoration(
                                 // On the vivid header band the handle is white.
                                 color: Colors.white.withValues(alpha: 0.55),
-                                borderRadius: .circular(2.5),
+                                borderRadius: BorderRadius.circular(2.5),
                               ),
                             ),
                           ),
@@ -380,7 +377,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () => Navigator.of(context).pop(),
-                              borderRadius: .circular(14),
+                              borderRadius: BorderRadius.circular(14),
                               child: Container(
                                 width: 28,
                                 height: 28,
@@ -391,6 +388,9 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                                 ),
                                 child: Icon(
                                   Icons.close_rounded,
+                                  semanticLabel: MaterialLocalizations.of(
+                                    context,
+                                  ).closeButtonTooltip,
                                   size: 16,
                                   color: Colors.white.withValues(alpha: 0.95),
                                 ),
@@ -427,14 +427,14 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                         bottom: 28,
                       ),
                       child: Column(
-                        mainAxisSize: .min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           // Title with enhanced typography
                           if (widget.title != null) ...[
                             RepaintBoundary(
                               child: Text(
                                 widget.title!,
-                                textAlign: .center,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: SpType.displaySize,
                                   fontWeight: SpType.displayWeight,
@@ -481,8 +481,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     }
     _lastBlur = blur;
     _lastBackdropFilterParam = backdropFilter;
-    _cachedBackdropFilter =
-        backdropFilter ??
+    _cachedBackdropFilter = backdropFilter ??
         (blur != null && blur <= 0
             ? null
             : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));

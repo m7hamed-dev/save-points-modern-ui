@@ -31,13 +31,25 @@ class KeyboardUtils {
     return MediaQuery.of(context).viewInsets.bottom;
   }
 
-  /// Dismisses keyboard when dialog is shown
-  static void dismissKeyboardForDialog(BuildContext context) {
-    hideKeyboard(context);
+  /// Drops focus only when something in this scope actually holds it.
+  ///
+  /// Used before showing a dialog or bottom sheet so an open keyboard does
+  /// not overlap it. Guarded, because unfocusing a scope that has no focus
+  /// still walks the focus tree for nothing.
+  static void dismissIfFocused(BuildContext context) {
+    final scope = FocusScope.of(context);
+    if (scope.hasFocus) {
+      scope.unfocus();
+    }
   }
 
+  /// Dismisses keyboard when dialog is shown
+  @Deprecated('Use dismissIfFocused instead.')
+  static void dismissKeyboardForDialog(BuildContext context) =>
+      dismissIfFocused(context);
+
   /// Dismisses keyboard when bottom sheet is shown
-  static void dismissKeyboardForBottomSheet(BuildContext context) {
-    hideKeyboard(context);
-  }
+  @Deprecated('Use dismissIfFocused instead.')
+  static void dismissKeyboardForBottomSheet(BuildContext context) =>
+      dismissIfFocused(context);
 }

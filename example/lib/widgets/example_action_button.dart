@@ -100,10 +100,11 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
               ),
             child: Card(
               elevation: _isHovered ? 6 : 2,
-              shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: .circular(12),
+                  borderRadius: BorderRadius.circular(12),
                   gradient: _isHovered
                       ? LinearGradient(
                           begin: Alignment.topLeft,
@@ -130,9 +131,9 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                       },
                     ),
                     Padding(
-                      padding: const .all(16),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
-                        mainAxisSize: .min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           AnimatedBuilder(
                             animation: _iconController,
@@ -153,10 +154,10 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                           const SizedBox(height: 8),
                           Text(
                             widget.label,
-                            textAlign: .center,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 12,
-                              fontWeight: .w500,
+                              fontWeight: FontWeight.w500,
                               color: _isHovered
                                   ? widget.color
                                   : Theme.of(
@@ -164,7 +165,7 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
                                     ).textTheme.bodyMedium?.color,
                             ),
                             maxLines: 2,
-                            overflow: .ellipsis,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),

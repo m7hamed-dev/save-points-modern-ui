@@ -111,8 +111,7 @@ class _EnhancedIconState extends State<EnhancedIcon>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        widget.backgroundColor ??
+    final bgColor = widget.backgroundColor ??
         (isDark ? const Color(0xFF1F2937) : Colors.white);
 
     return AnimatedBuilder(

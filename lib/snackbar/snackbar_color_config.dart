@@ -35,14 +35,13 @@ class SnackbarColorConfig {
   }) {
     final style = designStyle ?? config.defaultDesignStyle;
     final accent = SpPalette.of(_intentOf(type), isDark);
-    final resolvedIcon =
-        iconColor ?? config.getIconColor(type) ?? accent.base;
+    final resolvedIcon = iconColor ?? config.getIconColor(type) ?? accent.base;
     final isSolid = style == ContentDesignStyle.solid;
     final isNeon = style == ContentDesignStyle.neon;
 
     // The vivid gradient is the signature of the bold default.
-    final Gradient? resolvedGradient = gradient ??
-        (isSolid && background == null ? accent.gradient : null);
+    final Gradient? resolvedGradient =
+        gradient ?? (isSolid && background == null ? accent.gradient : null);
 
     return SnackbarColorConfig._(
       designStyle: style,

@@ -26,4 +26,3 @@ class ValidationUtils {
     return value != null && value > 0;
   }
 }
-

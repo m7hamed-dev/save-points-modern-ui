@@ -16,7 +16,9 @@ linter:
     
     # Style & Readability
     sort_child_properties_last: true
-    require_trailing_commas: true
+    # require_trailing_commas is deliberately off: it fights the Dart 3.7+
+    # formatter, which removes the very commas the rule then demands back.
+    # `dart format` is the authority on formatting here.
     prefer_final_locals: true
     prefer_final_fields: true
     prefer_final_in_for_each: true
@@ -41,6 +43,10 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "**/*.config.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
   errors:
     invalid_annotation_target: ignore
     avoid_dynamic_calls: error

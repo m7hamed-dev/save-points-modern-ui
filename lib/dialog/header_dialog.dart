@@ -108,12 +108,12 @@ class HeaderDialog extends StatelessWidget {
               children: [
                 // Main dialog content
                 ClipRRect(
-                  borderRadius: .circular(effectiveBorderRadius),
+                  borderRadius: BorderRadius.circular(effectiveBorderRadius),
                   child: _buildContent(
                     blur: blur,
                     backdropFilter: backdropFilter,
                     child: Column(
-                      mainAxisSize: .min,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         // Header bar
                         _buildHeader(
@@ -125,10 +125,12 @@ class HeaderDialog extends StatelessWidget {
                           width: double.infinity,
                           color: backgroundColor,
                           child: Column(
-                            mainAxisSize: .min,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               // Custom content
-                              Padding(padding: const .all(20), child: child),
+                              Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: child),
                               // Action buttons
                               if (primaryButtonText != null ||
                                   secondaryButtonText != null)
@@ -172,12 +174,12 @@ class HeaderDialog extends StatelessWidget {
 
   Widget _buildHeader(Color headerColor, Color textColor) {
     return Container(
-      width: .infinity,
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       decoration: BoxDecoration(color: headerColor),
       child: Text(
         headerTitle,
-        textAlign: .center,
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: textColor,
           fontSize: 20,
@@ -214,7 +216,8 @@ class HeaderDialog extends StatelessWidget {
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: .circular(DialogConstants.buttonBorderRadius),
+                    borderRadius: BorderRadius.circular(
+                        DialogConstants.buttonBorderRadius),
                   ),
                   minimumSize: const Size(
                     double.infinity,
@@ -251,7 +254,8 @@ class HeaderDialog extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: .circular(DialogConstants.buttonBorderRadius),
+                    borderRadius: BorderRadius.circular(
+                        DialogConstants.buttonBorderRadius),
                   ),
                   minimumSize: const Size(
                     double.infinity,
@@ -260,7 +264,8 @@ class HeaderDialog extends StatelessWidget {
                 ),
                 child: Text(
                   secondaryButtonText!,
-                  style: const TextStyle(fontSize: 16, fontWeight: .w500),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
@@ -274,8 +279,7 @@ class HeaderDialog extends StatelessWidget {
     required ImageFilter? backdropFilter,
     required Widget child,
   }) {
-    final filter =
-        backdropFilter ??
+    final filter = backdropFilter ??
         (blur != null && blur > 0
             ? ImageFilter.blur(sigmaX: blur, sigmaY: blur)
             : null);
@@ -313,8 +317,13 @@ class _OutsideCloseButton extends StatelessWidget {
         child: Container(
           width: 44,
           height: 44,
-          alignment: .center,
-          child: Icon(Icons.close, color: iconColor, size: 22),
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.close,
+            color: iconColor,
+            size: 22,
+            semanticLabel: MaterialLocalizations.of(context).closeButtonTooltip,
+          ),
         ),
       ),
     );

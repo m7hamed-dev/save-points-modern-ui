@@ -131,8 +131,7 @@ class _ModernDialogState extends State<ModernDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final colorConfig =
-        _cachedColorConfig ??
+    final colorConfig = _cachedColorConfig ??
         DialogColorConfig(
           theme: Theme.of(context),
           isDark: widget.isDark,
@@ -167,14 +166,14 @@ class _ModernDialogState extends State<ModernDialog> {
               maxWidth: DialogConstants.maxDialogWidth,
             ),
             child: ClipRRect(
-              borderRadius: .circular(DialogConstants.borderRadius),
+              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
               child: _buildContent(
                 blur: widget.blur,
                 backdropFilter: widget.backdropFilter,
                 child: DialogContainer(
                   colorConfig: colorConfig,
                   child: Column(
-                    mainAxisSize: .min,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       if (widget.icon != null)
                         RepaintBoundary(
@@ -230,8 +229,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             confirmColor: colorConfig.confirmColor,
                             cancelColor: colorConfig.cancelColor,
                             isDark: widget.isDark,
-                            isOutlined:
-                                colorConfig.designStyle ==
+                            isOutlined: colorConfig.designStyle ==
                                     ContentDesignStyle.outlined ||
                                 colorConfig.designStyle ==
                                     ContentDesignStyle.leftAccent ||
@@ -271,7 +269,7 @@ class _ModernDialogState extends State<ModernDialog> {
             ),
             decoration: BoxDecoration(
               color: colorConfig.backgroundColor,
-              borderRadius: .circular(DialogConstants.borderRadius),
+              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
               boxShadow: DialogShadows.getShadows(
                 widget.isDark,
                 designStyle: ContentDesignStyle.colorHeader,
@@ -279,12 +277,12 @@ class _ModernDialogState extends State<ModernDialog> {
               ),
             ),
             child: ClipRRect(
-              borderRadius: .circular(DialogConstants.borderRadius),
+              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
               child: _buildContent(
                 blur: widget.blur,
                 backdropFilter: widget.backdropFilter,
                 child: Column(
-                  mainAxisSize: .min,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     // Colored header with icon
                     Stack(
@@ -329,7 +327,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () => Navigator.of(context).pop(),
-                              borderRadius: .circular(14),
+                              borderRadius: BorderRadius.circular(14),
                               child: Container(
                                 width: 28,
                                 height: 28,
@@ -340,6 +338,9 @@ class _ModernDialogState extends State<ModernDialog> {
                                 ),
                                 child: Icon(
                                   Icons.close_rounded,
+                                  semanticLabel: MaterialLocalizations.of(
+                                    context,
+                                  ).closeButtonTooltip,
                                   size: 16,
                                   color: Colors.white.withValues(alpha: 0.95),
                                 ),
@@ -375,13 +376,13 @@ class _ModernDialogState extends State<ModernDialog> {
                         bottom: 28,
                       ),
                       child: Column(
-                        mainAxisSize: .min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           // Title with enhanced typography
                           RepaintBoundary(
                             child: Text(
                               widget.title,
-                              textAlign: .center,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: SpType.displaySize,
                                 fontWeight: SpType.displayWeight,
@@ -397,7 +398,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             RepaintBoundary(
                               child: Text(
                                 widget.message,
-                                textAlign: .center,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w400,
@@ -433,7 +434,7 @@ class _ModernDialogState extends State<ModernDialog> {
                                   height: 52,
                                   child: DecoratedBox(
                                     decoration: BoxDecoration(
-                                      borderRadius: .circular(26),
+                                      borderRadius: BorderRadius.circular(26),
                                       boxShadow: [
                                         BoxShadow(
                                           color: colorConfig.buttonColor
@@ -455,7 +456,8 @@ class _ModernDialogState extends State<ModernDialog> {
                                           horizontal: 28,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: .circular(26),
+                                          borderRadius:
+                                              BorderRadius.circular(26),
                                         ),
                                         elevation: 0,
                                       ),
@@ -486,14 +488,15 @@ class _ModernDialogState extends State<ModernDialog> {
                                           horizontal: 24,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: .circular(22),
+                                          borderRadius:
+                                              BorderRadius.circular(22),
                                         ),
                                       ),
                                       child: Text(
                                         widget.cancelText,
                                         style: const TextStyle(
                                           fontSize: 15,
-                                          fontWeight: .w500,
+                                          fontWeight: FontWeight.w500,
                                           letterSpacing: 0.2,
                                         ),
                                       ),
@@ -521,8 +524,7 @@ class _ModernDialogState extends State<ModernDialog> {
     }
     _lastBlur = blur;
     _lastBackdropFilterParam = backdropFilter;
-    _cachedBackdropFilter =
-        backdropFilter ??
+    _cachedBackdropFilter = backdropFilter ??
         (blur != null && blur <= 0
             ? null
             : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));

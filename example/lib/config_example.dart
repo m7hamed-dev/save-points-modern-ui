@@ -15,13 +15,16 @@ void configureSavePoints() {
   config.snackbar.defaultShowProgressIndicator = true;
   config.snackbar.defaultEnableHapticFeedback = false;
   config.snackbar.maxWidth = 400.0;
-  config.snackbar.defaultBorderRadius = .circular(20.0);
+  config.snackbar.defaultBorderRadius = BorderRadius.circular(20.0);
 
   // Customize specific snackbar types
   config.snackbar.customizeType(
-    .success,
+    SnackbarType.success,
     const SnackbarTypeConfig(
-      backgroundColor: {.dark: Color(0xFF0D7377), .light: Color(0xFF14A085)},
+      backgroundColor: {
+        Brightness.dark: Color(0xFF0D7377),
+        Brightness.light: Color(0xFF14A085)
+      },
       iconColor: Colors.tealAccent,
       defaultIcon: Icons.check_circle_outline,
     ),

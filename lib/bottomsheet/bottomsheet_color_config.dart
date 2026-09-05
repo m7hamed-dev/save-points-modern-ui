@@ -28,49 +28,47 @@ class BottomsheetColorConfig {
     Color? text,
     Color? icon,
     ContentDesignStyle? designStyle,
-  }) : designStyle = designStyle ?? ContentDesignStyle.colorHeader,
-       backgroundColor = _computeBackgroundColor(
-         background: background,
-         designStyle: designStyle ?? ContentDesignStyle.colorHeader,
-         isDark: isDark,
-       ),
-       handleColor = handle ?? SpSurface.handle(isDark),
-       textColor = _computeTextColor(
-         text: text,
-         designStyle: designStyle ?? ContentDesignStyle.colorHeader,
-         isDark: isDark,
-       ),
-       subtitleColor = SpSurface.onSurfaceMuted(isDark),
-       iconColor = _computeIconColor(
-         icon: icon,
-         designStyle: designStyle ?? ContentDesignStyle.colorHeader,
-         theme: theme,
-         isDark: isDark,
-       ),
-       borderColor = _computeBorderColor(
-         designStyle: designStyle ?? .colorHeader,
-         icon: icon,
-         theme: theme,
-         isDark: isDark,
-       ),
-       borderWidth = _computeBorderWidth(designStyle ?? .colorHeader),
-       headerColor = _computeHeaderColor(
-         icon:
-             icon ??
-             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-         isDark: isDark,
-       ),
-       headerColorEnd = _computeHeaderColorEnd(
-         icon:
-             icon ??
-             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-         isDark: isDark,
-       ),
-       buttonColor =
-           icon ??
-           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       buttonTextColor = Colors.white,
-       iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
+  })  : designStyle = designStyle ?? ContentDesignStyle.colorHeader,
+        backgroundColor = _computeBackgroundColor(
+          background: background,
+          designStyle: designStyle ?? ContentDesignStyle.colorHeader,
+          isDark: isDark,
+        ),
+        handleColor = handle ?? SpSurface.handle(isDark),
+        textColor = _computeTextColor(
+          text: text,
+          designStyle: designStyle ?? ContentDesignStyle.colorHeader,
+          isDark: isDark,
+        ),
+        subtitleColor = SpSurface.onSurfaceMuted(isDark),
+        iconColor = _computeIconColor(
+          icon: icon,
+          designStyle: designStyle ?? ContentDesignStyle.colorHeader,
+          theme: theme,
+          isDark: isDark,
+        ),
+        borderColor = _computeBorderColor(
+          designStyle: designStyle ?? ContentDesignStyle.colorHeader,
+          icon: icon,
+          theme: theme,
+          isDark: isDark,
+        ),
+        borderWidth =
+            _computeBorderWidth(designStyle ?? ContentDesignStyle.colorHeader),
+        headerColor = _computeHeaderColor(
+          icon: icon ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+          isDark: isDark,
+        ),
+        headerColorEnd = _computeHeaderColorEnd(
+          icon: icon ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+          isDark: isDark,
+        ),
+        buttonColor = icon ??
+            (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        buttonTextColor = Colors.white,
+        iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
 
   static Color _computeBackgroundColor({
     required Color? background,
@@ -115,15 +113,15 @@ class BottomsheetColorConfig {
     if (icon != null) return icon;
 
     switch (designStyle) {
-      case .outlined:
-      case .colorHeader:
-      case .leftAccent:
-      case .tonal:
-      case .glass:
-      case .neon:
-      case .minimal:
+      case ContentDesignStyle.outlined:
+      case ContentDesignStyle.colorHeader:
+      case ContentDesignStyle.leftAccent:
+      case ContentDesignStyle.tonal:
+      case ContentDesignStyle.glass:
+      case ContentDesignStyle.neon:
+      case ContentDesignStyle.minimal:
         return isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary;
-      case .solid:
+      case ContentDesignStyle.solid:
         return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
     }
   }

@@ -6,7 +6,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.
 /// Configuration for dialog appearance and behavior
 class DialogConfig {
   /// Default design style: bold gradient-header card.
-  ContentDesignStyle defaultDesignStyle = .colorHeader;
+  ContentDesignStyle defaultDesignStyle = ContentDesignStyle.colorHeader;
 
   /// Default confirm button text
   String defaultConfirmText = 'OK';
@@ -30,7 +30,7 @@ class DialogConfig {
   Duration transitionDuration = const Duration(milliseconds: 350);
 
   /// Default animation type
-  DialogAnimationType defaultAnimation = .fadeSlide;
+  DialogAnimationType defaultAnimation = DialogAnimationType.fadeSlide;
 
   /// Default icon colors for different types (optional)
   Map<SnackbarType, Color>? defaultIconColors;

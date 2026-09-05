@@ -5,7 +5,104 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0] - 2026-07-23
+## [2.0.0] - 2026-09-05
+
+A correctness release. Three of these were crashes or compile errors in real
+apps, so the fixes are worth the major bump; the rest widen who can install the
+package at all.
+
+### Fixed
+
+- **Crash showing two top snackbars in the same frame.** `show()` deferred its
+  overlay insert to a post-frame callback and skipped it when a newer toast had
+  claimed the slot, while `hide()` still scheduled a removal for that
+  never-inserted entry — tripping *"An OverlayEntry should be removed only
+  once"*. Removal is now guarded on `OverlayEntry.mounted`. Reproduced by any
+  double-tapped button or back-to-back error message.
+- **Ambiguous import when using `package:flutter/semantics.dart`.** The package
+  exported its own class named `SemanticsProperties`, which collided with
+  Flutter's and failed the consumer's build with `ambiguous_import`. The class
+  and its unused `AccessibilityUtils` wrapper are gone — see *Removed*.
+- **Top snackbars leaked a timer past the widget tree.** The auto-dismiss timer
+  and overlay entry were `static`, so they outlived disposal and later fired
+  against a disposed `AnimationController` and `ScaffoldMessenger`. The timer
+  now belongs to the toast's `State` and dies with it.
+- **`SnackbarQueue` could wedge permanently.** `clear()` left `_isShowing`
+  set, so every later `enqueue()` was silently swallowed. A stale `closed`
+  callback could also clobber the state of the snackbar currently showing;
+  callbacks are now generation-guarded.
+- **`hideLikeCircle` was accepted by `SavePointsSnackbar.show` and ignored.**
+  It is now forwarded to the top-position toast (the only position that can
+  honour it — bottom snackbars are laid out by `ScaffoldMessenger`).
+- **Circular-reveal animations were hard-coded LTR.** Three clippers called
+  `alignment.resolve(TextDirection.ltr)`, so a directional alignment revealed
+  from the wrong edge in RTL. They now resolve against `Directionality.of`.
+- **Bottom snackbars sat too high.** The package added 80dp of "FAB space" on
+  screens taller than 700dp — a guess, and a double-count: `Scaffold` already
+  lifts a floating `SnackBar` clear of the FAB (measured: 72dp) and of the
+  bottom safe area. Screens with a FAB were pushed too high; screens without
+  one got a dead gap. The guess is gone.
+- **Snackbars were invisible to screen readers.** Content now sits in a
+  `Semantics` live region so TalkBack and VoiceOver announce it on arrival —
+  with `explicitChildNodes`, so the close button stays reachable rather than
+  being collapsed into the announcement. Every icon-only close affordance
+  carries a localized label from `MaterialLocalizations`.
+
+### Changed
+
+- **Minimum SDK lowered from `^3.11.5` to `^3.6.0`** (Flutter 3.27+). The old
+  floor bought nothing but dot-shorthand syntax (`.circular(12)`,
+  `behavior: .floating`) and locked out every user below Dart 3.11. 174 call
+  sites were desugared; behaviour is unchanged.
+- **`SavePointsSnackbar.show` now returns a truthful controller for
+  `SnackbarPosition.top`.** It previously returned a placeholder `SnackBar`
+  with a 1 ms duration, so `close()` did nothing and `closed` completed almost
+  immediately — which also made `SnackbarQueue` fire every queued item at once.
+  The placeholder now lives exactly as long as the toast and is its single
+  clock, so `close()` dismisses and `closed` completes at the right moment.
+- **Barrier blur is now an explicit, documented default.** Dialogs and bottom
+  sheets always blurred their barrier even when `blur` was null, contradicting
+  the documented "when null, no blur is applied". Behaviour is unchanged, but
+  the default is now named (`defaultBarrierBlurSigma`) and `blur: 0` is the
+  documented way to opt out.
+- **`SnackbarQueue` dispatch is an exhaustive `switch`** rather than a chain of
+  conditionals, so a new `SnackbarType` is a compile error instead of silently
+  falling through to "warning".
+- **`require_trailing_commas` disabled.** It fights the Dart 3.7+ formatter,
+  which removes the very commas the rule then demands back.
+- The example app now demonstrates `SavePointsTheme` instead of mutating
+  process-wide globals.
+
+### Deprecated
+
+- `SavePointsBottomsheet.defaultDesignStyle` — use
+  `SavePointsTheme(data: SavePointsThemeData(designStyle: ...))`. A mutable
+  static is process-wide and notifies nothing already on screen.
+- `SavePointsConstants` — superseded by the `SpSpacing` / `SpRadius` /
+  `SpMotion` design tokens it duplicates one-for-one.
+- `KeyboardUtils.dismissKeyboardForDialog` and
+  `.dismissKeyboardForBottomSheet` — use `KeyboardUtils.dismissIfFocused`.
+
+### Removed
+
+- **`AccessibilityUtils` and its `SemanticsProperties` class.** Unused
+  anywhere in the package, and its name collided with Flutter's own
+  `SemanticsProperties`, breaking consumer builds. Real `Semantics` is now
+  wired directly into the components instead. If you used it, call
+  `Semantics(...)` from `package:flutter/material.dart` directly.
+
+### Added
+
+- **Regression test suite** (`test/regression_test.dart`) pinning every fix
+  above: the overlay crash, a burst of toasts, tearing the tree down before
+  the deferred insert, popping a route while a toast is up, controller
+  truthfulness, `hideLikeCircle`, the blur default, live-region semantics and
+  close-button reachability, the placeholder swallowing no taps, RTL reveal,
+  FAB margin, and the queue wedge. Suite is 43 tests; `flutter analyze` is
+  clean and `pub publish --dry-run` passes.
+- pub.dev metadata: `topics`, `platforms` and `screenshots`.
+
+## [1.2.1] - 2026-07-23
 
 ### Added
 

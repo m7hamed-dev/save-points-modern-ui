@@ -16,8 +16,7 @@ class BottomsheetShadows {
     ContentDesignStyle? designStyle,
     Color? accentColor,
   }) {
-    final style =
-        designStyle ??
+    final style = designStyle ??
         (isOutlined ? ContentDesignStyle.outlined : ContentDesignStyle.solid);
 
     // Sheets sit at the bottom edge, so the elevation rises upward.

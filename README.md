@@ -90,8 +90,10 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.2.0
+  save_points_snackbar_dialog_bottomsheet: ^2.0.0
 ```
+
+Requires Dart `^3.6.0` (Flutter 3.27 or newer).
 
 Install the package:
 
@@ -184,12 +186,14 @@ SavePointsBottomsheet.show(
 );
 ```
 
-Or set a global default per surface:
+Or set the default once for a whole subtree — the recommended way, since it
+covers all three surfaces at once and rebuilds descendants when it changes:
 
 ```dart
-SnackDiaBottomConfig().snackbar.defaultDesignStyle = ContentDesignStyle.solid;
-SnackDiaBottomConfig().dialog.defaultDesignStyle = ContentDesignStyle.colorHeader;
-SavePointsBottomsheet.defaultDesignStyle = ContentDesignStyle.colorHeader;
+SavePointsTheme(
+  data: const SavePointsThemeData(designStyle: ContentDesignStyle.glass),
+  child: MaterialApp(/* ... */),
+);
 ```
 
 ## 📚 Complete Documentation
@@ -253,7 +257,7 @@ static Future<bool?> show(
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading state control |
 | `hideLikeCircle` | `bool` | No | `false` | Disable circular reveal exit animation |
 | `designStyle` | `ContentDesignStyle?` | No | `colorHeader` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
-| `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
+| `blur` | `double?` | No | `20.0` | Barrier blur sigma. Falls back to `SavePointsTheme`, then to `defaultBarrierBlurSigma`. Pass `0` to opt out |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 | `child` | `Widget?` | No | `null` | Custom widget displayed between message and buttons |
 
@@ -551,7 +555,7 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 | `onTap` | `VoidCallback?` | No | `null` | Custom tap handler |
 | `onDismissed` | `VoidCallback?` | No | `null` | Callback when dismissed |
 | `designStyle` | `ContentDesignStyle?` | No | `solid` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
-| `blur` | `double?` | No | `null` | Backdrop blur sigma (glassmorphism); no blur when null |
+| `blur` | `double?` | No | `null` | Surface blur sigma. Unlike dialogs and sheets a snackbar has no barrier, so leaving it unset applies **no** blur |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
 #### Examples
@@ -766,7 +770,7 @@ static Future<T?> show<T>({
 | `loadingNotifier` | `ValueNotifier<bool>?` | No | `null` | External loading control |
 | `hideLikeCircle` | `bool` | No | `false` | Disable circular reveal exit animation |
 | `designStyle` | `ContentDesignStyle?` | No | `colorHeader` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
-| `blur` | `double?` | No | `20.0` | Backdrop blur sigma (glassmorphism); set ≤0 to disable |
+| `blur` | `double?` | No | `20.0` | Barrier blur sigma. Falls back to `SavePointsTheme`, then to `defaultBarrierBlurSigma`. Pass `0` to opt out |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
 
 #### Examples
@@ -1076,9 +1080,16 @@ config.dialog
   ..defaultShowCancelButton = true
   ..defaultDesignStyle = ContentDesignStyle.colorHeader; // any ContentDesignStyle
 
-// Bottom sheets expose their own global default:
-SavePointsBottomsheet.defaultDesignStyle = ContentDesignStyle.colorHeader;
 ```
+
+> [!WARNING]
+> `SavePointsBottomsheet.defaultDesignStyle` is deprecated as of 2.0.0. A
+> mutable static is process-wide and notifies nothing already on screen — use
+> [`SavePointsTheme`](#-scoped-defaults-with-savepointstheme) instead, which
+> also sets the default for dialogs and snackbars in one place.
+
+Resolution order for every component is **explicit argument → nearest
+`SavePointsTheme` → this config**.
 
 See the [Configuration Guide](https://github.com/m7hamed-dev/save-points-modern-ui/wiki/Configuration) for more details.
 
@@ -1136,6 +1147,17 @@ Supported fields: `designStyle`, `blur`, `snackbarPosition`,
 | macOS | ✅ Fully Supported |
 | Linux | ✅ Fully Supported |
 | Windows | ✅ Fully Supported |
+
+Pure Dart and Flutter — no platform channels, no native code.
+
+## ♿ Accessibility
+
+- Snackbars are announced by TalkBack and VoiceOver on arrival (they render
+  inside a `Semantics` live region).
+- Every icon-only close button carries a localized label, taken from
+  `MaterialLocalizations`, so it reads correctly in all supported locales.
+- Reveal and slide animations resolve against `Directionality.of(context)`, so
+  directional alignments mirror correctly in RTL layouts.
 
 ## 🎯 Performance
 

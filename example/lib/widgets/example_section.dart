@@ -41,10 +41,11 @@ class _ExampleSectionState extends State<ExampleSection> {
         curve: Curves.easeInOut,
         child: Card(
           elevation: _isHovered ? 6 : 2,
-          shape: RoundedRectangleBorder(borderRadius: .circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: .circular(16),
+              borderRadius: BorderRadius.circular(16),
               gradient: _isHovered
                   ? LinearGradient(
                       begin: Alignment.topLeft,
@@ -61,21 +62,21 @@ class _ExampleSectionState extends State<ExampleSection> {
                   : null,
             ),
             child: Padding(
-              padding: const .all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   Row(
                     children: [
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
-                        padding: const .all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: _isHovered
                               ? Theme.of(
                                   context,
                                 ).colorScheme.primary.withValues(alpha: 0.1)
                               : Colors.transparent,
-                          borderRadius: .circular(8),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           widget.icon,
@@ -87,7 +88,10 @@ class _ExampleSectionState extends State<ExampleSection> {
                         widget.title,
                         style: Theme.of(
                           context,
-                        ).textTheme.titleLarge?.copyWith(fontWeight: .bold),
+                        )
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -95,9 +99,9 @@ class _ExampleSectionState extends State<ExampleSection> {
                   Wrap(
                     spacing: 12,
                     runSpacing: 12,
-                    alignment: .center,
-                    runAlignment: .center,
-                    crossAxisAlignment: .center,
+                    alignment: WrapAlignment.center,
+                    runAlignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: widget.children,
                   ),
                 ],

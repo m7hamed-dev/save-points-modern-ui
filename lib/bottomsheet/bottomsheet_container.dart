@@ -25,9 +25,10 @@ class BottomsheetContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == .dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOutlined = colorConfig.borderColor != null;
-    final isLeftAccent = colorConfig.designStyle == .leftAccent;
+    final isLeftAccent =
+        colorConfig.designStyle == ContentDesignStyle.leftAccent;
     const topRadius = BottomsheetConstants.topBorderRadius;
 
     final borderRadius = BorderRadius.only(
@@ -71,7 +72,7 @@ class BottomsheetContainer extends StatelessWidget {
         ),
       ),
       child: Material(
-        type: .transparency,
+        type: MaterialType.transparency,
         child: SafeArea(top: false, child: child),
       ),
     );
@@ -93,7 +94,7 @@ class BottomsheetContainer extends StatelessWidget {
       content = ClipRRect(
         borderRadius: borderRadius,
         child: Row(
-          crossAxisAlignment: .stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(width: 5, color: colorConfig.iconColor),
             Expanded(child: content),

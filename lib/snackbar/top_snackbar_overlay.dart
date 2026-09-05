@@ -10,12 +10,27 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_animat
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
-/// Overlay-based snackbar for top positioning
+/// Overlay-based snackbar for top positioning.
+///
+/// Only one top snackbar is visible at a time: calling [show] replaces any
+/// toast already on screen. [show] returns an opaque token that identifies
+/// that toast, so callers can dismiss *their own* toast via [hide] without
+/// accidentally closing a newer one that has since replaced it.
 class TopSnackbarOverlay {
   static OverlayEntry? _overlayEntry;
-  static Timer? _timer;
 
-  static void show(
+  /// Identifies the toast currently on screen, so a stale [hide] is a no-op.
+  static Object? _token;
+
+  /// Fired exactly once when the current toast goes away, whatever the cause
+  /// (timer expiry, user dismissal, or replacement by a newer toast).
+  static VoidCallback? _onHidden;
+
+  /// Shows a top toast, replacing any toast already on screen.
+  ///
+  /// Returns a token identifying this toast; pass it to [hide] to dismiss
+  /// only this toast.
+  static Object show(
     BuildContext context, {
     required String title,
     String? subtitle,
@@ -31,6 +46,13 @@ class TopSnackbarOverlay {
     bool dismissible = true,
     bool dismissOnTap = false,
     bool showProgressIndicator = false,
+
+    /// Whether the toast retires itself once [duration] elapses.
+    ///
+    /// [SavePointsSnackbar] passes `false`: it backs each toast with a
+    /// placeholder snack bar and lets that placeholder be the single clock,
+    /// so the toast and the placeholder can never race to expire first.
+    bool autoDismiss = true,
     BorderRadius? borderRadius,
     double? maxWidth,
     Color? borderColor,
@@ -45,18 +67,24 @@ class TopSnackbarOverlay {
     Color? subtitleColor,
     bool showCloseButton = false,
   }) {
-    // Hide any existing overlay
+    // Hide any existing overlay (this also fires its onDismissed).
     hide();
 
     final overlayState = Overlay.of(context);
 
     final mediaQuery = MediaQuery.of(context);
     final topPadding = mediaQuery.padding.top;
-    const appBarHeight = 56.0; // Standard AppBar height
-    final topMargin = topPadding + appBarHeight + 12.0;
+    final topMargin = topPadding + kToolbarHeight + 12.0;
+
+    final token = Object();
+    _token = token;
+    // Routed through `hide`, which clears `_onHidden` before invoking it, so
+    // `onDismissed` runs exactly once no matter how many paths race to it.
+    _onHidden = onDismissed;
 
     _overlayEntry = OverlayEntry(
       builder: (context) => _TopSnackbarOverlayWidget(
+        token: token,
         title: title,
         subtitle: subtitle,
         icon: icon,
@@ -70,18 +98,17 @@ class TopSnackbarOverlay {
         dismissible: dismissible,
         dismissOnTap: dismissOnTap,
         showProgressIndicator: showProgressIndicator,
+        autoDismiss: autoDismiss,
         duration: duration,
-        borderRadius: borderRadius ?? .circular(SnackbarConstants.borderRadius),
+        borderRadius: borderRadius ??
+            BorderRadius.circular(SnackbarConstants.borderRadius),
         maxWidth: maxWidth ?? SnackbarConstants.maxWidth,
         topMargin: topMargin,
         borderColor: borderColor,
         borderWidth: borderWidth,
         hideLikeCircle: hideLikeCircle,
         onTap: onTap,
-        onDismissed: () {
-          hide();
-          onDismissed?.call();
-        },
+        onDismissed: () => hide(token),
         blur: blur,
         backdropFilter: backdropFilter,
         designStyle: designStyle,
@@ -100,29 +127,55 @@ class TopSnackbarOverlay {
       }
     });
 
-    // Auto dismiss after duration
-    _timer = Timer(duration, () {
-      hide();
-      onDismissed?.call();
-    });
+    return token;
   }
 
-  static void hide() {
-    _timer?.cancel();
-    _timer = null;
+  /// Forgets the current toast without animating or notifying.
+  ///
+  /// Called when the entry's [State] is disposed — for instance because the
+  /// route or the whole widget tree went away underneath it. Without this the
+  /// static slot kept pointing at a dead element, and the next toast tried to
+  /// close a placeholder belonging to a disposed [ScaffoldMessenger].
+  static void detach(Object token) {
+    if (!identical(_token, token)) return;
+    _token = null;
+    _onHidden = null;
+    _overlayEntry = null;
+  }
+
+  /// Dismisses the current top toast.
+  ///
+  /// Pass the token returned by [show] to dismiss only that toast; a token
+  /// belonging to a toast that has already gone away is a no-op. Passing no
+  /// token dismisses whatever is on screen.
+  static void hide([Object? token]) {
+    if (token != null && !identical(_token, token)) return;
+
+    _token = null;
+
+    final onHidden = _onHidden;
+    _onHidden = null;
+
     final entry = _overlayEntry;
     _overlayEntry = null;
     if (entry != null) {
       // Defer remove to avoid mouse_tracker assertion (_debugDuringDeviceUpdate).
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        entry.remove();
+        // `show` defers insertion too, and skips it when a newer toast has
+        // already claimed the slot — so this entry may never have been
+        // mounted. Removing an unmounted entry trips
+        // "An OverlayEntry should be removed only once".
+        if (entry.mounted) entry.remove();
       });
     }
+
+    onHidden?.call();
   }
 }
 
 /// Widget for top snackbar overlay
 class _TopSnackbarOverlayWidget extends StatefulWidget {
+  final Object token;
   final String title;
   final String? subtitle;
   final IconData? icon;
@@ -136,6 +189,7 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
   final bool dismissible;
   final bool dismissOnTap;
   final bool showProgressIndicator;
+  final bool autoDismiss;
   final Duration duration;
   final BorderRadius borderRadius;
   final double maxWidth;
@@ -153,6 +207,7 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
   final bool showCloseButton;
 
   const _TopSnackbarOverlayWidget({
+    required this.token,
     required this.title,
     this.subtitle,
     this.icon,
@@ -166,6 +221,7 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
     required this.dismissible,
     required this.dismissOnTap,
     required this.showProgressIndicator,
+    required this.autoDismiss,
     required this.duration,
     required this.borderRadius,
     required this.maxWidth,
@@ -196,6 +252,11 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
   Animation<double>? _rotationAnimation;
   late Animation<double> _fadeAnimation;
 
+  /// Owned by the State rather than by [TopSnackbarOverlay] so it dies with
+  /// the widget. As a static it outlived the tree, and fired later against a
+  /// disposed AnimationController and a disposed ScaffoldMessenger.
+  Timer? _autoDismiss;
+
   @override
   void initState() {
     super.initState();
@@ -203,6 +264,10 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
+
+    if (widget.autoDismiss) {
+      _autoDismiss = Timer(widget.duration, _handleDismiss);
+    }
 
     // Use new animation system if startAnimation/endAnimation provided
     if (widget.startAnimation != null || widget.endAnimation != null) {
@@ -298,8 +363,8 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
       case SnackbarAnimation.slide:
         _slideAnimation =
             Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(
-              CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-            );
+          CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+        );
         break;
       default:
         _slideAnimation = null;
@@ -308,18 +373,25 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
 
   @override
   void dispose() {
+    _autoDismiss?.cancel();
+    _autoDismiss = null;
+    TopSnackbarOverlay.detach(widget.token);
     _controller.dispose();
     super.dispose();
   }
 
   void _handleDismiss() {
+    if (!mounted) return;
+    _autoDismiss?.cancel();
+    _autoDismiss = null;
+
     // Switch to exit animation if endAnimation is specified
     if (widget.endAnimation != null) {
       _buildExitAnimation(widget.endAnimation!);
       _controller.value = 1.0; // Reset to end
     }
     _controller.reverse().then((_) {
-      widget.onDismissed();
+      if (mounted) widget.onDismissed();
     });
   }
 
@@ -455,8 +527,7 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
         constraints: BoxConstraints(maxWidth: widget.maxWidth),
         child: Container(
           width: double.infinity,
-          decoration:
-              widget.designStyle != ContentDesignStyle.outlined &&
+          decoration: widget.designStyle != ContentDesignStyle.outlined &&
                   widget.borderWidth > 0 &&
                   widget.borderColor != null
               ? BoxDecoration(
@@ -494,9 +565,8 @@ class _TopSnackbarOverlayWidgetState extends State<_TopSnackbarOverlayWidget>
                   ? widget.borderColor
                   : null,
               showCloseButton: widget.showCloseButton,
-              onCloseButtonPressed: widget.showCloseButton
-                  ? _handleDismiss
-                  : null,
+              onCloseButtonPressed:
+                  widget.showCloseButton ? _handleDismiss : null,
             ),
           ),
         ),

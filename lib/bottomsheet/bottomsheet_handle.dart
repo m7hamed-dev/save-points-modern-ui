@@ -9,8 +9,7 @@ class BottomsheetHandle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final handleColor =
-        color ??
+    final handleColor = color ??
         (isDark
             ? Colors.white.withValues(alpha: 0.3)
             : Colors.black.withValues(alpha: 0.2));
@@ -24,7 +23,8 @@ class BottomsheetHandle extends StatelessWidget {
       height: BottomsheetConstants.handleHeight,
       decoration: BoxDecoration(
         color: handleColor,
-        borderRadius: .circular(BottomsheetConstants.handleBorderRadius),
+        borderRadius:
+            BorderRadius.circular(BottomsheetConstants.handleBorderRadius),
       ),
     );
   }

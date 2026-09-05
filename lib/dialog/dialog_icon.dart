@@ -90,8 +90,7 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOutlined =
-        widget.designStyle == ContentDesignStyle.outlined ||
+    final isOutlined = widget.designStyle == ContentDesignStyle.outlined ||
         widget.designStyle == ContentDesignStyle.leftAccent ||
         widget.designStyle == ContentDesignStyle.tonal ||
         widget.designStyle == ContentDesignStyle.glass ||
@@ -105,9 +104,8 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
           animation: Listenable.merge([_scaleAnimation, _pulseAnimation]),
           builder: (context, child) {
             final pulseScale = widget.enablePulse ? _pulseAnimation.value : 1.0;
-            final glowIntensity = widget.enablePulse
-                ? _glowAnimation.value
-                : 0.25;
+            final glowIntensity =
+                widget.enablePulse ? _glowAnimation.value : 0.25;
 
             return Transform.scale(
               scale: _scaleAnimation.value * pulseScale,
@@ -138,7 +136,7 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
 
   Widget _buildOutlinedIcon(bool isDark, double glowIntensity) {
     return Container(
-      padding: const .all(DialogConstants.iconPadding),
+      padding: const EdgeInsets.all(DialogConstants.iconPadding),
       decoration: BoxDecoration(
         color: widget.color.withValues(alpha: isDark ? 0.1 : 0.05),
         shape: BoxShape.circle,
@@ -167,7 +165,7 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
 
   Widget _buildSolidIcon(bool isDark, double glowIntensity) {
     return Container(
-      padding: const .all(DialogConstants.iconPadding),
+      padding: const EdgeInsets.all(DialogConstants.iconPadding),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,

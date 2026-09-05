@@ -29,55 +29,50 @@ class DialogColorConfig {
     Color? confirmButtonColor,
     Color? cancelButtonColor,
     ContentDesignStyle? designStyle,
-  }) : designStyle = designStyle ?? ContentDesignStyle.solid,
-       iconColor =
-           iconColor ??
-           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       backgroundColor = _computeBackgroundColor(
-         backgroundColor: backgroundColor,
-         designStyle: designStyle ?? ContentDesignStyle.solid,
-         isDark: isDark,
-         iconColor: iconColor ??
-             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       ),
-       confirmColor =
-           confirmButtonColor ??
-           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       cancelColor =
-           cancelButtonColor ??
-           (isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
-       borderColor = _computeBorderColor(
-         designStyle: designStyle ?? ContentDesignStyle.solid,
-         iconColor: iconColor,
-         theme: theme,
-         isDark: isDark,
-       ),
-       borderWidth = _computeBorderWidth(designStyle ?? ContentDesignStyle.solid),
-       titleColor = _computeTitleColor(
-         designStyle: designStyle ?? ContentDesignStyle.solid,
-         isDark: isDark,
-       ),
-       messageColor = _computeMessageColor(
-         designStyle: designStyle ?? ContentDesignStyle.solid,
-         isDark: isDark,
-       ),
-       headerColor = _computeHeaderColor(
-         iconColor:
-             iconColor ??
-             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-         isDark: isDark,
-       ),
-       headerColorEnd = _computeHeaderColorEnd(
-         iconColor:
-             iconColor ??
-             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-         isDark: isDark,
-       ),
-       buttonColor =
-           iconColor ??
-           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       buttonTextColor = Colors.white,
-       iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
+  })  : designStyle = designStyle ?? ContentDesignStyle.solid,
+        iconColor = iconColor ??
+            (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        backgroundColor = _computeBackgroundColor(
+          backgroundColor: backgroundColor,
+          designStyle: designStyle ?? ContentDesignStyle.solid,
+          isDark: isDark,
+          iconColor: iconColor ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        ),
+        confirmColor = confirmButtonColor ??
+            (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        cancelColor = cancelButtonColor ??
+            (isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
+        borderColor = _computeBorderColor(
+          designStyle: designStyle ?? ContentDesignStyle.solid,
+          iconColor: iconColor,
+          theme: theme,
+          isDark: isDark,
+        ),
+        borderWidth =
+            _computeBorderWidth(designStyle ?? ContentDesignStyle.solid),
+        titleColor = _computeTitleColor(
+          designStyle: designStyle ?? ContentDesignStyle.solid,
+          isDark: isDark,
+        ),
+        messageColor = _computeMessageColor(
+          designStyle: designStyle ?? ContentDesignStyle.solid,
+          isDark: isDark,
+        ),
+        headerColor = _computeHeaderColor(
+          iconColor: iconColor ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+          isDark: isDark,
+        ),
+        headerColorEnd = _computeHeaderColorEnd(
+          iconColor: iconColor ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+          isDark: isDark,
+        ),
+        buttonColor = iconColor ??
+            (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        buttonTextColor = Colors.white,
+        iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
 
   static Color _computeBackgroundColor({
     required Color? backgroundColor,
@@ -112,8 +107,7 @@ class DialogColorConfig {
     required ThemeData theme,
     required bool isDark,
   }) {
-    final baseColor =
-        iconColor ??
+    final baseColor = iconColor ??
         (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
     switch (designStyle) {
       case ContentDesignStyle.outlined:

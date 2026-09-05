@@ -14,8 +14,7 @@ class DialogShadows {
     ContentDesignStyle? designStyle,
     Color? accentColor,
   }) {
-    final style =
-        designStyle ??
+    final style = designStyle ??
         (isOutlined ? ContentDesignStyle.outlined : ContentDesignStyle.solid);
 
     if (style == ContentDesignStyle.minimal) return SpShadows.flat;

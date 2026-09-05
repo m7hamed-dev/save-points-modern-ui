@@ -8,29 +8,33 @@ void main() {
   group('ContentDesignStyle', () {
     test('exposes all eight documented styles', () {
       expect(ContentDesignStyle.values, hasLength(8));
-      expect(ContentDesignStyle.values, containsAll(<ContentDesignStyle>[
-        ContentDesignStyle.solid,
-        ContentDesignStyle.outlined,
-        ContentDesignStyle.tonal,
-        ContentDesignStyle.colorHeader,
-        ContentDesignStyle.leftAccent,
-        ContentDesignStyle.glass,
-        ContentDesignStyle.neon,
-        ContentDesignStyle.minimal,
-      ]));
+      expect(
+          ContentDesignStyle.values,
+          containsAll(<ContentDesignStyle>[
+            ContentDesignStyle.solid,
+            ContentDesignStyle.outlined,
+            ContentDesignStyle.tonal,
+            ContentDesignStyle.colorHeader,
+            ContentDesignStyle.leftAccent,
+            ContentDesignStyle.glass,
+            ContentDesignStyle.neon,
+            ContentDesignStyle.minimal,
+          ]));
     });
   });
 
   group('SpIntent', () {
     test('covers the five semantic intents', () {
       expect(SpIntent.values, hasLength(5));
-      expect(SpIntent.values, containsAll(<SpIntent>[
-        SpIntent.success,
-        SpIntent.error,
-        SpIntent.warning,
-        SpIntent.info,
-        SpIntent.neutral,
-      ]));
+      expect(
+          SpIntent.values,
+          containsAll(<SpIntent>[
+            SpIntent.success,
+            SpIntent.error,
+            SpIntent.warning,
+            SpIntent.info,
+            SpIntent.neutral,
+          ]));
     });
   });
 

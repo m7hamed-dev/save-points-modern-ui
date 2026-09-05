@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart' hide AnimatedIcon;
@@ -73,7 +72,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     with TickerProviderStateMixin {
   late AnimationController _progressController;
   late AnimationController _entranceController;
-  Timer? _timer;
   ImageFilter? _cachedBackdropFilter;
   double? _lastBlur;
   ImageFilter? _lastBackdropFilterParam;
@@ -125,7 +123,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   void dispose() {
     _progressController.dispose();
     _entranceController.dispose();
-    _timer?.cancel();
     super.dispose();
   }
 
@@ -187,8 +184,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     _lastBlur = b;
     _lastBackdropFilterParam = backdropFilter;
     // Optional blur: only apply when blur or backdropFilter is explicitly set.
-    _cachedBackdropFilter =
-        backdropFilter ??
+    _cachedBackdropFilter = backdropFilter ??
         (b != null && b > 0 ? ImageFilter.blur(sigmaX: b, sigmaY: b) : null);
     return _cachedBackdropFilter;
   }
@@ -244,11 +240,26 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   Widget build(BuildContext context) {
     final isColorHeader = widget.designStyle == ContentDesignStyle.colorHeader;
 
-    if (isColorHeader) {
-      return _buildColorHeaderLayout();
-    }
+    final content =
+        isColorHeader ? _buildColorHeaderLayout() : _buildDefaultLayout();
 
-    return _buildDefaultLayout();
+    // A snackbar appears without the user asking for it, so it has to be
+    // announced rather than merely readable: `liveRegion` makes TalkBack and
+    // VoiceOver speak it as soon as it lands.
+    //
+    // `explicitChildNodes` rather than wrapping the content in
+    // `ExcludeSemantics`: excluding the subtree does silence the duplicate
+    // reading of the title, but it also swallows the close button, leaving no
+    // way to dismiss the snackbar with a screen reader on.
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      label: widget.subtitle == null
+          ? widget.title
+          : '${widget.title}. ${widget.subtitle}',
+      explicitChildNodes: true,
+      child: content,
+    );
   }
 
   /// Per-variant border for the default layout.
@@ -299,8 +310,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         ),
         child: showLeftAccent
             ? Row(
-                mainAxisSize: .min,
-                crossAxisAlignment: .stretch,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
                     width: 5,
@@ -361,12 +372,11 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
 
   Widget _buildDefaultLayoutContent() {
     return Column(
-      mainAxisSize: .min,
+      mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
-          onTap: widget.dismissOnTap || widget.onTap != null
-              ? _handleTap
-              : null,
+          onTap:
+              widget.dismissOnTap || widget.onTap != null ? _handleTap : null,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: SnackbarConstants.horizontalPadding,
@@ -390,7 +400,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                     child: RepaintBoundary(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: .min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             widget.title,
@@ -425,6 +435,9 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                 ),
                 if (widget.showCloseButton)
                   IconButton(
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).closeButtonTooltip,
                     icon: Icon(
                       Icons.close,
                       size: 20,
@@ -437,7 +450,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                         _animateDismiss();
                       }
                     },
-                    padding: const .all(12),
+                    padding: const EdgeInsets.all(12),
                     constraints: const BoxConstraints(
                       minWidth: SnackbarConstants.minTouchTargetSize,
                       minHeight: SnackbarConstants.minTouchTargetSize,
@@ -445,7 +458,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                     style: IconButton.styleFrom(
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       shape: RoundedRectangleBorder(
-                        borderRadius: .circular(12),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
@@ -494,9 +507,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     );
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final buttonColor = isDark
-        ? const Color(0xFF374151)
-        : const Color(0xFF1F2937);
+    final buttonColor =
+        isDark ? const Color(0xFF374151) : const Color(0xFF1F2937);
     final iconBgColor = isDark ? const Color(0xFF1F2937) : Colors.white;
 
     Widget content = RepaintBoundary(
@@ -514,11 +526,10 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         child: ClipRRect(
           borderRadius: widget.borderRadius,
           child: GestureDetector(
-            onTap: widget.dismissOnTap || widget.onTap != null
-                ? _handleTap
-                : null,
+            onTap:
+                widget.dismissOnTap || widget.onTap != null ? _handleTap : null,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 // Colored header with icon - enhanced gradient
                 Stack(
@@ -573,7 +584,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                 _animateDismiss();
                               }
                             },
-                            borderRadius: .circular(12),
+                            borderRadius: BorderRadius.circular(12),
                             child: Container(
                               width: 26,
                               height: 26,
@@ -585,6 +596,9 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                               ),
                               child: Icon(
                                 Icons.close_rounded,
+                                semanticLabel: MaterialLocalizations.of(
+                                  context,
+                                ).closeButtonTooltip,
                                 size: 14,
                                 color: isDark
                                     ? Colors.white.withValues(alpha: 0.7)
@@ -624,12 +638,12 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                   child: DefaultTextStyle(
                     style: const TextStyle(decoration: TextDecoration.none),
                     child: Column(
-                      mainAxisSize: .min,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         // Title with enhanced typography
                         Text(
                           widget.title,
-                          textAlign: .center,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
                             color: _effectiveTitleColor,
@@ -644,7 +658,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           const SizedBox(height: 8),
                           Text(
                             widget.subtitle!,
-                            textAlign: .center,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 14,
                               color: _effectiveSubtitleColor,
@@ -662,7 +676,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           height: 48,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              borderRadius: .circular(24),
+                              borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
                                   color: buttonColor.withValues(alpha: 0.25),
@@ -686,7 +700,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                   horizontal: 28,
                                 ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: .circular(24),
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
                                 elevation: 0,
                               ),
