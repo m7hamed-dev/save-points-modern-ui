@@ -144,6 +144,7 @@ class SavePointsBottomsheet {
             hideLikeCircle: hideLikeCircle,
             useBarrierBlur: useBarrierBlur,
             barrierFilter: barrierFilter,
+            barrierSigma: backdropFilter == null ? barrierSigma : null,
             barrierDismissible: finalIsDismissible,
             title: title,
             icon: icon,

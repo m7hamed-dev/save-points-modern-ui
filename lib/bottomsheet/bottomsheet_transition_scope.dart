@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/animated_barrier.dart';
+
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_builder.dart';
@@ -16,6 +18,7 @@ class BottomsheetTransitionScope extends StatefulWidget {
     this.hideLikeCircle = false,
     required this.useBarrierBlur,
     this.barrierFilter,
+    this.barrierSigma,
     required this.barrierDismissible,
     this.title,
     this.icon,
@@ -41,6 +44,10 @@ class BottomsheetTransitionScope extends StatefulWidget {
   final bool hideLikeCircle;
   final bool useBarrierBlur;
   final ImageFilter? barrierFilter;
+
+  /// Blur strength to ramp during the entrance. Null when the caller
+  /// supplied their own [ImageFilter], which cannot be interpolated.
+  final double? barrierSigma;
   final bool barrierDismissible;
   final String? title;
   final IconData? icon;
@@ -117,24 +124,14 @@ class _BottomsheetTransitionScopeState
       return Stack(
         fit: StackFit.expand,
         children: [
-          RepaintBoundary(
-            child: AnimatedBuilder(
-              animation: widget.animation,
-              builder: (context, child) {
-                return Opacity(opacity: widget.animation.value, child: child);
-              },
-              child: GestureDetector(
-                onTap: widget.barrierDismissible
-                    ? () => Navigator.of(context).pop()
-                    : null,
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: filter,
-                    child: Container(color: _barrierDimColor),
-                  ),
-                ),
-              ),
-            ),
+          AnimatedBarrier(
+            animation: widget.animation,
+            dimColor: _barrierDimColor,
+            sigma: widget.barrierSigma,
+            filter: widget.barrierSigma == null ? filter : null,
+            onTap: widget.barrierDismissible
+                ? () => Navigator.of(context).pop()
+                : null,
           ),
           Positioned(
             left: 0,

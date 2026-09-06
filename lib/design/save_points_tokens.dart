@@ -8,6 +8,8 @@
 /// like one design system rather than three.
 library;
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// Semantic intent shared across all components.
@@ -105,8 +107,21 @@ abstract final class SpSurface {
   static Color onSurface(bool isDark) =>
       isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A);
 
+  /// Secondary/body text.
+  ///
+  /// The light value is deliberately darker than a typical "muted grey": at
+  /// slate-500 it measured 3.93:1 on the `tonal` surface, under the 4.5:1
+  /// WCAG AA floor for body copy.
   static Color onSurfaceMuted(bool isDark) =>
-      isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
+      isDark ? const Color(0xFF94A3B8) : const Color(0xFF475569);
+
+  /// Body text for the translucent `glass` surface.
+  ///
+  /// Glass composites over whatever is behind the barrier, so it cannot rely
+  /// on the usual muted tone — that measured 2.50:1. This trades a little of
+  /// the muting for a readable floor.
+  static Color onSurfaceMutedOnGlass(bool isDark) =>
+      isDark ? const Color(0xFFCBD5E1) : const Color(0xFF1E293B);
 
   static Color hairline(bool isDark) => isDark
       ? Colors.white.withValues(alpha: 0.08)
@@ -124,8 +139,8 @@ abstract final class SpSurface {
   /// enough to hide its own blur, so `glass` rendered as a plain white card
   /// and was indistinguishable from `solid` and `minimal`.
   static Color glassFill(bool isDark) => isDark
-      ? const Color(0xFF151B26).withValues(alpha: 0.38)
-      : Colors.white.withValues(alpha: 0.30);
+      ? const Color(0xFF151B26).withValues(alpha: 0.46)
+      : Colors.white.withValues(alpha: 0.42);
 
   /// Hairline highlight border that gives frosted glass its edge.
   static Color glassBorder(bool isDark) => isDark
@@ -284,6 +299,37 @@ abstract final class SpPalette {
     return isDark
         ? hsl.withSaturation(0.45).withLightness(0.16).toColor()
         : hsl.withSaturation(0.55).withLightness(0.94).toColor();
+  }
+}
+
+/// Foreground colours chosen by measured contrast rather than by assumption.
+abstract final class SpContrast {
+  /// Relative luminance per WCAG 2.1.
+  static double luminance(Color c) {
+    double channel(double v) =>
+        v <= 0.03928 ? v / 12.92 : math.pow((v + 0.055) / 1.055, 2.4).toDouble();
+    return 0.2126 * channel(c.r) +
+        0.7152 * channel(c.g) +
+        0.0722 * channel(c.b);
+  }
+
+  /// Contrast ratio between two opaque colours.
+  static double ratio(Color a, Color b) {
+    final la = luminance(a), lb = luminance(b);
+    return (math.max(la, lb) + 0.05) / (math.min(la, lb) + 0.05);
+  }
+
+  /// The label colour that reads best on [background].
+  ///
+  /// White-on-accent is the usual house style, but it fails outright on the
+  /// lighter accents this package uses in dark mode — white on the dark-theme
+  /// blue measured 2.54:1. Picking by measurement also keeps caller-supplied
+  /// button colours legible.
+  static Color onColor(Color background) {
+    const dark = Color(0xFF0B1220);
+    return ratio(Colors.white, background) >= ratio(dark, background)
+        ? Colors.white
+        : dark;
   }
 }
 

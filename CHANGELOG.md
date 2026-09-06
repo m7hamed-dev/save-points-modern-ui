@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2026-09-05
 
+### Accessibility
+
+Contrast was measured across every style in both brightnesses (32 checks,
+now guarded by `test/quality_test.dart`). Three combinations failed the 4.5:1
+WCAG AA floor for body text:
+
+- **Every dark-mode dialog button read at 2.54:1** — white label on the
+  dark-theme blue. Label colour is now chosen by measured contrast rather than
+  assumed to be white, which also keeps caller-supplied button colours legible.
+  Now 7.36:1.
+- **`tonal` body text at 3.93:1.** The light muted tone moved from slate-500 to
+  slate-600. Now 6.26:1.
+- **`glass` body text at 2.50:1**, because a translucent surface composites
+  over whatever is behind it. It now uses a dedicated darker body tone and a
+  slightly denser fill. Now 8.68:1.
+
+Layout was also checked at 1.5x and 2.0x text scale: no overflow.
+
+### Performance
+
+- **Icons no longer animate forever** — see *Changed*. A settled dialog,
+  snackbar or bottom sheet now schedules zero frames; previously each one
+  repainted every frame for as long as it was on screen.
+- **The barrier fade no longer costs a screen-sized `saveLayer` per frame.**
+  It animated an `Opacity` wrapped around the `BackdropFilter`, so every frame
+  of the entrance paid for a full-screen layer on top of the one the blur
+  already needs. The barrier now ramps its blur sigma and dim alpha instead —
+  one layer rather than two, and the background comes into focus rather than a
+  finished blur dissolving in.
+
 ### Design
 
 The eight design styles collapsed to about four looks in practice — `solid`,

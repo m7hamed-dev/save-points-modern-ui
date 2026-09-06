@@ -15,6 +15,7 @@ class DialogIcon extends StatefulWidget {
   final Color color;
   final ContentDesignStyle? designStyle;
   final bool enableAnimation;
+
   /// Loops a subtle scale + glow pulse for as long as the surface is on
   /// screen.
   ///

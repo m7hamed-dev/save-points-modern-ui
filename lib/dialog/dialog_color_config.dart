@@ -71,7 +71,10 @@ class DialogColorConfig {
         ),
         buttonColor = iconColor ??
             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-        buttonTextColor = Colors.white,
+        buttonTextColor = SpContrast.onColor(
+          confirmButtonColor ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        ),
         iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
 
   static Color _computeBackgroundColor({
@@ -156,9 +159,11 @@ class DialogColorConfig {
     required ContentDesignStyle designStyle,
     required bool isDark,
   }) =>
-      designStyle == ContentDesignStyle.neon
-          ? Colors.white.withValues(alpha: 0.7)
-          : SpSurface.onSurfaceMuted(isDark);
+      switch (designStyle) {
+        ContentDesignStyle.neon => Colors.white.withValues(alpha: 0.7),
+        ContentDesignStyle.glass => SpSurface.onSurfaceMutedOnGlass(isDark),
+        _ => SpSurface.onSurfaceMuted(isDark),
+      };
 
   /// Bold gradient header band — the vivid accent gradient derived from the
   /// icon color. White header content sits on top of this.

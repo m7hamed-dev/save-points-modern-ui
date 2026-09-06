@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/animated_barrier.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_direction.dart';
@@ -162,6 +163,9 @@ class SavePointsDialog {
             hideLikeCircle: hideLikeCircle,
             useBarrierBlur: useBarrierBlur,
             barrierFilter: barrierFilter,
+            // A caller-supplied filter cannot be interpolated, so only our
+            // own blur gets ramped; theirs is held constant.
+            barrierSigma: backdropFilter == null ? barrierSigma : null,
             barrierDismissible: finalBarrierDismissible,
             title: title,
             message: message,
@@ -278,24 +282,14 @@ class SavePointsDialog {
           return Stack(
             fit: StackFit.expand,
             children: [
-              RepaintBoundary(
-                child: AnimatedBuilder(
-                  animation: animation,
-                  builder: (context, child) {
-                    return Opacity(opacity: animation.value, child: child);
-                  },
-                  child: GestureDetector(
-                    onTap: barrierDismissible
-                        ? () => Navigator.of(context).pop()
-                        : null,
-                    child: ClipRect(
-                      child: BackdropFilter(
-                        filter: barrierFilter,
-                        child: Container(color: const Color(0x40000000)),
-                      ),
-                    ),
-                  ),
-                ),
+              AnimatedBarrier(
+                animation: animation,
+                dimColor: const Color(0x40000000),
+                sigma: backdropFilter == null ? barrierSigma : null,
+                filter: backdropFilter == null ? null : barrierFilter,
+                onTap: barrierDismissible
+                    ? () => Navigator.of(context).pop()
+                    : null,
               ),
               Center(child: transitionedDialog),
             ],
