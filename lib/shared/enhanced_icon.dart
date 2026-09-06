@@ -27,6 +27,7 @@ class EnhancedIcon extends StatefulWidget {
   final double containerSize;
   final Color? backgroundColor;
   final bool enableAnimation;
+
   /// Loops a subtle scale + glow pulse for as long as the surface is on
   /// screen.
   ///

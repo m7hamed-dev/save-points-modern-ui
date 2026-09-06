@@ -19,7 +19,25 @@ import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.
 /// that toast, so callers can dismiss *their own* toast via [hide] without
 /// accidentally closing a newer one that has since replaced it.
 class TopSnackbarOverlay {
-  static OverlayEntry? _overlayEntry;
+  /// The single entry kept inserted in [_host].
+  ///
+  /// Toasts change what this entry *paints* rather than being inserted and
+  /// removed themselves. Structurally mutating the overlay from a callback is
+  /// what makes `OverlayEntry.remove()` race its own deferred insert, and it
+  /// is the documented cause of the `mouse_tracker` `_debugDuringDeviceUpdate`
+  /// assertion: the tree changing shape mid-hover forces the tracker to
+  /// re-enter its update phase. One insert per overlay, then nothing but
+  /// repaints.
+  static OverlayEntry? _entry;
+
+  /// The overlay [_entry] is inserted into, so a new route gets a new entry.
+  static OverlayState? _host;
+
+  /// What [_entry] paints; null means nothing is on screen.
+  ///
+  /// Deliberately never disposed: it is process-wide state with the same
+  /// lifetime as the class itself.
+  static final ValueNotifier<Widget?> _content = ValueNotifier<Widget?>(null);
 
   /// Identifies the toast currently on screen, so a stale [hide] is a no-op.
   static Object? _token;
@@ -88,53 +106,91 @@ class TopSnackbarOverlay {
     // `onDismissed` runs exactly once no matter how many paths race to it.
     _onHidden = onDismissed;
 
-    _overlayEntry = OverlayEntry(
-      builder: (context) => _TopSnackbarOverlayWidget(
-        token: token,
-        title: title,
-        subtitle: subtitle,
-        icon: icon,
-        iconColor: iconColor,
-        backgroundColor: backgroundColor,
-        gradient: gradient,
-        animation: animation,
-        startAnimation: startAnimation,
-        endAnimation: endAnimation,
-        type: type,
-        dismissible: dismissible,
-        dismissOnTap: dismissOnTap,
-        showProgressIndicator: showProgressIndicator,
-        autoDismiss: autoDismiss,
-        duration: duration,
-        borderRadius: borderRadius ??
-            BorderRadius.circular(SnackbarConstants.borderRadius),
-        maxWidth: maxWidth ?? SnackbarConstants.maxWidth,
-        topMargin: topMargin,
-        borderColor: borderColor,
-        borderWidth: borderWidth,
-        hideLikeCircle: hideLikeCircle,
-        onTap: onTap,
-        onDismissed: () => hide(token),
-        blur: blur,
-        backdropFilter: backdropFilter,
-        designStyle: designStyle,
-        titleColor: titleColor,
-        subtitleColor: subtitleColor,
-        showCloseButton: showCloseButton,
-        enablePulse: enablePulse,
-      ),
+    _content.value = _TopSnackbarOverlayWidget(
+      // A fresh key per toast, so each one gets its own State and replays
+      // its entrance instead of reusing the previous toast's controller.
+      key: ValueKey<Object>(token),
+      token: token,
+      title: title,
+      subtitle: subtitle,
+      icon: icon,
+      iconColor: iconColor,
+      backgroundColor: backgroundColor,
+      gradient: gradient,
+      animation: animation,
+      startAnimation: startAnimation,
+      endAnimation: endAnimation,
+      type: type,
+      dismissible: dismissible,
+      dismissOnTap: dismissOnTap,
+      showProgressIndicator: showProgressIndicator,
+      autoDismiss: autoDismiss,
+      duration: duration,
+      borderRadius:
+          borderRadius ?? BorderRadius.circular(SnackbarConstants.borderRadius),
+      maxWidth: maxWidth ?? SnackbarConstants.maxWidth,
+      topMargin: topMargin,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      hideLikeCircle: hideLikeCircle,
+      onTap: onTap,
+      onDismissed: () => hide(token),
+      blur: blur,
+      backdropFilter: backdropFilter,
+      designStyle: designStyle,
+      titleColor: titleColor,
+      subtitleColor: subtitleColor,
+      showCloseButton: showCloseButton,
+      enablePulse: enablePulse,
     );
 
-    // Defer insert to avoid mouse_tracker assertion (_debugDuringDeviceUpdate).
-    // Inserting/removing overlay during build or hit-test can trigger the assertion.
-    final entryToInsert = _overlayEntry!;
+    _attachTo(overlayState);
+    return token;
+  }
+
+  /// Ensures the shared entry is inserted in [host], reusing it if it already
+  /// is.
+  ///
+  /// Only the very first toast in a given overlay pays for an insert; every
+  /// toast after it is a repaint of an entry that is already there.
+  static void _attachTo(OverlayState host) {
+    final entry = _entry;
+    if (entry != null && identical(_host, host) && host.mounted) return;
+
+    _discardEntry();
+    _host = host;
+
+    final fresh = OverlayEntry(
+      builder: (context) => ValueListenableBuilder<Widget?>(
+        valueListenable: _content,
+        // A Stack, because the toast positions itself with [Positioned] and
+        // the entry's builder result is no longer the overlay's direct child.
+        builder: (context, toast, _) => Stack(
+          fit: StackFit.expand,
+          children: [if (toast != null) toast],
+        ),
+      ),
+    );
+    _entry = fresh;
+
+    // Still deferred: inserting during build or hit-test is what the framework
+    // objects to. Unlike before, this now happens once per overlay.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_overlayEntry == entryToInsert) {
-        overlayState.insert(entryToInsert);
+      if (identical(_entry, fresh) && host.mounted && !fresh.mounted) {
+        host.insert(fresh);
       }
     });
+  }
 
-    return token;
+  /// Drops the shared entry, e.g. because a different overlay now owns us.
+  static void _discardEntry() {
+    final entry = _entry;
+    _entry = null;
+    _host = null;
+    if (entry == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (entry.mounted) entry.remove();
+    });
   }
 
   /// Takes the current toast off screen without running its `onDismissed`.
@@ -159,7 +215,10 @@ class TopSnackbarOverlay {
     if (!identical(_token, token)) return;
     _token = null;
     _onHidden = null;
-    _overlayEntry = null;
+    // The widget is already being unmounted, so the content must not be
+    // reassigned here — that would be a notification during a build. The next
+    // `show` replaces it, and `_attachTo` rebuilds the entry if the overlay
+    // that owned it went away with the widget.
   }
 
   /// Dismisses the current top toast.
@@ -175,18 +234,10 @@ class TopSnackbarOverlay {
     final onHidden = _onHidden;
     _onHidden = null;
 
-    final entry = _overlayEntry;
-    _overlayEntry = null;
-    if (entry != null) {
-      // Defer remove to avoid mouse_tracker assertion (_debugDuringDeviceUpdate).
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        // `show` defers insertion too, and skips it when a newer toast has
-        // already claimed the slot — so this entry may never have been
-        // mounted. Removing an unmounted entry trips
-        // "An OverlayEntry should be removed only once".
-        if (entry.mounted) entry.remove();
-      });
-    }
+    // Clearing the content repaints the entry that is already inserted. No
+    // insert, no remove, no deferral — and so no window in which the overlay
+    // changes shape underneath a hover.
+    _content.value = null;
 
     onHidden?.call();
   }
@@ -227,6 +278,7 @@ class _TopSnackbarOverlayWidget extends StatefulWidget {
   final bool? enablePulse;
 
   const _TopSnackbarOverlayWidget({
+    super.key,
     required this.token,
     required this.title,
     this.subtitle,

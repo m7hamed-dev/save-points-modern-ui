@@ -88,16 +88,22 @@ class _ExampleActionButtonState extends State<ExampleActionButton>
           onTapUp: _handleTapUp,
           onTapCancel: _handleTapCancel,
           onTap: widget.onPressed,
-          child: AnimatedContainer(
+          // The scale is painted, not hit-tested: `transformHitTests: false`.
+          // A hover callback that moves the widget's own hit area can flip the
+          // pointer back out of it, which re-enters the mouse tracker's update
+          // phase and trips `!_debugDuringDeviceUpdate` — repeatedly, because
+          // enter and exit then chase each other.
+          child: TweenAnimationBuilder<double>(
             duration: const Duration(milliseconds: 150),
             curve: Curves.easeInOut,
-            transform: Matrix4.identity()
-              ..scaleByDouble(
-                _isPressed ? 0.95 : (_isHovered ? 1.05 : 1.0),
-                _isPressed ? 0.95 : (_isHovered ? 1.05 : 1.0),
-                _isPressed ? 0.95 : (_isHovered ? 1.05 : 1.0),
-                1.0,
-              ),
+            tween: Tween<double>(
+              end: _isPressed ? 0.95 : (_isHovered ? 1.05 : 1.0),
+            ),
+            builder: (context, scale, child) => Transform.scale(
+              scale: scale,
+              transformHitTests: false,
+              child: child,
+            ),
             child: Card(
               elevation: _isHovered ? 6 : 2,
               shape: RoundedRectangleBorder(

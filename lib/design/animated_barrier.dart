@@ -19,9 +19,9 @@ class AnimatedBarrier extends StatelessWidget {
     this.filter,
     this.onTap,
   }) : assert(
-         sigma != null || filter != null,
-         'AnimatedBarrier needs a sigma to ramp, or a filter to hold constant',
-       );
+          sigma != null || filter != null,
+          'AnimatedBarrier needs a sigma to ramp, or a filter to hold constant',
+        );
 
   /// Drives both the blur ramp and the dim fade.
   final Animation<double> animation;

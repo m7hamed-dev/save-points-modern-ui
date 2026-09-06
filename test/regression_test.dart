@@ -123,6 +123,68 @@ void main() {
     });
   });
 
+  group('the top overlay is repainted, not restructured', () {
+    testWidgets('a second toast replaces the first one\'s content', (
+      tester,
+    ) async {
+      // Toasts now share one OverlayEntry and swap what it paints. That only
+      // works if each toast is keyed: without a key the second one would reuse
+      // the first's State, keep its animation controller, and never appear.
+      final ctx = await pumpHost(tester);
+
+      SavePointsSnackbar.show(
+        ctx,
+        title: 'first toast',
+        position: SnackbarPosition.top,
+        duration: const Duration(seconds: 30),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(find.text('first toast'), findsOneWidget);
+
+      SavePointsSnackbar.show(
+        ctx,
+        title: 'second toast',
+        position: SnackbarPosition.top,
+        duration: const Duration(seconds: 30),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+
+      expect(find.text('second toast'), findsOneWidget);
+      expect(find.text('first toast'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('showing and hiding leaves the overlay entry in place', (
+      tester,
+    ) async {
+      // The entry itself must survive a toast going away: inserting and
+      // removing it per toast is what raced its own deferred insert, and what
+      // reshapes the tree under a hovering pointer.
+      final ctx = await pumpHost(tester);
+      int overlayChildren() =>
+          tester.widgetList<Overlay>(find.byType(Overlay)).length;
+
+      final before = overlayChildren();
+      for (var i = 0; i < 4; i++) {
+        final controller = SavePointsSnackbar.show(
+          ctx,
+          title: 'toast $i',
+          position: SnackbarPosition.top,
+          duration: const Duration(seconds: 30),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+        controller.close();
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+      }
+
+      expect(overlayChildren(), before);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
   group('returned controller is truthful for top position', () {
     testWidgets('closed does not complete while the toast is up', (
       tester,

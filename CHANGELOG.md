@@ -25,6 +25,21 @@ WCAG AA floor for body text:
 
 Layout was also checked at 1.5x and 2.0x text scale: no overflow.
 
+### Stability
+
+- **The top toast no longer restructures the overlay.** Each toast used to
+  insert its own `OverlayEntry` and remove it again, with both operations
+  deferred to post-frame callbacks to dodge Flutter's `mouse_tracker`
+  `_debugDuringDeviceUpdate` assertion — a workaround the 1.2.x source already
+  carried, and one that left the insert racing its own removal. There is now a
+  single entry per overlay whose *content* changes: one insert, then nothing
+  but repaints. Toasts are keyed so each still gets its own state and replays
+  its entrance.
+- The example app's action buttons scaled themselves from a `MouseRegion`
+  hover callback, moving their own hit area out from under the pointer. The
+  scale is now painted with `transformHitTests: false`, so enter and exit can
+  no longer chase each other.
+
 ### Performance
 
 - **Icons no longer animate forever** — see *Changed*. A settled dialog,
