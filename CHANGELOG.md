@@ -25,6 +25,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **The `colorHeader` band is now one widget.** All three components built it
+  themselves — gradient, highlight, close chip, floating icon — and the copies
+  had drifted: a 110dp band on a dialog against 90dp on a snackbar, a 14dp
+  close chip against 12dp, a 16dp glyph against 14dp. Worse, the snackbar
+  derived its band from a pastel of the accent (saturation 0.3, lightness
+  0.92), so the "coloured header" was a wash you could barely see; it now uses
+  the family's vivid gradient like the other two. 260 lines lighter across the
+  three components, and 66 of 72 rendered states are byte-identical — only the
+  six `colorHeader` shots moved, which is exactly what this was meant to
+  change.
+- **Removed a debug artifact**: dialogs tinted a caller-supplied `child` with
+  a translucent blue box.
 - **Every style now resolves in one place.** Dialogs, snackbars and bottom
   sheets each carried their own answer to the same questions — 64 style
   branches across three colour-config files and three shadow files. They had

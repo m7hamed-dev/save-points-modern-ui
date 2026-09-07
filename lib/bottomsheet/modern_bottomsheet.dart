@@ -9,9 +9,9 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_loading_indicator.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/color_header_band.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 
 /// Modern bottom sheet widget
 class ModernBottomsheet extends StatefulWidget {
@@ -315,109 +315,15 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Colored header with icon - enhanced gradient
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      // Header gradient background with smooth transition
-                      Container(
-                        width: double.infinity,
-                        height: 110,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              colorConfig.headerColor,
-                              colorConfig.headerColorEnd,
-                            ],
-                            stops: const [0.0, 1.0],
-                          ),
-                        ),
-                      ),
-                      // Subtle radial overlay for depth
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: RadialGradient(
-                              center: Alignment.topRight,
-                              radius: 1.5,
-                              colors: [
-                                Colors.white.withValues(
-                                  alpha: widget.isDark ? 0.05 : 0.12,
-                                ),
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Handle with enhanced styling
-                      if (widget.showHandle)
-                        Positioned(
-                          top: 12,
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: Container(
-                              width: 44,
-                              height: 5,
-                              decoration: BoxDecoration(
-                                // On the vivid header band the handle is white.
-                                color: Colors.white.withValues(alpha: 0.55),
-                                borderRadius: BorderRadius.circular(2.5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      // Close button with enhanced styling
-                      if (widget.isDismissible)
-                        Positioned(
-                          top: 12,
-                          right: 12,
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => Navigator.of(context).pop(),
-                              borderRadius: BorderRadius.circular(14),
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                  // Frosted chip on the vivid header band.
-                                  color: Colors.white.withValues(alpha: 0.22),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.close_rounded,
-                                  semanticLabel: MaterialLocalizations.of(
-                                    context,
-                                  ).closeButtonTooltip,
-                                  size: 16,
-                                  color: Colors.white.withValues(alpha: 0.95),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      // Centered icon with enhanced animations
-                      if (widget.icon != null)
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: -30,
-                          child: Center(
-                            child: RepaintBoundary(
-                              child: EnhancedIcon(
-                                icon: widget.icon!,
-                                color: colorConfig.iconColor,
-                                backgroundColor:
-                                    colorConfig.iconBackgroundColor,
-                                enablePulse: resolvePulse(context),
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
+                  ColorHeaderBand(
+                    startColor: colorConfig.headerColor,
+                    endColor: colorConfig.headerColorEnd,
+                    isDark: widget.isDark,
+                    icon: widget.icon,
+                    iconColor: colorConfig.iconColor,
+                    iconBackgroundColor: colorConfig.iconBackgroundColor,
+                    enablePulse: resolvePulse(context),
+                    onClose: () => Navigator.of(context).pop(),
                   ),
                   // Content area with enhanced spacing
                   Flexible(

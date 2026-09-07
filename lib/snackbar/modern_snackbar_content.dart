@@ -2,10 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart' hide AnimatedIcon;
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/color_header_band.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/progress_indicator_bar.dart';
@@ -229,13 +229,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
       return _isDark ? Colors.grey[400]! : const Color(0xFF616161);
     }
     return Colors.white.withValues(alpha: 0.8);
-  }
-
-  /// Get the header gradient color for colorHeader style
-  Color get _headerGradientColor {
-    // Create a light pastel version based on icon color
-    final hsl = HSLColor.fromColor(widget.iconColor);
-    return hsl.withSaturation(0.3).withLightness(0.92).toColor();
   }
 
   @override
@@ -552,101 +545,17 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Colored header with icon - enhanced gradient
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    // Header gradient background with smooth transition
-                    Container(
-                      width: double.infinity,
-                      height: 90,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            _headerGradientColor,
-                            _headerGradientColor.withValues(
-                              alpha: isDark ? 0.4 : 0.2,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Subtle radial overlay for depth
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                            center: Alignment.topRight,
-                            radius: 1.5,
-                            colors: [
-                              Colors.white.withValues(
-                                alpha: isDark ? 0.05 : 0.15,
-                              ),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Close button with enhanced styling
-                    if (widget.showCloseButton)
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              if (widget.onCloseButtonPressed != null) {
-                                widget.onCloseButtonPressed!();
-                              } else {
-                                _animateDismiss();
-                              }
-                            },
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              width: 26,
-                              height: 26,
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.1)
-                                    : Colors.black.withValues(alpha: 0.06),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.close_rounded,
-                                semanticLabel: MaterialLocalizations.of(
-                                  context,
-                                ).closeButtonTooltip,
-                                size: 14,
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.7)
-                                    : const Color(0xFF6B7280),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    // Centered icon with enhanced animations
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: -26,
-                      child: Center(
-                        child: RepaintBoundary(
-                          child: EnhancedIcon(
-                            icon: widget.icon,
-                            color: widget.iconColor,
-                            size: 26,
-                            containerSize: 52,
-                            backgroundColor: iconBgColor,
-                            enablePulse: resolvePulse(context),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                ColorHeaderBand(
+                  startColor:
+                      SpPalette.gradientFrom(widget.iconColor).colors.first,
+                  endColor:
+                      SpPalette.gradientFrom(widget.iconColor).colors.last,
+                  isDark: isDark,
+                  icon: widget.icon,
+                  iconColor: widget.iconColor,
+                  iconBackgroundColor: iconBgColor,
+                  enablePulse: resolvePulse(context),
+                  onClose: widget.showCloseButton ? _animateDismiss : null,
                 ),
                 // Content area with enhanced typography
                 Padding(

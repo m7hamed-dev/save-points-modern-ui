@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/color_header_band.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_buttons.dart';
@@ -14,7 +15,6 @@ import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_icon.dart'
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_loading_indicator.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_message.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_title.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 
 /// Modern dialog widget with loading support
 class ModernDialog extends StatefulWidget {
@@ -286,94 +286,22 @@ class _ModernDialogState extends State<ModernDialog> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Colored header with icon
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        // Header gradient background with smooth transition
-                        Container(
-                          width: double.infinity,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                colorConfig.headerColor,
-                                colorConfig.headerColorEnd,
-                              ],
-                              stops: const [0.0, 1.0],
-                            ),
-                          ),
-                        ),
-                        // Subtle pattern overlay for depth
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: RadialGradient(
-                                center: Alignment.topRight,
-                                radius: 1.5,
-                                colors: [
-                                  Colors.white.withValues(alpha: 0.1),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Close button with hover effect
-                        Positioned(
-                          top: 12,
-                          right: 12,
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => Navigator.of(context).pop(),
-                              borderRadius: BorderRadius.circular(14),
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                  // Frosted chip on the vivid header band.
-                                  color: Colors.white.withValues(alpha: 0.22),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.close_rounded,
-                                  semanticLabel: MaterialLocalizations.of(
-                                    context,
-                                  ).closeButtonTooltip,
-                                  size: 16,
-                                  color: Colors.white.withValues(alpha: 0.95),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Centered icon with enhanced animations
-                        if (widget.icon != null)
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: -30,
-                            child: Center(
-                              child: RepaintBoundary(
-                                child: EnhancedIcon(
-                                  icon: widget.icon!,
-                                  color: colorConfig.iconColor,
-                                  backgroundColor:
-                                      colorConfig.iconBackgroundColor,
-                                  enablePulse: resolvePulse(context),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
+                    ColorHeaderBand(
+                      startColor: colorConfig.headerColor,
+                      endColor: colorConfig.headerColorEnd,
+                      isDark: widget.isDark,
+                      icon: widget.icon,
+                      iconColor: colorConfig.iconColor,
+                      iconBackgroundColor: colorConfig.iconBackgroundColor,
+                      enablePulse: resolvePulse(context),
+                      onClose: () => Navigator.of(context).pop(),
                     ),
                     // Content area with enhanced spacing
                     Padding(
                       padding: EdgeInsets.only(
-                        top: widget.icon != null ? 44 : 28,
+                        top: ColorHeaderBand.contentTopPadding(
+                          hasIcon: widget.icon != null,
+                        ),
                         left: 28,
                         right: 28,
                         bottom: 28,
@@ -415,10 +343,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             const SizedBox(height: 28),
                           // Optional custom child widget
                           if (widget.child != null) ...[
-                            Container(
-                              color: Colors.blue.withValues(alpha: 0.1),
-                              child: widget.child!,
-                            ),
+                            widget.child!,
                             const SizedBox(height: 20),
                           ],
                           // Action button(s) with enhanced styling
