@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2026-09-05
 
+### Added
+
+- **Four new design styles**, taking the family to twelve:
+  - `brutalist` — flat punchy fill, a 3dp hard-edged border and an offset
+    shadow with no blur at all. Tight corners; deliberately un-soft.
+  - `gradientBorder` — a neutral surface ringed by a vivid gradient stroke,
+    so the accent frames the content without tinting it.
+  - `aurora` — a multi-stop wash of the accent bleeding diagonally across the
+    surface, like light through frosted colour.
+  - `soft` — claymorphic: pastel fill, generous rounding and a light-from-
+    above pair of shadows.
+- **`SpStyles`** — one resolver that turns a `ContentDesignStyle` into a
+  concrete surface spec (fill, wash, border, gradient stroke, elevation,
+  rounding, text colours). Public, so a consumer can build their own surface
+  in the same language.
+
+### Changed
+
+- **Every style now resolves in one place.** Dialogs, snackbars and bottom
+  sheets each carried their own answer to the same questions — 64 style
+  branches across three colour-config files and three shadow files. They had
+  drifted: the same `colorHeader` rendered a 110dp header band on a dialog and
+  90dp on a snackbar, a 14dp close chip here and a 12dp one there. The three
+  configs and all three shadow classes now delegate to `SpStyles`, so a style
+  looks like itself wherever it is used and a new one is written once.
+- Surfaces honour a style's **wash, gradient stroke and rounding**, not just
+  its fill and border — which is what lets `aurora`, `gradientBorder` and
+  `brutalist` exist at all.
+- Bottom-sheet button labels now pick their colour by measured contrast, the
+  same way dialog labels already did.
+
 ### Accessibility
 
 Contrast was measured across every style in both brightnesses (32 checks,

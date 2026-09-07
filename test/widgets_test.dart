@@ -59,7 +59,7 @@ void main() {
       await tester.pump();
     });
 
-    testWidgets('renders across all eight design styles', (tester) async {
+    testWidgets('renders in every design style', (tester) async {
       for (final style in ContentDesignStyle.values) {
         await pumpHost(tester, (context) {
           SavePointsDialog.show(

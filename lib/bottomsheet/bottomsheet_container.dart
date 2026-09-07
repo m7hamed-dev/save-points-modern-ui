@@ -9,6 +9,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 
 /// Bottom sheet container with decoration
 class BottomsheetContainer extends StatelessWidget {
@@ -38,10 +39,17 @@ class BottomsheetContainer extends StatelessWidget {
       bottomRight: const Radius.circular(BottomsheetConstants.borderRadius),
     );
 
+    final spec = SpStyles.of(
+      colorConfig.designStyle,
+      colorConfig.iconColor,
+      isDark,
+    );
+
     Widget content = Container(
       padding: BottomsheetConstants.padding,
       decoration: BoxDecoration(
-        color: colorConfig.backgroundColor,
+        color: spec.fillGradient == null ? colorConfig.backgroundColor : null,
+        gradient: spec.fillGradient,
         borderRadius: isLeftAccent
             ? BorderRadius.only(
                 topRight: borderRadius.topRight,

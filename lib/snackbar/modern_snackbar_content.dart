@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart' hide AnimatedIcon;
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
@@ -263,25 +264,39 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     );
   }
 
-  /// Per-variant border for the default layout.
+  SpStyleSpec get _spec =>
+      SpStyles.of(widget.designStyle, widget.iconColor, _isDark);
+
+  /// The component's radius, scaled by whatever the style asks for.
+  BorderRadius get _radius => BorderRadius.only(
+        topLeft: widget.borderRadius.topLeft * _spec.radiusScale,
+        topRight: widget.borderRadius.topRight * _spec.radiusScale,
+        bottomLeft: widget.borderRadius.bottomLeft * _spec.radiusScale,
+        bottomRight: widget.borderRadius.bottomRight * _spec.radiusScale,
+      );
+
+  /// Wraps [child] in a gradient stroke when the style calls for one; a
+  /// gradient cannot be expressed as a [Border].
+  Widget _withGradientStroke(Widget child) {
+    final g = _spec.borderGradient;
+    if (g == null) return child;
+    return Container(
+      padding: EdgeInsets.all(_spec.borderWidth),
+      decoration: BoxDecoration(gradient: g, borderRadius: _radius),
+      child: child,
+    );
+  }
+
+  /// Per-variant border, resolved from the shared style spec.
   BoxBorder? _variantBorder() {
-    switch (widget.designStyle) {
-      case ContentDesignStyle.outlined:
-        return widget.borderColor != null
-            ? Border.all(color: widget.borderColor!, width: 2)
-            : null;
-      case ContentDesignStyle.neon:
-        return Border.all(color: widget.iconColor, width: 2);
-      case ContentDesignStyle.glass:
-        return Border.all(color: SpSurface.glassBorder(_isDark), width: 1.5);
-      case ContentDesignStyle.minimal:
-        return Border.all(color: SpSurface.hairline(_isDark));
-      case ContentDesignStyle.solid:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-        return null;
-    }
+    final spec = SpStyles.of(widget.designStyle, widget.iconColor, _isDark);
+    if (!spec.hasBorder) return null;
+    // An explicit borderColor still wins for the outlined variant, which is
+    // the one style callers routinely recolour.
+    final color = widget.designStyle == ContentDesignStyle.outlined
+        ? (widget.borderColor ?? spec.borderColor!)
+        : spec.borderColor!;
+    return Border.all(color: color, width: spec.borderWidth);
   }
 
   Widget _buildDefaultLayout() {
@@ -296,13 +311,17 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     final showLeftAccent = widget.designStyle == ContentDesignStyle.leftAccent;
 
     Widget content = RepaintBoundary(
-      child: Container(
+      child: _withGradientStroke(Container(
         constraints: constraints,
         decoration: BoxDecoration(
-          color: widget.gradient == null ? widget.backgroundColor : null,
-          gradient: widget.gradient,
-          borderRadius: widget.borderRadius,
-          border: border,
+          // A caller-supplied gradient wins; otherwise the style may paint
+          // its own wash across the surface.
+          color: (widget.gradient ?? _spec.fillGradient) == null
+              ? widget.backgroundColor
+              : null,
+          gradient: widget.gradient ?? _spec.fillGradient,
+          borderRadius: _radius,
+          border: _spec.borderGradient != null ? null : border,
           boxShadow: SnackbarShadows.getShadows(
             widget.designStyle,
             widget.iconColor,
@@ -339,7 +358,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                 borderRadius: widget.borderRadius,
                 child: _buildDefaultLayoutContent(),
               ),
-      ),
+      )),
     );
     if (isGlass) {
       content = ClipRRect(

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_color_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_constants.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_shadows.dart';
@@ -24,7 +25,16 @@ class DialogContainer extends StatelessWidget {
     final isOutlined = colorConfig.borderColor != null;
     final isLeftAccent =
         colorConfig.designStyle == ContentDesignStyle.leftAccent;
-    final borderRadius = BorderRadius.circular(DialogConstants.borderRadius);
+    final spec = SpStyles.of(
+      colorConfig.designStyle,
+      colorConfig.iconColor,
+      isDark,
+    );
+    // Rounding is part of the style: brutalism wants tight corners, clay wants
+    // generous ones. Everything else keeps the component's own radius.
+    final borderRadius = BorderRadius.circular(
+      DialogConstants.borderRadius * spec.radiusScale,
+    );
 
     final contentBorderRadius = isLeftAccent
         ? BorderRadius.only(
@@ -36,9 +46,11 @@ class DialogContainer extends StatelessWidget {
     Widget content = Container(
       padding: DialogConstants.dialogPadding,
       decoration: BoxDecoration(
-        color: colorConfig.backgroundColor,
+        // A style may paint a wash across the surface instead of a flat fill.
+        color: spec.fillGradient == null ? colorConfig.backgroundColor : null,
+        gradient: spec.fillGradient,
         borderRadius: contentBorderRadius,
-        border: isLeftAccent
+        border: isLeftAccent || spec.borderGradient != null
             ? null
             : Border.all(
                 color: colorConfig.borderColor ?? SpSurface.hairline(isDark),
@@ -53,6 +65,20 @@ class DialogContainer extends StatelessWidget {
       ),
       child: child,
     );
+
+    // A gradient stroke cannot be expressed as a Border, so it is painted as
+    // a thin gradient-filled layer that the surface sits inside.
+    final borderGradient = spec.borderGradient;
+    if (borderGradient != null) {
+      content = Container(
+        padding: EdgeInsets.all(spec.borderWidth),
+        decoration: BoxDecoration(
+          gradient: borderGradient,
+          borderRadius: borderRadius,
+        ),
+        child: content,
+      );
+    }
 
     if (colorConfig.designStyle == ContentDesignStyle.glass) {
       content = ClipRRect(

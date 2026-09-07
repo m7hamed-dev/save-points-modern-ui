@@ -36,4 +36,20 @@ enum ContentDesignStyle {
   /// Minimal: opaque surface, single hairline border, flat (no shadow).
   /// Clean and understated.
   minimal,
+
+  /// Neo-brutalist: flat punchy fill, a thick hard-edged border and an
+  /// offset shadow with no blur. Loud, graphic, deliberately un-soft.
+  brutalist,
+
+  /// A neutral surface ringed by a vivid gradient stroke. Reads as premium
+  /// without tinting the content area.
+  gradientBorder,
+
+  /// Aurora: a soft multi-stop wash of the accent across the surface, like
+  /// light bleeding through frosted colour.
+  aurora,
+
+  /// Claymorphic: pastel fill, generous rounding and a light-from-above pair
+  /// of shadows. Friendly and tactile.
+  soft,
 }

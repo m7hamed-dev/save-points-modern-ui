@@ -6,8 +6,8 @@ import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar_dia
 /// components speak one visual language.
 void main() {
   group('ContentDesignStyle', () {
-    test('exposes all eight documented styles', () {
-      expect(ContentDesignStyle.values, hasLength(8));
+    test('exposes every documented style', () {
+      expect(ContentDesignStyle.values, hasLength(12));
       expect(
           ContentDesignStyle.values,
           containsAll(<ContentDesignStyle>[
@@ -19,6 +19,10 @@ void main() {
             ContentDesignStyle.glass,
             ContentDesignStyle.neon,
             ContentDesignStyle.minimal,
+            ContentDesignStyle.brutalist,
+            ContentDesignStyle.gradientBorder,
+            ContentDesignStyle.aurora,
+            ContentDesignStyle.soft,
           ]));
     });
   });

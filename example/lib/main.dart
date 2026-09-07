@@ -366,6 +366,14 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       case ContentDesignStyle.leftAccent:
       case ContentDesignStyle.tonal:
         return Icons.style;
+      case ContentDesignStyle.brutalist:
+        return Icons.check_box_outline_blank;
+      case ContentDesignStyle.gradientBorder:
+        return Icons.filter_frames;
+      case ContentDesignStyle.aurora:
+        return Icons.gradient;
+      case ContentDesignStyle.soft:
+        return Icons.bubble_chart;
     }
   }
 
@@ -378,6 +386,14 @@ class _ExampleHomePageState extends State<ExampleHomePage>
         return 'Neon';
       case ContentDesignStyle.minimal:
         return 'Minimal';
+      case ContentDesignStyle.brutalist:
+        return 'Brutalist';
+      case ContentDesignStyle.gradientBorder:
+        return 'Gradient border';
+      case ContentDesignStyle.aurora:
+        return 'Aurora';
+      case ContentDesignStyle.soft:
+        return 'Soft';
       case ContentDesignStyle.solid:
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:

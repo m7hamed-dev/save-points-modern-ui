@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 
 /// Professional dialog color configuration with enhanced palettes
 class DialogColorConfig {
@@ -82,27 +83,10 @@ class DialogColorConfig {
     required ContentDesignStyle designStyle,
     required bool isDark,
     Color? iconColor,
-  }) {
-    if (backgroundColor != null) return backgroundColor;
-
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.leftAccent:
-      case ContentDesignStyle.solid:
-      case ContentDesignStyle.minimal:
-        return SpSurface.background(isDark);
-      case ContentDesignStyle.colorHeader:
-        return SpSurface.elevated(isDark);
-      case ContentDesignStyle.glass:
-        return SpSurface.glassFill(isDark);
-      case ContentDesignStyle.neon:
-        return SpSurface.neonSurface(isDark);
-      case ContentDesignStyle.tonal:
-        return iconColor != null
-            ? SpPalette.tonalFrom(iconColor, isDark)
-            : SpSurface.background(isDark);
-    }
-  }
+  }) =>
+      backgroundColor ??
+      SpStyles.of(designStyle, iconColor ?? const Color(0xFF6366F1), isDark)
+          .fill;
 
   static Color? _computeBorderColor({
     required ContentDesignStyle designStyle,
@@ -110,60 +94,29 @@ class DialogColorConfig {
     required ThemeData theme,
     required bool isDark,
   }) {
-    final baseColor = iconColor ??
+    final accent = iconColor ??
         (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
-        return baseColor.withValues(alpha: isDark ? 0.62 : 0.55);
-      case ContentDesignStyle.neon:
-        return baseColor;
-      case ContentDesignStyle.glass:
-        return SpSurface.glassBorder(isDark);
-      case ContentDesignStyle.minimal:
-        return SpSurface.hairline(isDark);
-      case ContentDesignStyle.solid:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-        // leftAccent uses a left bar; tonal/solid/colorHeader have no border.
-        return null;
-    }
+    final spec = SpStyles.of(designStyle, accent, isDark);
+    return spec.hasBorder ? spec.borderColor : null;
   }
 
   static double? _computeBorderWidth(ContentDesignStyle designStyle) {
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.neon:
-        return 2.0;
-      case ContentDesignStyle.glass:
-        return 1.5;
-      case ContentDesignStyle.minimal:
-        return 1.0;
-      case ContentDesignStyle.solid:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-        return null;
-    }
+    // Resolved against a placeholder accent: width never depends on colour.
+    final spec = SpStyles.of(designStyle, const Color(0xFF6366F1), false);
+    return spec.borderWidth > 0 ? spec.borderWidth : null;
   }
 
   static Color _computeTitleColor({
     required ContentDesignStyle designStyle,
     required bool isDark,
   }) =>
-      designStyle == ContentDesignStyle.neon
-          ? SpSurface.neonText
-          : SpSurface.onSurface(isDark);
+      SpStyles.of(designStyle, const Color(0xFF6366F1), isDark).onSurface;
 
   static Color _computeMessageColor({
     required ContentDesignStyle designStyle,
     required bool isDark,
   }) =>
-      switch (designStyle) {
-        ContentDesignStyle.neon => Colors.white.withValues(alpha: 0.7),
-        ContentDesignStyle.glass => SpSurface.onSurfaceMutedOnGlass(isDark),
-        _ => SpSurface.onSurfaceMuted(isDark),
-      };
+      SpStyles.of(designStyle, const Color(0xFF6366F1), isDark).onSurfaceMuted;
 
   /// Bold gradient header band — the vivid accent gradient derived from the
   /// icon color. White header content sits on top of this.

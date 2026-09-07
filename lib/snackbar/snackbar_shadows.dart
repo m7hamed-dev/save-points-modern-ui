@@ -1,37 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 
-/// Snackbar elevation — bold, colored-glow depth driven by [SpShadows].
+/// Elevation is part of the design style, not of the component: every
+/// surface resolves it through [SpStyles] so a style casts the same shadow
+/// wherever it is used. These three classes used to each carry their own
+/// switch, which is how they drifted apart.
 class SnackbarShadows {
-  /// Returns layered shadows for the given [style].
-  ///
-  /// When [accentColor] is provided the elevation includes a tinted glow in
-  /// that color (the signature bold look); otherwise a neutral ambient
-  /// elevation is used. [isDark] deepens the ambient layer.
+  /// Layered elevation for the snackbar surface.
   static List<BoxShadow> getShadows([
     ContentDesignStyle style = ContentDesignStyle.solid,
     Color? accentColor,
     bool isDark = false,
-  ]) {
-    if (style == ContentDesignStyle.minimal) return SpShadows.flat;
-    if (style == ContentDesignStyle.neon) {
-      return accentColor != null
-          ? SpShadows.neon(color: accentColor)
-          : SpShadows.ambient(isDark: isDark);
-    }
-
-    // Bolder styles float higher.
-    final level = switch (style) {
-      ContentDesignStyle.colorHeader || ContentDesignStyle.solid => 1.0,
-      ContentDesignStyle.tonal || ContentDesignStyle.glass => 0.85,
-      ContentDesignStyle.outlined || ContentDesignStyle.leftAccent => 0.7,
-      ContentDesignStyle.minimal || ContentDesignStyle.neon => 1.0,
-    };
-
-    if (accentColor != null) {
-      return SpShadows.glow(color: accentColor, isDark: isDark, level: level);
-    }
-    return SpShadows.ambient(isDark: isDark, level: level);
-  }
+  ]) =>
+      SpStyles.of(style, accentColor ?? const Color(0xFF6366F1), isDark)
+          .shadows;
 }
