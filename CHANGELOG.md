@@ -215,6 +215,18 @@ package at all.
 
 ### Removed
 
+Public API with no callers anywhere — not in the package, the example, the
+tests or the README. Removing it at a major version rather than carrying it
+forward:
+
+- **`ValidationUtils`** — `isNotEmpty`, `isPositiveDuration` and friends,
+  none of which the package ever called.
+- **`ThemeUtils`** — one-line wrappers around `Theme.of(context)`.
+- **`SnackbarPresets`** and **`AnimationPresets`** (with its `AnimationConfig`)
+  — preset tables nothing read. `DialogPresets` is genuinely used and stays.
+- **`StaticEnhancedIcon`** — a non-animating variant of `EnhancedIcon` that
+  was never built.
+
 - **`AccessibilityUtils` and its `SemanticsProperties` class.** Unused
   anywhere in the package, and its name collided with Flutter's own
   `SemanticsProperties`, breaking consumer builds. Real `Semantics` is now
