@@ -31,6 +31,19 @@
 
 > A comprehensive Flutter package providing elegant, customizable UI components with stunning glassmorphism effects, smooth animations, and extensive customization options. Perfect for building modern, professional user interfaces.
 
+## Contents
+
+| | |
+|---|---|
+| [Overview](#-overview) · [Key features](#-key-features) | what this is |
+| [Installation](#-installation) · [Quick start](#-quick-start) | five minutes in |
+| **[Design styles](#design-styles)** | the twelve looks, and when to use each |
+| [Dialog](#-savepointsdialog-1) · [Snackbar](#-savepointssnackbar-1) · [Bottom sheet](#-savepointsbottomsheet-1) | every parameter |
+| [Dialog presets](#-dialog-presets) · [Animations](#-animation-types) | ready-made choices |
+| [Configuration](#️-configuration) · [`SavePointsTheme`](#-scoped-defaults-with-savepointstheme) | defaults, app-wide or per subtree |
+| [Building on the same styles](#-building-on-the-same-styles) | `SpStyles` for your own widgets |
+| [Accessibility](#-accessibility) · [Performance](#-performance) | what the package guarantees |
+
 ## 🌟 Overview
 
 **SavePoints Modern UI** is a production-ready Flutter package that offers three powerful, feature-rich UI components:
@@ -39,7 +52,7 @@
 - **🍞 Snackbars** - Enhanced notifications with rich animations and customization
 - **📱 Bottom Sheets** - Modern bottom sheets with drag handles and scroll support
 
-All three share one **bold & expressive** design language and the same 8 visual styles — `solid`, `outlined`, `tonal`, `colorHeader`, `leftAccent`, plus the new `glass`, `neon` and `minimal` variants — driven by unified design tokens (vivid palette, display typography, colored-glow elevation).
+All three share one **bold & expressive** design language and the same **12 visual styles**, from an understated `minimal` through frosted `glass` to a loud `brutalist`. Every style is resolved in one place, so it looks like itself on a dialog, a snackbar and a bottom sheet alike. See [Design styles](#design-styles).
 
 All components feature automatic dark mode support, extensive customization options, and are optimized for performance with built-in repaint boundaries and efficient animations. The codebase follows professional Flutter best practices with comprehensive documentation, well-organized structure, and maintainable code.
 
@@ -48,7 +61,7 @@ All components feature automatic dark mode support, extensive customization opti
 ### 🎭 SavePointsDialog
 
 - **✨ Glassmorphism Design** - Beautiful frosted glass effects with backdrop blur
-- **🎨 8 design styles** - `solid`, `outlined`, `tonal`, `colorHeader` (default), `leftAccent`, `glass`, `neon`, `minimal`; all with light & dark themes
+- **🎨 12 design styles** - `solid`, `outlined`, `tonal`, `colorHeader`, `leftAccent`, `glass`, `neon`, `minimal`, `brutalist`, `gradientBorder`, `aurora`, `soft` — `colorHeader` by default, all in light & dark. [See the table](#design-styles)
 - **🎨 Fully Customizable** - Colors, icons, buttons, and animations
 - **⚡ Smooth Animations** - Multiple animation types including fade, slide, scale, bounce, and more
 - **🌓 Dark Mode Support** - Automatic theme adaptation
@@ -61,7 +74,7 @@ All components feature automatic dark mode support, extensive customization opti
 ### 🍞 SavePointsSnackbar
 
 - **📊 Multiple Types** - Success, Error, Warning, and Info variants with predefined styling
-- **🎨 8 design styles** - `solid` (default, vivid gradient), `outlined`, `tonal`, `colorHeader`, `leftAccent`, `glass`, `neon`, `minimal`; all with light & dark themes
+- **🎨 12 design styles** - `solid`, `outlined`, `tonal`, `colorHeader`, `leftAccent`, `glass`, `neon`, `minimal`, `brutalist`, `gradientBorder`, `aurora`, `soft` — `solid` by default, all in light & dark. [See the table](#design-styles)
 - **🎬 Rich Animations** - 7+ animation types: fade, slide, scale, bounce, rotate, elastic, slideRotate
 - **📈 Progress Indicators** - Optional progress bars for timed notifications
 - **🎨 Gradient Backgrounds** - Support for custom gradient designs
@@ -69,12 +82,13 @@ All components feature automatic dark mode support, extensive customization opti
 - **👆 Interactive** - Tap to dismiss, custom tap handlers, and action buttons
 - **🎯 Customizable Styling** - Borders, border radius, margins, colors, and more
 - **📳 Haptic Feedback** - Configurable haptic responses
+- **♿ Announced** - Snackbars are a `Semantics` live region, so TalkBack and VoiceOver read them on arrival
 - **⚡ Performance Optimized** - Efficient animations with clamped values
 
 ### 📱 SavePointsBottomsheet
 
 - **✨ Modern Design** - Glassmorphism effects with backdrop blur
-- **🎨 8 design styles** - `solid`, `outlined`, `tonal`, `colorHeader` (default), `leftAccent`, `glass`, `neon`, `minimal`; all with light & dark themes
+- **🎨 12 design styles** - `solid`, `outlined`, `tonal`, `colorHeader`, `leftAccent`, `glass`, `neon`, `minimal`, `brutalist`, `gradientBorder`, `aurora`, `soft` — `colorHeader` by default, all in light & dark. [See the table](#design-styles)
 - **🎚️ Drag Handle** - Optional drag indicator for better UX
 - **📜 Scrollable Content** - Built-in support for scrollable content with proper constraints
 - **⌨️ Keyboard Aware** - Automatically positions above keyboard when TextFormField is focused
@@ -152,16 +166,20 @@ All three components share one **bold & expressive** design language and the sam
 set of visual styles via `ContentDesignStyle`. Every style adapts to light and
 dark themes.
 
-| Style | Look |
-|-------|------|
-| `solid` | Vivid gradient fill with white content and a same-hue colored glow — **snackbar default** |
-| `colorHeader` | Card with a vivid gradient header band and a circular icon chip — **dialog & bottom sheet default** |
-| `outlined` | Surface with a colored border, subtle elevation |
-| `tonal` | Soft, tinted background (Material 3 tonal) |
-| `leftAccent` | Surface with a colored vertical bar on the left edge |
-| `glass` | Frosted glassmorphism — translucent surface over a backdrop blur with a hairline border |
-| `neon` | Deep near-black surface with a glowing accent border and an intense colored bloom |
-| `minimal` | Opaque surface, single hairline border, perfectly flat (no shadow) |
+| Style | Look | Reach for it when |
+|-------|------|-------------------|
+| `solid` | Vivid gradient fill, white content, a same-hue glow — **snackbar default** | The message *is* the colour: a success, an error |
+| `colorHeader` | Vivid gradient band across the top with a circular icon chip — **dialog & sheet default** | A moment deserves a header |
+| `outlined` | Neutral surface inside a coloured border | You want the accent without the weight |
+| `tonal` | Softly tinted surface (Material 3 tonal) | Quiet, but still carrying the intent colour |
+| `leftAccent` | Neutral surface with a gradient bar down the leading edge | Lists and stacked notices, where a bar scans faster |
+| `glass` | Frosted translucency over a backdrop blur, hairline highlight | There is something worth seeing behind it |
+| `neon` | Near-black surface, glowing accent ring, wide bloom | Dark UIs, or anything that should look electric |
+| `minimal` | Opaque surface, one hairline, perfectly flat | The component should get out of the way |
+| `brutalist` | Flat punchy fill, thick hard border, an offset shadow with no blur | Graphic, loud, deliberately un-soft |
+| `gradientBorder` | Neutral surface ringed by a vivid gradient stroke | Premium framing without tinting the content |
+| `aurora` | A multi-stop wash of the accent bleeding across the surface | Hero moments; the most expressive of the set |
+| `soft` | Pastel fill, generous rounding, light-from-above shadows | Friendly and tactile — onboarding, empty states |
 
 Pick any style per call:
 
@@ -259,6 +277,7 @@ static Future<bool?> show(
 | `designStyle` | `ContentDesignStyle?` | No | `colorHeader` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
 | `blur` | `double?` | No | `20.0` | Barrier blur sigma. Falls back to `SavePointsTheme`, then to `defaultBarrierBlurSigma`. Pass `0` to opt out |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
+| `enablePulse` | `bool?` | No | `false` | Loops a subtle scale + glow on the icon. Off by default: it never stops, so it repaints every frame and hangs `pumpAndSettle()` in tests |
 | `child` | `Widget?` | No | `null` | Custom widget displayed between message and buttons |
 
 #### Examples
@@ -557,6 +576,7 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 | `designStyle` | `ContentDesignStyle?` | No | `solid` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
 | `blur` | `double?` | No | `null` | Surface blur sigma. Unlike dialogs and sheets a snackbar has no barrier, so leaving it unset applies **no** blur |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
+| `enablePulse` | `bool?` | No | `false` | Loops a subtle scale + glow on the icon. Off by default: it never stops, so it repaints every frame and hangs `pumpAndSettle()` in tests |
 
 #### Examples
 
@@ -772,6 +792,7 @@ static Future<T?> show<T>({
 | `designStyle` | `ContentDesignStyle?` | No | `colorHeader` | `solid` / `outlined` / `tonal` / `colorHeader` / `leftAccent` / `glass` / `neon` / `minimal` |
 | `blur` | `double?` | No | `20.0` | Barrier blur sigma. Falls back to `SavePointsTheme`, then to `defaultBarrierBlurSigma`. Pass `0` to opt out |
 | `backdropFilter` | `ImageFilter?` | No | `null` | Custom backdrop filter (overrides `blur` when set) |
+| `enablePulse` | `bool?` | No | `false` | Loops a subtle scale + glow on the icon. Off by default: it never stops, so it repaints every frame and hangs `pumpAndSettle()` in tests |
 
 #### Examples
 
@@ -1135,7 +1156,42 @@ component's own default. Because it is a standard `InheritedWidget`, a subtree
 can wrap itself in another `SavePointsTheme` to override just that branch.
 
 Supported fields: `designStyle`, `blur`, `snackbarPosition`,
-`snackbarDuration`, `enableHapticFeedback`, `barrierDismissible`.
+`snackbarDuration`, `enableHapticFeedback`, `barrierDismissible`,
+`enablePulse`.
+
+## 🎨 Building on the same styles
+
+Every style resolves through one public helper, so you can decorate your own
+surfaces in the package's language instead of eyeballing its colours:
+
+```dart
+final spec = SpStyles.of(
+  ContentDesignStyle.aurora,
+  Theme.of(context).colorScheme.primary,
+  Theme.of(context).brightness == Brightness.dark,
+);
+
+Container(
+  decoration: BoxDecoration(
+    color: spec.fillGradient == null ? spec.fill : null,
+    gradient: spec.fillGradient,
+    borderRadius: BorderRadius.circular(24 * spec.radiusScale),
+    border: spec.hasBorder
+        ? Border.all(color: spec.borderColor!, width: spec.borderWidth)
+        : null,
+    boxShadow: spec.shadows,
+  ),
+  child: Text('Matches the family', style: TextStyle(color: spec.onSurface)),
+);
+```
+
+`SpStyleSpec` carries everything a style decides: `fill`, `fillGradient`,
+`onSurface`, `onSurfaceMuted`, `shadows`, `borderColor`, `borderWidth`,
+`borderGradient`, `radiusScale` and `blurSigma`.
+
+The underlying tokens are public too — `SpRadius`, `SpSpacing`, `SpType`,
+`SpMotion`, `SpSurface`, `SpPalette`, `SpShadows` and `SpContrast` — if you
+would rather compose your own.
 
 ## 📱 Platform Support
 

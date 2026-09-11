@@ -12,42 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > `SnackbarPresets`, `AnimationPresets` and `StaticEnhancedIcon` — and changes
 > some layout defaults. A `^1.2.0` constraint resolves to it automatically, so
 > anyone who imported those names will meet a compile error rather than a
-> deprecation notice. See *Removed* below for what to use instead.
+> deprecation notice. See [Removed](#removed) for what to use instead.
 
-### Added
-
-- **`SavePointsTheme` scoped defaults**: A new `InheritedWidget`
-  (`SavePointsTheme` + `SavePointsThemeData`) lets you declare component
-  defaults once in the widget tree instead of repeating `designStyle:`/`blur:`
-  on every call or mutating the global `SnackDiaBottomConfig` singleton.
-  Supports `designStyle`, `blur`, `snackbarPosition`, `snackbarDuration`,
-  `enableHapticFeedback` and `barrierDismissible`. Resolution order is
-  explicit argument → nearest theme → built-in default, so it is fully
-  backward compatible and scopes correctly per subtree.
-- **Canonical entry point**: New `save_points_snackbar_dialog_bottomsheet.dart`
-  library so the import path matches the package name (the path the README has
-  always documented). A single import now exposes the entire public API.
-- **Design tokens are now public**: The shared token layer (`SpRadius`,
-  `SpSpacing`, `SpType`, `SpMotion`, `SpSurface`, `SpPalette`, `SpAccent`,
-  `SpIntent`) is exported so consumers can theme against the same source of
-  truth the components use.
-- **Test suite**: Added unit and widget tests covering the design tokens, the
-  snackbar queue, public enums, and the `show()` APIs for dialog, snackbar and
-  bottom sheet across all eight design styles.
-
-### Changed
-
-- **Package no longer ships example code in `lib/`**: The demo app and its
-  widgets lived under `lib/` (`lib/main.dart`, `lib/example/widgets/`,
-  `lib/savepoints_config_example.dart`) and bloated the published package. They
-  now live in `example/` where they belong. The actively-maintained demo is now
-  the canonical `example/lib/main.dart`, so pub.dev shows the current example.
-
-### Fixed
-
-- Removed a stray `debugPrint` that logged on every `ModernDialog` build.
-- Replaced placeholder `yourusername` repository/homepage/issue-tracker URLs in
-  `pubspec.yaml` and the README with the real repository.
+**In short:** four crashes and compile errors are fixed, the twelve design
+styles now resolve in one place instead of drifting apart across three
+components, contrast meets WCAG AA everywhere, and the minimum SDK drops from
+Dart 3.11 to 3.6 so most projects can actually install it.
 
 ### Added
 
@@ -60,190 +30,165 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     surface, like light through frosted colour.
   - `soft` — claymorphic: pastel fill, generous rounding and a light-from-
     above pair of shadows.
+- **`SavePointsTheme` scoped defaults** — an `InheritedWidget`
+  (`SavePointsTheme` + `SavePointsThemeData`) that declares component defaults
+  once in the widget tree instead of repeating `designStyle:` / `blur:` on
+  every call or mutating the `SnackDiaBottomConfig` singleton. Covers
+  `designStyle`, `blur`, `snackbarPosition`, `snackbarDuration`,
+  `enableHapticFeedback`, `barrierDismissible` and `enablePulse`. Resolution
+  order is explicit argument → nearest theme → built-in default, so adopting
+  it is backward compatible and scopes per subtree.
 - **`SpStyles`** — one resolver that turns a `ContentDesignStyle` into a
   concrete surface spec (fill, wash, border, gradient stroke, elevation,
-  rounding, text colours). Public, so a consumer can build their own surface
-  in the same language.
-
-### Changed
-
-- **The `colorHeader` band is now one widget.** All three components built it
-  themselves — gradient, highlight, close chip, floating icon — and the copies
-  had drifted: a 110dp band on a dialog against 90dp on a snackbar, a 14dp
-  close chip against 12dp, a 16dp glyph against 14dp. Worse, the snackbar
-  derived its band from a pastel of the accent (saturation 0.3, lightness
-  0.92), so the "coloured header" was a wash you could barely see; it now uses
-  the family's vivid gradient like the other two. 260 lines lighter across the
-  three components, and 66 of 72 rendered states are byte-identical — only the
-  six `colorHeader` shots moved, which is exactly what this was meant to
-  change.
-- **Removed a debug artifact**: dialogs tinted a caller-supplied `child` with
-  a translucent blue box.
-- **Every style now resolves in one place.** Dialogs, snackbars and bottom
-  sheets each carried their own answer to the same questions — 64 style
-  branches across three colour-config files and three shadow files. They had
-  drifted: the same `colorHeader` rendered a 110dp header band on a dialog and
-  90dp on a snackbar, a 14dp close chip here and a 12dp one there. The three
-  configs and all three shadow classes now delegate to `SpStyles`, so a style
-  looks like itself wherever it is used and a new one is written once.
-- Surfaces honour a style's **wash, gradient stroke and rounding**, not just
-  its fill and border — which is what lets `aurora`, `gradientBorder` and
-  `brutalist` exist at all.
-- Bottom-sheet button labels now pick their colour by measured contrast, the
-  same way dialog labels already did.
-
-### Accessibility
-
-Contrast was measured across every style in both brightnesses (32 checks,
-now guarded by `test/quality_test.dart`). Three combinations failed the 4.5:1
-WCAG AA floor for body text:
-
-- **Every dark-mode dialog button read at 2.54:1** — white label on the
-  dark-theme blue. Label colour is now chosen by measured contrast rather than
-  assumed to be white, which also keeps caller-supplied button colours legible.
-  Now 7.36:1.
-- **`tonal` body text at 3.93:1.** The light muted tone moved from slate-500 to
-  slate-600. Now 6.26:1.
-- **`glass` body text at 2.50:1**, because a translucent surface composites
-  over whatever is behind it. It now uses a dedicated darker body tone and a
-  slightly denser fill. Now 8.68:1.
-
-Layout was also checked at 1.5x and 2.0x text scale: no overflow.
-
-### Stability
-
-- **The top toast no longer restructures the overlay.** Each toast used to
-  insert its own `OverlayEntry` and remove it again, with both operations
-  deferred to post-frame callbacks to dodge Flutter's `mouse_tracker`
-  `_debugDuringDeviceUpdate` assertion — a workaround the 1.2.x source already
-  carried, and one that left the insert racing its own removal. There is now a
-  single entry per overlay whose *content* changes: one insert, then nothing
-  but repaints. Toasts are keyed so each still gets its own state and replays
-  its entrance.
-- The example app's action buttons scaled themselves from a `MouseRegion`
-  hover callback, moving their own hit area out from under the pointer. The
-  scale is now painted with `transformHitTests: false`, so enter and exit can
-  no longer chase each other.
-
-### Performance
-
-- **Icons no longer animate forever** — see *Changed*. A settled dialog,
-  snackbar or bottom sheet now schedules zero frames; previously each one
-  repainted every frame for as long as it was on screen.
-- **The barrier fade no longer costs a screen-sized `saveLayer` per frame.**
-  It animated an `Opacity` wrapped around the `BackdropFilter`, so every frame
-  of the entrance paid for a full-screen layer on top of the one the blur
-  already needs. The barrier now ramps its blur sigma and dim alpha instead —
-  one layer rather than two, and the background comes into focus rather than a
-  finished blur dissolving in.
-
-### Design
-
-The eight design styles collapsed to about four looks in practice — `solid`,
-`outlined`, `minimal` and `glass` rendered as near-identical white cards on
-dialogs and sheets. The palette and the bold-and-expressive language are
-unchanged; these are the places where the implementation was not delivering
-what the tokens already described.
-
-- **`leftAccent` was broken.** Its accent bar sat in a `Row` with
-  `CrossAxisAlignment.stretch` and no height bound, so the dialog stretched to
-  fill the viewport instead of hugging its content, and the bar itself was not
-  visible. Bounded with `IntrinsicHeight`, and the bar now carries the accent
-  gradient at 6dp.
-- **`glass` was not translucent.** Its fill sat at 58% alpha — opaque enough to
-  hide its own `BackdropFilter`, which is why it looked like `solid`. Now 30%
-  (light) / 38% (dark) with a brighter highlight edge, so the blurred backdrop
-  actually reads through it.
-- **`solid`'s icon chip was a wash.** It painted the accent gradient at
-  22%/12% alpha, coming out as a pale tint on a white surface. It now uses the
-  gradient at full strength with a white glyph — the element that makes `solid`
-  read as the boldest of the family.
-- **`neon` barely glowed.** The bloom is wider and stronger, so the variant
-  reads as neon rather than as a dark card with a hairline.
-- **`neon` sheets had unreadable content.** The surface is near-black but the
-  caller's `child` inherits the app's own `ThemeData`, so on a light theme
-  consumer content rendered dark-on-dark. The subtree is now handed a matching
-  brightness.
-- **`outlined` borders were nearly invisible** at 25–30% alpha. Raised to 55%
-  (light) / 62% (dark).
-- **Colored-glow elevation is now visible in light mode** (halo alpha 22% →
-  34%), which is what separates `solid` from `minimal` at a glance.
-
-### Changed
-
-- **Icon pulse is opt-in.** Dialog, snackbar and sheet icons looped a scale +
-  glow animation forever, with no way to switch it off from the public API. It
-  kept the app repainting for as long as the surface was on screen, and it made
-  `pumpAndSettle()` hang in the tests of anyone using the package. It is now off
-  by default; turn it on per call with `enablePulse: true` on `show()`, or for a
-  subtree with `SavePointsThemeData(enablePulse: true)`.
-
-
-A correctness release. Three of these were crashes or compile errors in real
-apps, so the fixes are worth the major bump; the rest widen who can install the
-package at all.
-
-### Fixed
-
-- **Crash showing two top snackbars in the same frame.** `show()` deferred its
-  overlay insert to a post-frame callback and skipped it when a newer toast had
-  claimed the slot, while `hide()` still scheduled a removal for that
-  never-inserted entry — tripping *"An OverlayEntry should be removed only
-  once"*. Removal is now guarded on `OverlayEntry.mounted`. Reproduced by any
-  double-tapped button or back-to-back error message.
-- **Ambiguous import when using `package:flutter/semantics.dart`.** The package
-  exported its own class named `SemanticsProperties`, which collided with
-  Flutter's and failed the consumer's build with `ambiguous_import`. The class
-  and its unused `AccessibilityUtils` wrapper are gone — see *Removed*.
-- **Top snackbars leaked a timer past the widget tree.** The auto-dismiss timer
-  and overlay entry were `static`, so they outlived disposal and later fired
-  against a disposed `AnimationController` and `ScaffoldMessenger`. The timer
-  now belongs to the toast's `State` and dies with it.
-- **`SnackbarQueue` could wedge permanently.** `clear()` left `_isShowing`
-  set, so every later `enqueue()` was silently swallowed. A stale `closed`
-  callback could also clobber the state of the snackbar currently showing;
-  callbacks are now generation-guarded.
-- **`hideLikeCircle` was accepted by `SavePointsSnackbar.show` and ignored.**
-  It is now forwarded to the top-position toast (the only position that can
-  honour it — bottom snackbars are laid out by `ScaffoldMessenger`).
-- **Circular-reveal animations were hard-coded LTR.** Three clippers called
-  `alignment.resolve(TextDirection.ltr)`, so a directional alignment revealed
-  from the wrong edge in RTL. They now resolve against `Directionality.of`.
-- **Bottom snackbars sat too high.** The package added 80dp of "FAB space" on
-  screens taller than 700dp — a guess, and a double-count: `Scaffold` already
-  lifts a floating `SnackBar` clear of the FAB (measured: 72dp) and of the
-  bottom safe area. Screens with a FAB were pushed too high; screens without
-  one got a dead gap. The guess is gone.
-- **Snackbars were invisible to screen readers.** Content now sits in a
-  `Semantics` live region so TalkBack and VoiceOver announce it on arrival —
-  with `explicitChildNodes`, so the close button stays reachable rather than
-  being collapsed into the announcement. Every icon-only close affordance
-  carries a localized label from `MaterialLocalizations`.
+  rounding, text colours). Public, so you can decorate your own widgets in the
+  package's language.
+- **Design tokens are public**: `SpRadius`, `SpSpacing`, `SpType`, `SpMotion`,
+  `SpSurface`, `SpPalette`, `SpAccent`, `SpIntent`, `SpShadows` and the new
+  `SpContrast`.
+- **Canonical entry point** — `save_points_snackbar_dialog_bottomsheet.dart`,
+  so the import path matches the package name. One import exposes the whole
+  public API.
+- **Test suite**, from 26 tests to 78: design tokens, the snackbar queue, the
+  three `show()` APIs across every style, a regression test per fix below, and
+  a quality suite that guards contrast, idle frame count and text scaling.
+- pub.dev metadata: `topics`, `platforms` and `screenshots`.
 
 ### Changed
 
 - **Minimum SDK lowered from `^3.11.5` to `^3.6.0`** (Flutter 3.27+). The old
   floor bought nothing but dot-shorthand syntax (`.circular(12)`,
   `behavior: .floating`) and locked out every user below Dart 3.11. 174 call
-  sites were desugared; behaviour is unchanged.
-- **`SavePointsSnackbar.show` now returns a truthful controller for
-  `SnackbarPosition.top`.** It previously returned a placeholder `SnackBar`
-  with a 1 ms duration, so `close()` did nothing and `closed` completed almost
-  immediately — which also made `SnackbarQueue` fire every queued item at once.
-  The placeholder now lives exactly as long as the toast and is its single
-  clock, so `close()` dismisses and `closed` completes at the right moment.
-- **Barrier blur is now an explicit, documented default.** Dialogs and bottom
-  sheets always blurred their barrier even when `blur` was null, contradicting
-  the documented "when null, no blur is applied". Behaviour is unchanged, but
-  the default is now named (`defaultBarrierBlurSigma`) and `blur: 0` is the
-  documented way to opt out.
-- **`SnackbarQueue` dispatch is an exhaustive `switch`** rather than a chain of
-  conditionals, so a new `SnackbarType` is a compile error instead of silently
-  falling through to "warning".
-- **`require_trailing_commas` disabled.** It fights the Dart 3.7+ formatter,
+  sites desugared; behaviour unchanged.
+- **Icon pulse is opt-in.** Icons looped a scale-and-glow animation forever
+  with no way to switch it off, so a surface repainted every frame for as long
+  as it was open and `pumpAndSettle()` hung in consumers' tests. Now off by
+  default — `enablePulse: true` on `show()`, or on `SavePointsThemeData` for a
+  subtree.
+- **`SavePointsSnackbar.show` returns a truthful controller for
+  `SnackbarPosition.top`.** It used to return a placeholder `SnackBar` with a
+  1 ms duration, so `close()` did nothing and `closed` completed almost
+  immediately — which also made `SnackbarQueue` fire every queued item at
+  once. The placeholder now lives exactly as long as the toast and is its
+  single clock.
+- **Every style resolves in one place.** The three components each carried
+  their own answer to the same questions — 64 style branches across three
+  colour-config files and three shadow files — and had drifted. They all
+  delegate to `SpStyles` now, so a style looks like itself wherever it is used
+  and a new one is written once instead of three times.
+- **The `colorHeader` band is one widget.** All three components built it
+  themselves, and the copies drifted: a 110dp band on a dialog against 90dp on
+  a snackbar, a 14dp close chip against 12dp, a 16dp glyph against 14dp. Worse,
+  the snackbar derived its band from a pastel of the accent (saturation 0.3,
+  lightness 0.92), so the "coloured header" was a wash you could barely see.
+  260 lines lighter, and of 72 rendered states 66 came back byte-identical —
+  only the six `colorHeader` shots moved.
+- **Surfaces honour a style's wash, gradient stroke and rounding**, not just
+  its fill and border — which is what lets `aurora`, `gradientBorder` and
+  `brutalist` exist at all.
+- **The top toast no longer restructures the overlay.** Each toast used to
+  insert its own `OverlayEntry` and remove it again, both deferred to
+  post-frame callbacks to dodge Flutter's `mouse_tracker`
+  `_debugDuringDeviceUpdate` assertion — a workaround the 1.2.x source already
+  carried, and one that left the insert racing its own removal. One entry per
+  overlay now, whose *content* changes.
+- **The barrier fade costs one layer instead of two.** It animated an
+  `Opacity` wrapped around the `BackdropFilter`, paying for a screen-sized
+  `saveLayer` on every frame of the entrance. It ramps the blur sigma and dim
+  alpha instead, so the background comes into focus rather than a finished
+  blur dissolving in.
+- **Barrier blur is an explicit, documented default.** Dialogs and sheets
+  always blurred even when `blur` was null, contradicting the documented "when
+  null, no blur is applied". Behaviour is unchanged, but the default is named
+  (`defaultBarrierBlurSigma`) and `blur: 0` is the documented opt-out.
+- **`SnackbarQueue` dispatch is an exhaustive `switch`**, so a new
+  `SnackbarType` is a compile error rather than silently falling through to
+  "warning".
+- Bottom-sheet button labels pick their colour by measured contrast, as dialog
+  labels already did.
+- The package no longer ships example code in `lib/`; the demo lives in
+  `example/` where pub.dev can show it.
+- `require_trailing_commas` disabled — it fights the Dart 3.7+ formatter,
   which removes the very commas the rule then demands back.
-- The example app now demonstrates `SavePointsTheme` instead of mutating
+- The example app demonstrates `SavePointsTheme` instead of mutating
   process-wide globals.
+
+### Fixed
+
+**Crashes and compile errors**
+
+- **Two top snackbars in the same frame threw** *"An OverlayEntry should be
+  removed only once"*. `show()` deferred its insert and skipped it when a
+  newer toast claimed the slot, while `hide()` still scheduled a removal for
+  that never-inserted entry. Reproduced by any double-tapped button.
+- **Ambiguous import with `package:flutter/semantics.dart`.** The package
+  exported its own `SemanticsProperties`, which collided with Flutter's and
+  failed consumer builds.
+- **Top snackbars leaked a timer past the widget tree.** The auto-dismiss
+  timer and overlay entry were `static`, so they outlived disposal and later
+  fired against a disposed `AnimationController` and `ScaffoldMessenger`.
+- **`SnackbarQueue` could wedge permanently.** `clear()` left `_isShowing`
+  set, so every later `enqueue()` was silently swallowed. Stale `closed`
+  callbacks could also clobber the snackbar currently showing; they are
+  generation-guarded now.
+
+**Contrast** — measured across every style in both brightnesses, 32 checks now
+guarded by `test/quality_test.dart`. Three combinations were under the 4.5:1
+WCAG AA floor for body text:
+
+- Dark-mode dialog buttons read **2.54:1** — a white label on the dark-theme
+  blue. Label colour is now chosen by measured contrast rather than assumed
+  white, which also protects caller-supplied colours. **7.36:1**.
+- `tonal` body text **3.93:1** → **6.26:1** (light muted tone moved from
+  slate-500 to slate-600).
+- `glass` body text **2.50:1** → **8.68:1** (a translucent surface composites
+  over whatever is behind it, so it needs its own darker body tone).
+
+Layout was also checked at 1.5x and 2.0x text scale: no overflow.
+
+**Styles that were not delivering what the tokens described**
+
+- **`leftAccent` was broken.** Its accent bar sat in a `Row` with
+  `CrossAxisAlignment.stretch` and no height bound, so the dialog stretched to
+  fill the viewport instead of hugging its content, and the bar was not
+  visible at all.
+- **`glass` was not translucent.** Its fill sat at 58% alpha — opaque enough to
+  hide its own `BackdropFilter`, which is why it looked like `solid`. Now 30%
+  (light) / 38% (dark) with a brighter highlight edge.
+- **`solid`'s icon chip was a wash** — the accent gradient at 22%/12% alpha.
+  Now full strength with a white glyph, which is what makes `solid` read as the
+  boldest of the family.
+- **`neon` barely glowed**; the bloom is wider and stronger.
+- **`neon` sheets rendered the caller's `child` dark-on-dark**, because that
+  child inherits the app's own `ThemeData` while the surface is near-black.
+  The subtree gets a matching brightness now.
+- **`outlined` borders were nearly invisible** at 25–30% alpha. Now 55%
+  (light) / 62% (dark).
+- **Colored-glow elevation was invisible in light mode** (halo at 22%, now
+  34%), which is what separates `solid` from `minimal` at a glance.
+
+**Behaviour**
+
+- **`hideLikeCircle` was accepted and ignored.** It is forwarded to the
+  top-position toast now — the only position that can honour it, since bottom
+  snackbars are laid out by `ScaffoldMessenger`.
+- **Circular-reveal animations were hard-coded LTR.** Three clippers called
+  `alignment.resolve(TextDirection.ltr)`, so directional alignments revealed
+  from the wrong edge in RTL. They resolve against `Directionality.of` now.
+- **Bottom snackbars sat too high.** The package added 80dp of "FAB space" on
+  screens taller than 700dp — a guess, and a double-count: `Scaffold` already
+  lifts a floating `SnackBar` clear of the FAB (measured at 72dp) and of the
+  bottom safe area.
+- **Snackbars were invisible to screen readers.** Content sits in a `Semantics`
+  live region now, with `explicitChildNodes` so the close button stays
+  reachable rather than being collapsed into the announcement. Every icon-only
+  close affordance carries a localized label from `MaterialLocalizations`.
+- The example app's action buttons scaled themselves from a `MouseRegion`
+  hover callback, moving their own hit area out from under the pointer; the
+  scale is painted with `transformHitTests: false` now.
+- A stray `debugPrint` logged on every `ModernDialog` build.
+- Dialogs tinted a caller-supplied `child` with a translucent blue debug box.
+- Placeholder `yourusername` URLs in `pubspec.yaml` and the README pointed
+  nowhere.
 
 ### Deprecated
 
@@ -251,40 +196,26 @@ package at all.
   `SavePointsTheme(data: SavePointsThemeData(designStyle: ...))`. A mutable
   static is process-wide and notifies nothing already on screen.
 - `SavePointsConstants` — superseded by the `SpSpacing` / `SpRadius` /
-  `SpMotion` design tokens it duplicates one-for-one.
+  `SpMotion` tokens it duplicates one-for-one.
 - `KeyboardUtils.dismissKeyboardForDialog` and
   `.dismissKeyboardForBottomSheet` — use `KeyboardUtils.dismissIfFocused`.
 
 ### Removed
 
 Public API with no callers anywhere — not in the package, the example, the
-tests or the README. Removing it at a major version rather than carrying it
-forward:
+tests or the README:
 
-- **`ValidationUtils`** — `isNotEmpty`, `isPositiveDuration` and friends,
-  none of which the package ever called.
+- **`AccessibilityUtils` and its `SemanticsProperties`** — unused, and the name
+  collided with Flutter's own `SemanticsProperties`, breaking consumer builds.
+  Real `Semantics` is wired into the components now; if you used it, call
+  `Semantics(...)` from `package:flutter/material.dart` directly.
+- **`ValidationUtils`** — `isNotEmpty`, `isPositiveDuration` and friends, none
+  of which the package ever called.
 - **`ThemeUtils`** — one-line wrappers around `Theme.of(context)`.
 - **`SnackbarPresets`** and **`AnimationPresets`** (with its `AnimationConfig`)
   — preset tables nothing read. `DialogPresets` is genuinely used and stays.
-- **`StaticEnhancedIcon`** — a non-animating variant of `EnhancedIcon` that
-  was never built.
-
-- **`AccessibilityUtils` and its `SemanticsProperties` class.** Unused
-  anywhere in the package, and its name collided with Flutter's own
-  `SemanticsProperties`, breaking consumer builds. Real `Semantics` is now
-  wired directly into the components instead. If you used it, call
-  `Semantics(...)` from `package:flutter/material.dart` directly.
-
-### Added
-
-- **Regression test suite** (`test/regression_test.dart`) pinning every fix
-  above: the overlay crash, a burst of toasts, tearing the tree down before
-  the deferred insert, popping a route while a toast is up, controller
-  truthfulness, `hideLikeCircle`, the blur default, live-region semantics and
-  close-button reachability, the placeholder swallowing no taps, RTL reveal,
-  FAB margin, and the queue wedge. Suite is 43 tests; `flutter analyze` is
-  clean and `pub publish --dry-run` passes.
-- pub.dev metadata: `topics`, `platforms` and `screenshots`.
+- **`StaticEnhancedIcon`** — a non-animating variant of `EnhancedIcon` that was
+  never built.
 
 ## [1.1.10] - 2026-02-13
 
