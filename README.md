@@ -90,7 +90,7 @@ Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^2.0.0
+  save_points_snackbar_dialog_bottomsheet: ^1.2.1
 ```
 
 Requires Dart `^3.6.0` (Flutter 3.27 or newer).
@@ -1083,7 +1083,7 @@ config.dialog
 ```
 
 > [!WARNING]
-> `SavePointsBottomsheet.defaultDesignStyle` is deprecated as of 2.0.0. A
+> `SavePointsBottomsheet.defaultDesignStyle` is deprecated as of 1.2.1. A
 > mutable static is process-wide and notifies nothing already on screen — use
 > [`SavePointsTheme`](#-scoped-defaults-with-savepointstheme) instead, which
 > also sets the default for dialogs and snackbars in one place.

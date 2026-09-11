@@ -5,7 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2026-09-05
+## [1.2.1] - 2026-09-11
+
+> **Upgrading from 1.2.0 needs a look.** Despite the patch number this release
+> removes public API — `AccessibilityUtils`, `ValidationUtils`, `ThemeUtils`,
+> `SnackbarPresets`, `AnimationPresets` and `StaticEnhancedIcon` — and changes
+> some layout defaults. A `^1.2.0` constraint resolves to it automatically, so
+> anyone who imported those names will meet a compile error rather than a
+> deprecation notice. See *Removed* below for what to use instead.
+
+### Added
+
+- **`SavePointsTheme` scoped defaults**: A new `InheritedWidget`
+  (`SavePointsTheme` + `SavePointsThemeData`) lets you declare component
+  defaults once in the widget tree instead of repeating `designStyle:`/`blur:`
+  on every call or mutating the global `SnackDiaBottomConfig` singleton.
+  Supports `designStyle`, `blur`, `snackbarPosition`, `snackbarDuration`,
+  `enableHapticFeedback` and `barrierDismissible`. Resolution order is
+  explicit argument → nearest theme → built-in default, so it is fully
+  backward compatible and scopes correctly per subtree.
+- **Canonical entry point**: New `save_points_snackbar_dialog_bottomsheet.dart`
+  library so the import path matches the package name (the path the README has
+  always documented). A single import now exposes the entire public API.
+- **Design tokens are now public**: The shared token layer (`SpRadius`,
+  `SpSpacing`, `SpType`, `SpMotion`, `SpSurface`, `SpPalette`, `SpAccent`,
+  `SpIntent`) is exported so consumers can theme against the same source of
+  truth the components use.
+- **Test suite**: Added unit and widget tests covering the design tokens, the
+  snackbar queue, public enums, and the `show()` APIs for dialog, snackbar and
+  bottom sheet across all eight design styles.
+
+### Changed
+
+- **Package no longer ships example code in `lib/`**: The demo app and its
+  widgets lived under `lib/` (`lib/main.dart`, `lib/example/widgets/`,
+  `lib/savepoints_config_example.dart`) and bloated the published package. They
+  now live in `example/` where they belong. The actively-maintained demo is now
+  the canonical `example/lib/main.dart`, so pub.dev shows the current example.
+
+### Fixed
+
+- Removed a stray `debugPrint` that logged on every `ModernDialog` build.
+- Replaced placeholder `yourusername` repository/homepage/issue-tracker URLs in
+  `pubspec.yaml` and the README with the real repository.
 
 ### Added
 
@@ -243,43 +285,6 @@ forward:
   FAB margin, and the queue wedge. Suite is 43 tests; `flutter analyze` is
   clean and `pub publish --dry-run` passes.
 - pub.dev metadata: `topics`, `platforms` and `screenshots`.
-
-## [1.2.1] - 2026-07-23
-
-### Added
-
-- **`SavePointsTheme` scoped defaults**: A new `InheritedWidget`
-  (`SavePointsTheme` + `SavePointsThemeData`) lets you declare component
-  defaults once in the widget tree instead of repeating `designStyle:`/`blur:`
-  on every call or mutating the global `SnackDiaBottomConfig` singleton.
-  Supports `designStyle`, `blur`, `snackbarPosition`, `snackbarDuration`,
-  `enableHapticFeedback` and `barrierDismissible`. Resolution order is
-  explicit argument → nearest theme → built-in default, so it is fully
-  backward compatible and scopes correctly per subtree.
-- **Canonical entry point**: New `save_points_snackbar_dialog_bottomsheet.dart`
-  library so the import path matches the package name (the path the README has
-  always documented). A single import now exposes the entire public API.
-- **Design tokens are now public**: The shared token layer (`SpRadius`,
-  `SpSpacing`, `SpType`, `SpMotion`, `SpSurface`, `SpPalette`, `SpAccent`,
-  `SpIntent`) is exported so consumers can theme against the same source of
-  truth the components use.
-- **Test suite**: Added unit and widget tests covering the design tokens, the
-  snackbar queue, public enums, and the `show()` APIs for dialog, snackbar and
-  bottom sheet across all eight design styles.
-
-### Changed
-
-- **Package no longer ships example code in `lib/`**: The demo app and its
-  widgets lived under `lib/` (`lib/main.dart`, `lib/example/widgets/`,
-  `lib/savepoints_config_example.dart`) and bloated the published package. They
-  now live in `example/` where they belong. The actively-maintained demo is now
-  the canonical `example/lib/main.dart`, so pub.dev shows the current example.
-
-### Fixed
-
-- Removed a stray `debugPrint` that logged on every `ModernDialog` build.
-- Replaced placeholder `yourusername` repository/homepage/issue-tracker URLs in
-  `pubspec.yaml` and the README with the real repository.
 
 ## [1.1.10] - 2026-02-13
 
