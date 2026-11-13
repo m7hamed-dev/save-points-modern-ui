@@ -7,13 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.2] - 2026-11-13
 
-A quality and documentation pass. **Fully backward compatible**: no public
-name, signature or default changed, so `^1.2.1` resolves to this release and
-existing code keeps compiling and behaving as it did — with two loading-state
-bugs now out of the way.
+> **One behaviour changes in every app.** Tapping outside a dialog now
+> dismisses it. That is what `barrierDismissible` has promised since 1.0 and
+> what it defaults to, but it never actually worked — see
+> [Fixed](#fixed). If any of your dialogs relied on *not* closing, pass
+> `barrierDismissible: false` (or set it on a `SavePointsTheme`) before
+> upgrading. Bottom sheets and snackbars are unaffected.
+
+A quality and documentation pass. Source-compatible throughout: no public
+name was removed or renamed, every existing call still compiles, and
+`^1.2.1` resolves to this release.
 
 ### Fixed
 
+- **Tapping outside a dialog dismisses it.** Both `SavePointsDialog.show` and
+  `showCustom` built their card as `Material` → `Center` → card. The
+  transparent `Material` therefore filled the whole screen and hit-tested as
+  opaque, swallowing every tap meant for the barrier underneath: measured on
+  an 800×600 surface, the dialog's box was the full 800×600 while the visible
+  card was 400×307. `barrierDismissible` — `true` by default — had no effect.
+  The order is now `Center` → `Material` → card, and the dialog's horizontal
+  inset moved outside the `Material` the way Flutter's own `Dialog` places
+  `insetPadding`, so the region that absorbs taps is exactly the visible card
+  and the strip beside it dismisses too. Bottom sheets were never affected:
+  their barrier is a separate `GestureDetector` layered above the sheet.
+  Pixel geometry of the card is unchanged.
 - **A rebuild no longer cancels a `loadingNotifier`-driven spinner.**
   `ModernDialog` and `ModernBottomsheet` assigned `_isLoading = widget.isLoading`
   on *every* `didUpdateWidget`, so any rebuild from above reset the spinner
@@ -89,7 +107,7 @@ bugs now out of the way.
 
 ### Tests
 
-- 78 → 106 tests in the package, plus 3 new smoke tests in the example.
+- 78 → 113 tests in the package, plus 3 new smoke tests in the example.
 - `test/api_surface_test.dart` is a new backward-compatibility guard: it calls
   every public entry point the way 1.2.1 documented it, so a future rename or
   signature change fails to compile instead of reaching pub.dev.

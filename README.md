@@ -1261,6 +1261,34 @@ verified to work, not just to compile.
 ## ❓ FAQ
 
 <details>
+<summary><b>Since 1.2.2 tapping outside my dialog closes it. How do I stop that?</b></summary>
+
+Pass `barrierDismissible: false`, per call or for a whole subtree:
+
+```dart
+SavePointsDialog.show(
+  context,
+  title: 'Pick one',
+  message: 'You must choose to continue.',
+  barrierDismissible: false,
+);
+
+// or, for every dialog below this point:
+SavePointsTheme(
+  data: const SavePointsThemeData(barrierDismissible: false),
+  child: const MyApp(),
+);
+```
+
+Before 1.2.2 the flag did nothing: the dialog's transparent backing layer
+covered the whole screen and absorbed the tap before it reached the barrier,
+so dialogs never closed on an outside tap regardless of what you passed. The
+layer is now sized to the card, so `barrierDismissible` finally behaves as
+documented — and it has always defaulted to `true`.
+
+</details>
+
+<details>
 <summary><b>My action button never appears on a top snackbar. Why?</b></summary>
 
 A bottom snackbar is a real `SnackBar`, so it has Flutter's `SnackBarAction`

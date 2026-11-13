@@ -95,79 +95,90 @@ class HeaderDialog extends StatelessWidget {
     final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
 
     return RepaintBoundary(
-      child: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            margin: DialogConstants.dialogMargin,
-            constraints: const BoxConstraints(
-              maxWidth: DialogConstants.maxDialogWidth,
-            ),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // Main dialog content
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(effectiveBorderRadius),
-                  child: _buildContent(
-                    blur: blur,
-                    backdropFilter: backdropFilter,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Header bar
-                        _buildHeader(
-                          effectiveHeaderColor,
-                          effectiveHeaderTextColor,
-                        ),
-                        // Content area
-                        Container(
-                          width: double.infinity,
-                          color: backgroundColor,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Custom content
-                              Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: child),
-                              // Action buttons
-                              if (primaryButtonText != null ||
-                                  secondaryButtonText != null)
-                                _buildButtons(
-                                  context,
-                                  effectivePrimaryColor,
-                                  effectiveSecondaryColor,
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+      // Center first, Material second. The other way round the transparent
+      // Material filled the whole screen and hit-tested opaque, so it
+      // swallowed every tap aimed at the barrier behind it and
+      // barrierDismissible — true by default — did nothing. Center does not
+      // hit-test itself, so a tap outside the card now falls through to the
+      // barrier while the card still absorbs its own taps.
+      child: Center(
+        child: Padding(
+            // The inset lives outside the Material, the way Flutter's own
+            // Dialog places insetPadding: a tap in this band is a tap outside
+            // the card, so it dismisses rather than being absorbed.
+            padding: DialogConstants.dialogMargin,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: DialogConstants.maxDialogWidth,
                 ),
-                // Close button outside the dialog (top-left)
-                if (showCloseButton)
-                  Positioned(
-                    top: -16,
-                    left: 0,
-                    child: _OutsideCloseButton(
-                      iconColor: effectiveHeaderTextColor,
-                      backgroundColor: effectiveHeaderColor,
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                        if (onClose != null) {
-                          onClose!();
-                        } else {
-                          Navigator.of(context).pop();
-                        }
-                      },
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Main dialog content
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(effectiveBorderRadius),
+                      child: _buildContent(
+                        blur: blur,
+                        backdropFilter: backdropFilter,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Header bar
+                            _buildHeader(
+                              effectiveHeaderColor,
+                              effectiveHeaderTextColor,
+                            ),
+                            // Content area
+                            Container(
+                              width: double.infinity,
+                              color: backgroundColor,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Custom content
+                                  Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: child),
+                                  // Action buttons
+                                  if (primaryButtonText != null ||
+                                      secondaryButtonText != null)
+                                    _buildButtons(
+                                      context,
+                                      effectivePrimaryColor,
+                                      effectiveSecondaryColor,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-              ],
-            ),
-          ),
-        ),
+                    // Close button outside the dialog (top-left)
+                    if (showCloseButton)
+                      Positioned(
+                        top: -16,
+                        left: 0,
+                        child: _OutsideCloseButton(
+                          iconColor: effectiveHeaderTextColor,
+                          backgroundColor: effectiveHeaderColor,
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            if (onClose != null) {
+                              onClose!();
+                            } else {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            )),
       ),
     );
   }

@@ -750,6 +750,118 @@ void main() {
     });
   });
 
+  group('tapping the barrier dismisses the dialog', () {
+    // Was: the dialog's root Material sat *outside* its Center, so the
+    // transparent area around the visible card filled the screen and
+    // hit-tested opaque. Every tap meant for the barrier was swallowed by the
+    // dialog itself, and barrierDismissible — which defaults to true — never
+    // did anything. Bottom sheets were unaffected: their barrier is a
+    // separate GestureDetector layered above the sheet's own box.
+    testWidgets('show, with the default blurred barrier', (tester) async {
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.show(ctx, title: 'T', message: 'M');
+      await tester.pumpAndSettle();
+      expect(find.text('T'), findsOneWidget);
+
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+      expect(find.text('T'), findsNothing);
+    });
+
+    testWidgets('show, with the barrier blur turned off', (tester) async {
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.show(ctx, title: 'T', message: 'M', blur: 0);
+      await tester.pumpAndSettle();
+
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+      expect(find.text('T'), findsNothing);
+    });
+
+    testWidgets('show, in the colorHeader layout', (tester) async {
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.show(
+        ctx,
+        title: 'T',
+        message: 'M',
+        designStyle: ContentDesignStyle.colorHeader,
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+      expect(find.text('T'), findsNothing);
+    });
+
+    testWidgets('showCustom', (tester) async {
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.showCustom<void>(
+        context: ctx,
+        headerTitle: 'H',
+        child: const Text('body'),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('H'), findsOneWidget);
+
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+      expect(find.text('H'), findsNothing);
+    });
+
+    testWidgets('including the inset band beside the card', (tester) async {
+      // The dialog's own horizontal margin used to sit inside the Material,
+      // so a 24dp strip either side of the card absorbed taps without
+      // dismissing. Flutter's own Dialog puts insetPadding outside, and so
+      // does this one now.
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.show(ctx, title: 'T', message: 'M');
+      await tester.pumpAndSettle();
+
+      final card = tester.getRect(
+        find
+            .descendant(
+              of: find.byType(ModernDialog),
+              matching: find.byType(ClipRRect),
+            )
+            .first,
+      );
+      await tester.tapAt(Offset(card.left - 10, card.center.dy));
+      await tester.pumpAndSettle();
+      expect(find.text('T'), findsNothing);
+    });
+
+    testWidgets('but not when barrierDismissible is false', (tester) async {
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.show(
+        ctx,
+        title: 'T',
+        message: 'M',
+        barrierDismissible: false,
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+      expect(find.text('T'), findsOneWidget);
+    });
+
+    testWidgets('and not when the tap lands on the dialog itself', (
+      tester,
+    ) async {
+      final ctx = await pumpHost(tester);
+      SavePointsDialog.show(ctx, title: 'T', message: 'M');
+      await tester.pumpAndSettle();
+
+      await tester.tapAt(tester.getCenter(find.text('M')));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('T'),
+        findsOneWidget,
+        reason: 'the card must still swallow its own taps',
+      );
+    });
+  });
+
   group('dismissAllSnackbars', () {
     testWidgets('also takes down an overlay-based top toast', (tester) async {
       final ctx = await pumpHost(tester);

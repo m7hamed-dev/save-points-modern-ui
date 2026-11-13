@@ -135,100 +135,112 @@ class _ModernDialogState extends State<ModernDialog>
     DialogColorConfig colorConfig,
   ) {
     return RepaintBoundary(
-      child: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            margin: DialogConstants.dialogMargin,
-            constraints: const BoxConstraints(
-              maxWidth: DialogConstants.maxDialogWidth,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
-              child: _buildContent(
-                blur: widget.blur,
-                backdropFilter: widget.backdropFilter,
-                child: DialogContainer(
-                  colorConfig: colorConfig,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (widget.icon != null)
-                        RepaintBoundary(
-                          child: DialogIcon(
-                            icon: widget.icon!,
-                            color: colorConfig.iconColor,
-                            designStyle: colorConfig.designStyle,
-                            enablePulse: resolvePulse(context),
+      // Center first, Material second. The other way round the transparent
+      // Material filled the whole screen and hit-tested opaque, so it
+      // swallowed every tap aimed at the barrier behind it and
+      // barrierDismissible — true by default — did nothing. Center does not
+      // hit-test itself, so a tap outside the card now falls through to the
+      // barrier while the card still absorbs its own taps.
+      child: Center(
+        child: Padding(
+            // The inset lives outside the Material, the way Flutter's own
+            // Dialog places insetPadding: a tap in this band is a tap outside
+            // the card, so it dismisses rather than being absorbed.
+            padding: DialogConstants.dialogMargin,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: DialogConstants.maxDialogWidth,
+                ),
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(DialogConstants.borderRadius),
+                  child: _buildContent(
+                    blur: widget.blur,
+                    backdropFilter: widget.backdropFilter,
+                    child: DialogContainer(
+                      colorConfig: colorConfig,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (widget.icon != null)
+                            RepaintBoundary(
+                              child: DialogIcon(
+                                icon: widget.icon!,
+                                color: colorConfig.iconColor,
+                                designStyle: colorConfig.designStyle,
+                                enablePulse: resolvePulse(context),
+                              ),
+                            ),
+                          RepaintBoundary(
+                            child: DialogTitle(
+                              title: widget.title,
+                              isDark: widget.isDark,
+                              color: colorConfig.titleColor,
+                            ),
                           ),
-                        ),
-                      RepaintBoundary(
-                        child: DialogTitle(
-                          title: widget.title,
-                          isDark: widget.isDark,
-                          color: colorConfig.titleColor,
-                        ),
+                          const SizedBox(
+                            height: DialogConstants.contentSpacingAfterTitle,
+                          ),
+                          if (widget.message.isNotEmpty)
+                            RepaintBoundary(
+                              child: DialogMessage(
+                                message: widget.message,
+                                isDark: widget.isDark,
+                                color: colorConfig.messageColor,
+                              ),
+                            ),
+                          if (widget.message.isNotEmpty)
+                            const SizedBox(
+                              height:
+                                  DialogConstants.contentSpacingAfterMessage,
+                            ),
+                          // Optional custom child widget
+                          if (widget.child != null) ...[
+                            Container(
+                              color: Colors.blue.withValues(alpha: 0.1),
+                              child: widget.child!,
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                          // Main content: loading indicator or action buttons
+                          if (isLoading)
+                            RepaintBoundary(
+                              child: DialogLoadingIndicator(
+                                color: colorConfig.confirmColor,
+                              ),
+                            )
+                          else
+                            RepaintBoundary(
+                              child: DialogButtons(
+                                confirmText: widget.confirmText,
+                                cancelText: widget.cancelText,
+                                showCancelButton: widget.showCancelButton,
+                                confirmColor: colorConfig.confirmColor,
+                                cancelColor: colorConfig.cancelColor,
+                                isDark: widget.isDark,
+                                isOutlined: colorConfig.designStyle ==
+                                        ContentDesignStyle.outlined ||
+                                    colorConfig.designStyle ==
+                                        ContentDesignStyle.leftAccent ||
+                                    colorConfig.designStyle ==
+                                        ContentDesignStyle.tonal ||
+                                    colorConfig.designStyle ==
+                                        ContentDesignStyle.glass ||
+                                    colorConfig.designStyle ==
+                                        ContentDesignStyle.minimal,
+                                onConfirm: () => _handleConfirm(context),
+                                onCancel: () => _handleCancel(context),
+                              ),
+                            ),
+                        ],
                       ),
-                      const SizedBox(
-                        height: DialogConstants.contentSpacingAfterTitle,
-                      ),
-                      if (widget.message.isNotEmpty)
-                        RepaintBoundary(
-                          child: DialogMessage(
-                            message: widget.message,
-                            isDark: widget.isDark,
-                            color: colorConfig.messageColor,
-                          ),
-                        ),
-                      if (widget.message.isNotEmpty)
-                        const SizedBox(
-                          height: DialogConstants.contentSpacingAfterMessage,
-                        ),
-                      // Optional custom child widget
-                      if (widget.child != null) ...[
-                        Container(
-                          color: Colors.blue.withValues(alpha: 0.1),
-                          child: widget.child!,
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                      // Main content: loading indicator or action buttons
-                      if (isLoading)
-                        RepaintBoundary(
-                          child: DialogLoadingIndicator(
-                            color: colorConfig.confirmColor,
-                          ),
-                        )
-                      else
-                        RepaintBoundary(
-                          child: DialogButtons(
-                            confirmText: widget.confirmText,
-                            cancelText: widget.cancelText,
-                            showCancelButton: widget.showCancelButton,
-                            confirmColor: colorConfig.confirmColor,
-                            cancelColor: colorConfig.cancelColor,
-                            isDark: widget.isDark,
-                            isOutlined: colorConfig.designStyle ==
-                                    ContentDesignStyle.outlined ||
-                                colorConfig.designStyle ==
-                                    ContentDesignStyle.leftAccent ||
-                                colorConfig.designStyle ==
-                                    ContentDesignStyle.tonal ||
-                                colorConfig.designStyle ==
-                                    ContentDesignStyle.glass ||
-                                colorConfig.designStyle ==
-                                    ContentDesignStyle.minimal,
-                            onConfirm: () => _handleConfirm(context),
-                            onCancel: () => _handleCancel(context),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
+            )),
       ),
     );
   }
@@ -238,187 +250,202 @@ class _ModernDialogState extends State<ModernDialog>
     DialogColorConfig colorConfig,
   ) {
     return RepaintBoundary(
-      child: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            margin: DialogConstants.dialogMargin,
-            constraints: const BoxConstraints(
-              maxWidth: DialogConstants.maxDialogWidth,
-            ),
-            decoration: BoxDecoration(
-              color: colorConfig.backgroundColor,
-              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
-              boxShadow: DialogShadows.getShadows(
-                widget.isDark,
-                designStyle: ContentDesignStyle.colorHeader,
-                accentColor: colorConfig.iconColor,
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(DialogConstants.borderRadius),
-              child: _buildContent(
-                blur: widget.blur,
-                backdropFilter: widget.backdropFilter,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ColorHeaderBand(
-                      startColor: colorConfig.headerColor,
-                      endColor: colorConfig.headerColorEnd,
-                      isDark: widget.isDark,
-                      icon: widget.icon,
-                      iconColor: colorConfig.iconColor,
-                      iconBackgroundColor: colorConfig.iconBackgroundColor,
-                      enablePulse: resolvePulse(context),
-                      onClose: () => Navigator.of(context).pop(),
-                    ),
-                    // Content area with enhanced spacing
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: ColorHeaderBand.contentTopPadding(
-                          hasIcon: widget.icon != null,
+      // Center first, Material second. The other way round the transparent
+      // Material filled the whole screen and hit-tested opaque, so it
+      // swallowed every tap aimed at the barrier behind it and
+      // barrierDismissible — true by default — did nothing. Center does not
+      // hit-test itself, so a tap outside the card now falls through to the
+      // barrier while the card still absorbs its own taps.
+      child: Center(
+        child: Padding(
+            // The inset lives outside the Material, the way Flutter's own
+            // Dialog places insetPadding: a tap in this band is a tap outside
+            // the card, so it dismisses rather than being absorbed.
+            padding: DialogConstants.dialogMargin,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: DialogConstants.maxDialogWidth,
+                ),
+                decoration: BoxDecoration(
+                  color: colorConfig.backgroundColor,
+                  borderRadius:
+                      BorderRadius.circular(DialogConstants.borderRadius),
+                  boxShadow: DialogShadows.getShadows(
+                    widget.isDark,
+                    designStyle: ContentDesignStyle.colorHeader,
+                    accentColor: colorConfig.iconColor,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(DialogConstants.borderRadius),
+                  child: _buildContent(
+                    blur: widget.blur,
+                    backdropFilter: widget.backdropFilter,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ColorHeaderBand(
+                          startColor: colorConfig.headerColor,
+                          endColor: colorConfig.headerColorEnd,
+                          isDark: widget.isDark,
+                          icon: widget.icon,
+                          iconColor: colorConfig.iconColor,
+                          iconBackgroundColor: colorConfig.iconBackgroundColor,
+                          enablePulse: resolvePulse(context),
+                          onClose: () => Navigator.of(context).pop(),
                         ),
-                        left: 28,
-                        right: 28,
-                        bottom: 28,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Title with enhanced typography
-                          RepaintBoundary(
-                            child: Text(
-                              widget.title,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: SpType.displaySize,
-                                fontWeight: SpType.displayWeight,
-                                color: colorConfig.titleColor,
-                                letterSpacing: SpType.displayTracking,
-                                height: SpType.displayHeight,
-                              ),
+                        // Content area with enhanced spacing
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: ColorHeaderBand.contentTopPadding(
+                              hasIcon: widget.icon != null,
                             ),
+                            left: 28,
+                            right: 28,
+                            bottom: 28,
                           ),
-                          const SizedBox(height: 10),
-                          // Message with better readability
-                          if (widget.message.isNotEmpty)
-                            RepaintBoundary(
-                              child: Text(
-                                widget.message,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  color: colorConfig.messageColor,
-                                  height: 1.55,
-                                  letterSpacing: 0.1,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Title with enhanced typography
+                              RepaintBoundary(
+                                child: Text(
+                                  widget.title,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: SpType.displaySize,
+                                    fontWeight: SpType.displayWeight,
+                                    color: colorConfig.titleColor,
+                                    letterSpacing: SpType.displayTracking,
+                                    height: SpType.displayHeight,
+                                  ),
                                 ),
                               ),
-                            ),
-                          if (widget.message.isNotEmpty)
-                            const SizedBox(height: 28),
-                          // Optional custom child widget
-                          if (widget.child != null) ...[
-                            widget.child!,
-                            const SizedBox(height: 20),
-                          ],
-                          // Action button(s) with enhanced styling
-                          if (isLoading)
-                            RepaintBoundary(
-                              child: DialogLoadingIndicator(
-                                color: colorConfig.confirmColor,
-                              ),
-                            )
-                          else
-                            Column(
-                              children: [
-                                // Primary button with gradient and shadow
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 52,
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(26),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: colorConfig.buttonColor
-                                              .withValues(alpha: 0.3),
-                                          blurRadius: 12,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
+                              const SizedBox(height: 10),
+                              // Message with better readability
+                              if (widget.message.isNotEmpty)
+                                RepaintBoundary(
+                                  child: Text(
+                                    widget.message,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: colorConfig.messageColor,
+                                      height: 1.55,
+                                      letterSpacing: 0.1,
                                     ),
-                                    child: ElevatedButton(
-                                      onPressed: () => _handleConfirm(context),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            colorConfig.buttonColor,
-                                        foregroundColor:
-                                            colorConfig.buttonTextColor,
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 14,
-                                          horizontal: 28,
-                                        ),
-                                        shape: RoundedRectangleBorder(
+                                  ),
+                                ),
+                              if (widget.message.isNotEmpty)
+                                const SizedBox(height: 28),
+                              // Optional custom child widget
+                              if (widget.child != null) ...[
+                                widget.child!,
+                                const SizedBox(height: 20),
+                              ],
+                              // Action button(s) with enhanced styling
+                              if (isLoading)
+                                RepaintBoundary(
+                                  child: DialogLoadingIndicator(
+                                    color: colorConfig.confirmColor,
+                                  ),
+                                )
+                              else
+                                Column(
+                                  children: [
+                                    // Primary button with gradient and shadow
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 52,
+                                      child: DecoratedBox(
+                                        decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(26),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: colorConfig.buttonColor
+                                                  .withValues(alpha: 0.3),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                         ),
-                                        elevation: 0,
-                                      ),
-                                      child: Text(
-                                        widget.confirmText,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.3,
+                                        child: ElevatedButton(
+                                          onPressed: () =>
+                                              _handleConfirm(context),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                colorConfig.buttonColor,
+                                            foregroundColor:
+                                                colorConfig.buttonTextColor,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 14,
+                                              horizontal: 28,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(26),
+                                            ),
+                                            elevation: 0,
+                                          ),
+                                          child: Text(
+                                            widget.confirmText,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                    // Cancel button with subtle styling
+                                    if (widget.showCancelButton) ...[
+                                      const SizedBox(height: 14),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        height: 44,
+                                        child: TextButton(
+                                          onPressed: () =>
+                                              _handleCancel(context),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                colorConfig.cancelColor,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 10,
+                                              horizontal: 24,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            widget.cancelText,
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500,
+                                              letterSpacing: 0.2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
                                 ),
-                                // Cancel button with subtle styling
-                                if (widget.showCancelButton) ...[
-                                  const SizedBox(height: 14),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    height: 44,
-                                    child: TextButton(
-                                      onPressed: () => _handleCancel(context),
-                                      style: TextButton.styleFrom(
-                                        foregroundColor:
-                                            colorConfig.cancelColor,
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 10,
-                                          horizontal: 24,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(22),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        widget.cancelText,
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                          letterSpacing: 0.2,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                        ],
-                      ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
+            )),
       ),
     );
   }
