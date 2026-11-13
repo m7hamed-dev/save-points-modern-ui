@@ -30,6 +30,14 @@ bugs now out of the way.
 
 ### Added
 
+- **`SavePointsDialog.showCustom` now resolves its defaults from an in-scope
+  `SavePointsTheme`.** It read neither the theme nor anything else, so a
+  `SavePointsTheme` that set `blur` or `barrierDismissible` applied to every
+  surface in the subtree *except* this one. Both now follow the documented
+  order — explicit argument → nearest theme → built-in default — exactly as
+  `show` does. `barrierDismissible` changed from `bool barrierDismissible =
+  true` to `bool?` so that "not given" can fall through to the theme; passing
+  a value, or passing nothing without a theme, behaves exactly as before.
 - **`SavePointsSnackbar.showInfo`** — the counterpart of `showSuccess`,
   `showError` and `showWarning` for `SnackbarType.info`, which the class
   documented as a supported type but offered no helper for.
@@ -81,7 +89,7 @@ bugs now out of the way.
 
 ### Tests
 
-- 78 → 99 tests in the package, plus 3 new smoke tests in the example.
+- 78 → 106 tests in the package, plus 3 new smoke tests in the example.
 - `test/api_surface_test.dart` is a new backward-compatibility guard: it calls
   every public entry point the way 1.2.1 documented it, so a future rename or
   signature change fails to compile instead of reaching pub.dev.

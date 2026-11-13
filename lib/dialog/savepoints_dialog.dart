@@ -202,6 +202,10 @@ class SavePointsDialog {
   /// - Custom content area (your widget)
   /// - Primary and optional secondary action buttons
   ///
+  /// Like [show], `blur` and `barrierDismissible` resolve in the order
+  /// explicit argument → nearest [SavePointsTheme] → built-in default, so a
+  /// theme declared once for a subtree reaches this dialog too.
+  ///
   /// Example:
   /// ```dart
   /// SavePointsDialog.showCustom(
@@ -227,19 +231,39 @@ class SavePointsDialog {
     Color? secondaryButtonColor,
     bool showCloseButton = true,
     VoidCallback? onClose,
-    bool barrierDismissible = true,
+
+    /// Whether tapping the barrier dismisses the dialog.
+    ///
+    /// Falls back to the enclosing [SavePointsTheme], then to `true`.
+    bool? barrierDismissible,
     DialogAnimationDirection? startAnimation,
     DialogAnimationDirection? endAnimation,
+
+    /// Backdrop blur sigma for the barrier behind the dialog, and for the
+    /// dialog's own surface.
+    ///
+    /// Falls back to the enclosing [SavePointsTheme], then to
+    /// [SavePointsDialog.defaultBarrierBlurSigma]. Pass `blur: 0` for a plain
+    /// dim barrier.
     double? blur,
     ImageFilter? backdropFilter,
   }) {
     // Dismiss keyboard when showing dialog
     KeyboardUtils.dismissIfFocused(context);
 
+    final spTheme = SavePointsTheme.maybeOf(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final barrierSigma = blur ?? defaultBarrierBlurSigma;
+    // Same resolution order as [show]: explicit argument, then the nearest
+    // SavePointsTheme, then the built-in default. This used to read neither,
+    // so a theme that set `blur` or `barrierDismissible` was silently ignored
+    // by showCustom while applying to every other surface in the subtree.
+    final finalBarrierDismissible =
+        barrierDismissible ?? spTheme?.barrierDismissible ?? true;
+    final finalBlur = blur ?? spTheme?.blur;
+
+    final barrierSigma = finalBlur ?? defaultBarrierBlurSigma;
     final ImageFilter? barrierFilter = backdropFilter ??
         (barrierSigma <= 0
             ? null
@@ -248,7 +272,7 @@ class SavePointsDialog {
 
     return showGeneralDialog<T>(
       context: context,
-      barrierDismissible: barrierDismissible,
+      barrierDismissible: finalBarrierDismissible,
       barrierLabel: 'Close dialog',
       barrierColor: useBarrierBlur ? Colors.transparent : Colors.black54,
       transitionDuration: const Duration(milliseconds: 350),
@@ -267,7 +291,7 @@ class SavePointsDialog {
           showCloseButton: showCloseButton,
           onClose: onClose,
           isDark: isDark,
-          blur: blur,
+          blur: finalBlur,
           backdropFilter: backdropFilter,
           child: child,
         );
@@ -288,7 +312,7 @@ class SavePointsDialog {
                 dimColor: const Color(0x40000000),
                 sigma: backdropFilter == null ? barrierSigma : null,
                 filter: backdropFilter == null ? null : barrierFilter,
-                onTap: barrierDismissible
+                onTap: finalBarrierDismissible
                     ? () => Navigator.of(context).pop()
                     : null,
               ),
