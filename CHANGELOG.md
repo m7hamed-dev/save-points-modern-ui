@@ -5,6 +5,90 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-11-13
+
+A quality and documentation pass. **Fully backward compatible**: no public
+name, signature or default changed, so `^1.2.1` resolves to this release and
+existing code keeps compiling and behaving as it did — with two loading-state
+bugs now out of the way.
+
+### Fixed
+
+- **A rebuild no longer cancels a `loadingNotifier`-driven spinner.**
+  `ModernDialog` and `ModernBottomsheet` assigned `_isLoading = widget.isLoading`
+  on *every* `didUpdateWidget`, so any rebuild from above reset the spinner
+  the notifier had just turned on. Because a route's `transitionBuilder`
+  rebuilds its child once per frame, a spinner raised during the open
+  animation was cancelled as fast as it appeared. The static flag now moves
+  the state only when it actually changes.
+- **A `loadingNotifier` that is already `true` is honoured from the first
+  frame.** `initState` seeded the state from `widget.isLoading` and never read
+  the notifier, so a surface opened mid-flight showed no spinner until that
+  notifier happened to change again. Swapping one notifier for another now
+  adopts the new one's value immediately too, instead of leaving the old one's
+  state on screen.
+
+### Added
+
+- **`SavePointsSnackbar.showInfo`** — the counterpart of `showSuccess`,
+  `showError` and `showWarning` for `SnackbarType.info`, which the class
+  documented as a supported type but offered no helper for.
+- **The `BuildContext` snackbar extensions now return their
+  `ScaffoldFeatureController`** instead of `void`, so
+  `context.showSuccessSnackbar(...)` can be closed early or awaited the same
+  way `SavePointsSnackbar.showSuccess(...)` can. Callers that ignore the
+  result are unaffected.
+
+### Changed
+
+- **One shared loading-state implementation.** The identical ~25-line
+  notifier lifecycle in `ModernDialog` and `ModernBottomsheet` moved into an
+  internal `LoadingStateMixin`, so the two cannot drift apart again. It is
+  deliberately not exported.
+- **The repeated design-style tests in `SavePointsSnackbar.show` are resolved
+  once** instead of being spelled out identically in both position branches.
+- **`deprecated_member_use` is an `info`, not an `error`.** Flutter 3.47
+  deprecated `package:flutter/material.dart` itself, which this line is built
+  on deliberately, so every file reported an error nothing here could act on
+  — 51 of them, which is what pub.dev's analysis saw. `dart analyze` now
+  reports **no errors and no warnings**, and the deprecations that *can* be
+  acted on are no longer buried.
+- Documentation accuracy, all of it user-visible:
+  - the pub.dev screenshot caption said "eight built-in design styles"; there
+    are twelve;
+  - `ContentDesignStyle`'s own doc listed only five of its twelve values, and
+    called `solid` "the current default" without saying that is true for
+    snackbars but not for dialogs and bottom sheets;
+  - `SavePointsDialog.show` promised an assertion when `message` is empty; it
+    asserts on `title` only, and an empty `message` is valid alongside a
+    `child`;
+  - `applyTheme` on all three config classes said it applied theme-aware
+    settings while doing nothing at all; it is now documented as the reserved
+    no-op it is;
+  - `margin`, `actionLabel` and `onActionPressed` are ignored for
+    `SnackbarPosition.top` — an overlay toast has no `SnackBarAction` slot —
+    which the parameters now say.
+
+### Documentation
+
+- README rewritten around a single `H1` with a uniform badge row, and gained a
+  **Compatibility** table (Dart `^3.6.0`, Flutter 3.27+, every platform, zero
+  dependencies) and a **FAQ** covering the questions this API actually raises.
+- **Four dead links removed.** The demo GIF in the hero, both "Live Demo"
+  URLs and the GitHub Discussions link all returned 404.
+- The "Running the Example" instructions pointed at `lib/main.dart` and
+  `cd save_points_snackbar_dialog_bottomsheet`; neither path exists.
+
+### Tests
+
+- 78 → 99 tests in the package, plus 3 new smoke tests in the example.
+- `test/api_surface_test.dart` is a new backward-compatibility guard: it calls
+  every public entry point the way 1.2.1 documented it, so a future rename or
+  signature change fails to compile instead of reaching pub.dev.
+- `test/_doc_check.dart` type-checks every Dart snippet in the README's FAQ.
+- `example/test/` drives the demo's real buttons, so the example is verified
+  to work rather than merely to compile.
+
 ## [1.2.1] - 2026-09-11
 
 > **Upgrading from 1.2.0 needs a look.** Despite the patch number this release

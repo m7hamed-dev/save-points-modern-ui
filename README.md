@@ -1,31 +1,30 @@
+<div align="center">
+
 # SavePoints Modern UI 🎨
 
-<div align="center">
-  <!-- <img src="banner.webp" alt="SavePoints Modern UI Banner" width="100%"> -->
+### Dialogs, snackbars and bottom sheets that share one design language — twelve styles, one import, no native code
 
-  <h3>📹 Demo</h3>
-  <img src="https://raw.githubusercontent.com/m7hamed-dev/save_points_sa_privacy_polices/main/src/save_points_snackbar_dialog_bottomsheet-video.gif" alt="SavePoints Modern UI Demo" width="100%" style="max-width: 600px;">
+[![Pub Version](https://img.shields.io/pub/v/save_points_snackbar_dialog_bottomsheet?style=flat-square&logo=dart&color=0175C2)](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet)
+[![Pub Points](https://img.shields.io/pub/points/save_points_snackbar_dialog_bottomsheet?style=flat-square&color=0175C2)](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet/score)
+[![Likes](https://img.shields.io/pub/likes/save_points_snackbar_dialog_bottomsheet?style=flat-square&color=0175C2)](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet/score)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/m7hamed-dev/save-points-modern-ui/pulls)
+
+[**📦 pub.dev**](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet) · [**📚 API reference**](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/) · [**🧪 Example app**](https://github.com/m7hamed-dev/save-points-modern-ui/tree/main/example) · [**🐛 Report a bug**](https://github.com/m7hamed-dev/save-points-modern-ui/issues)
+
+<img width="900" alt="The three components across the built-in design styles" src="https://github.com/user-attachments/assets/05a6eb09-54c2-4e49-8447-14aef43b28ea" />
+
 </div>
 
+---
+
+## 🖼️ Preview
+
 <div align="center">
 
-[![pub package](https://img.shields.io/pub/v/save_points_snackbar_dialog_bottomsheet.svg)](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet)
-[![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
-[![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?logo=Flutter&logoColor=white)](https://flutter.dev)
-
-**[🌐 Live Demo](https://snackbar-dialog-bottomsheet.netlify.app/)** • [📦 Pub.dev](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet) • [📚 Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
-
-
-
-# InfoGraphic
-<img width="1200"  alt="Image" src="https://github.com/user-attachments/assets/05a6eb09-54c2-4e49-8447-14aef43b28ea" />
-
-# Real Screenshots
-<img width="1200"   alt="Image" src="https://github.com/user-attachments/assets/de97592d-503e-4595-a8fd-6e0602c75535" />
-<img width="1200"   alt="Image" src="https://github.com/user-attachments/assets/f60ce6c6-ee79-4eaa-b638-d0af32fe4eae" />
-<img width="1200"   alt="Image" src="https://github.com/user-attachments/assets/bd6102c0-15dc-4026-9309-ebb9f1245653" />
-
-
+<img width="900" alt="Dialogs rendered in several design styles" src="https://github.com/user-attachments/assets/de97592d-503e-4595-a8fd-6e0602c75535" />
+<img width="900" alt="Snackbars rendered in several design styles" src="https://github.com/user-attachments/assets/f60ce6c6-ee79-4eaa-b638-d0af32fe4eae" />
+<img width="900" alt="Bottom sheets rendered in several design styles" src="https://github.com/user-attachments/assets/bd6102c0-15dc-4026-9309-ebb9f1245653" />
 
 </div>
 
@@ -36,13 +35,14 @@
 | | |
 |---|---|
 | [Overview](#-overview) · [Key features](#-key-features) | what this is |
-| [Installation](#-installation) · [Quick start](#-quick-start) | five minutes in |
+| [Installation](#-installation) · [Compatibility](#-compatibility) · [Quick start](#-quick-start) | five minutes in |
 | **[Design styles](#design-styles)** | the twelve looks, and when to use each |
 | [Dialog](#-savepointsdialog-1) · [Snackbar](#-savepointssnackbar-1) · [Bottom sheet](#-savepointsbottomsheet-1) | every parameter |
 | [Dialog presets](#-dialog-presets) · [Animations](#-animation-types) | ready-made choices |
 | [Configuration](#️-configuration) · [`SavePointsTheme`](#-scoped-defaults-with-savepointstheme) | defaults, app-wide or per subtree |
 | [Building on the same styles](#-building-on-the-same-styles) | `SpStyles` for your own widgets |
 | [Accessibility](#-accessibility) · [Performance](#-performance) | what the package guarantees |
+| **[FAQ](#-faq)** | the questions people actually ask |
 
 ## 🌟 Overview
 
@@ -100,26 +100,53 @@ All components feature automatic dark mode support, extensive customization opti
 
 ## 📦 Installation
 
-Add `save_points_snackbar_dialog_bottomsheet` to your `pubspec.yaml`:
+```bash
+flutter pub add save_points_snackbar_dialog_bottomsheet
+```
+
+Or add it to `pubspec.yaml` yourself:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.2.1
+  save_points_snackbar_dialog_bottomsheet: ^1.2.2
 ```
 
-Requires Dart `^3.6.0` (Flutter 3.27 or newer).
-
-Install the package:
-
-```bash
-flutter pub get
-```
-
-Import the package:
+Then one import gives you the whole API:
 
 ```dart
 import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar_dialog_bottomsheet.dart';
 ```
+
+> [!NOTE]
+> There is nothing else to set up — no initialization call, no wrapper widget,
+> no platform configuration. The only requirement is that a `MaterialApp` (or
+> any `ScaffoldMessenger`) sits above the context you pass in, which is already
+> true in a standard Flutter app.
+
+## ✅ Compatibility
+
+| Requirement | Version |
+|---|---|
+| Dart SDK | `^3.6.0` |
+| Flutter | 3.27 or newer |
+| Dependencies | none beyond the Flutter SDK |
+
+| Platform | Status |
+|---|---|
+| Android · iOS | ✅ Supported |
+| Web | ✅ Supported |
+| macOS · Windows · Linux | ✅ Supported |
+
+Pure Dart and Flutter: no platform channels, no native code, no transitive
+packages. That is why the package works unchanged on every target above.
+
+> [!IMPORTANT]
+> The 1.2.x line is built on `package:flutter/material.dart`. If your app has
+> already migrated to `package:material_ui` (Flutter 3.47+), the two
+> `ScaffoldMessenger` implementations are not interchangeable and this line
+> will not work for you — a `material_ui` build is being prepared as `2.0.0`
+> on [GitHub](https://github.com/m7hamed-dev/save-points-modern-ui) and is not
+> on pub.dev yet.
 
 ## 🚀 Quick Start
 
@@ -1193,19 +1220,6 @@ The underlying tokens are public too — `SpRadius`, `SpSpacing`, `SpType`,
 `SpMotion`, `SpSurface`, `SpPalette`, `SpShadows` and `SpContrast` — if you
 would rather compose your own.
 
-## 📱 Platform Support
-
-| Platform | Status |
-|----------|--------|
-| iOS | ✅ Fully Supported |
-| Android | ✅ Fully Supported |
-| Web | ✅ Fully Supported |
-| macOS | ✅ Fully Supported |
-| Linux | ✅ Fully Supported |
-| Windows | ✅ Fully Supported |
-
-Pure Dart and Flutter — no platform channels, no native code.
-
 ## ♿ Accessibility
 
 - Snackbars are announced by TalkBack and VoiceOver on arrival (they render
@@ -1225,36 +1239,205 @@ Pure Dart and Flutter — no platform channels, no native code.
 
 ## 🔧 Running the Example
 
-The example app is located in the `lib/main.dart` file and demonstrates all features of the package.
+The runnable demo lives in [`example/`](https://github.com/m7hamed-dev/save-points-modern-ui/tree/main/example).
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/m7hamed-dev/save-points-modern-ui.git
-   cd save_points_snackbar_dialog_bottomsheet
-   ```
+```bash
+git clone https://github.com/m7hamed-dev/save-points-modern-ui.git
+cd save-points-modern-ui/example
+flutter run
+```
 
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
+It ships **more than 80 one-tap examples**, grouped by component:
 
-3. Run the example:
-   ```bash
-   flutter run
-   ```
+- every one of the twelve design styles, side by side on all three components
+- dialog presets, async confirm flows, and custom `child` content
+- snackbars at the top and bottom, with progress bars, queues and actions
+- bottom sheets with handles, scrollable content and loading states
+- an app-bar switcher that flips the global default style at runtime
 
-The example app includes:
-- **Animated UI** - Beautiful gradient backgrounds, staggered animations, and smooth transitions
-- **Interactive Buttons** - Scale, hover, and ripple effects on all action buttons
-- **Bottom Navigation** - Navigate between sections with snackbar feedback
-- **Comprehensive Examples** - Over 40+ examples showcasing all features
-- **Dialog Presets** - Examples using predefined dialog configurations
-- **Advanced Flows** - Multi-step interactions and combined component usage
-- **Professional Code** - Well-organized, documented, and maintainable codebase following Flutter best practices
+Its smoke tests (`example/test/`) drive those same buttons, so the demo is
+verified to work, not just to compile.
+
+## ❓ FAQ
+
+<details>
+<summary><b>My action button never appears on a top snackbar. Why?</b></summary>
+
+A bottom snackbar is a real `SnackBar`, so it has Flutter's `SnackBarAction`
+slot. A top snackbar is an overlay toast — there is no such slot, so
+`actionLabel` and `onActionPressed` are ignored there, and so is `margin`
+(the toast positions itself under the status bar and app bar instead).
+
+Either keep the action and use `SnackbarPosition.bottom`, or use `onTap` on
+the toast itself:
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Saved',
+  position: SnackbarPosition.top,
+  onTap: () => context.go('/details'), // works at the top
+);
+```
+
+</details>
+
+<details>
+<summary><b>I get "requires a ScaffoldMessenger ancestor".</b></summary>
+
+Every snackbar needs a `ScaffoldMessenger` above the `BuildContext` you pass
+in. A normal `MaterialApp` provides one, so this almost always means the
+context came from above the `MaterialApp` — for example the `BuildContext` of
+the widget that *builds* `MaterialApp`.
+
+Take the context from inside, with a `Builder` or from the page's own
+`build`:
+
+```dart
+MaterialApp(
+  home: Builder( // this context is below the MaterialApp
+    builder: (context) => ElevatedButton(
+      onPressed: () => SavePointsSnackbar.showSuccess(context, title: 'Hi'),
+      child: const Text('Show'),
+    ),
+  ),
+);
+```
+
+</details>
+
+<details>
+<summary><b><code>pumpAndSettle()</code> hangs in my widget tests.</b></summary>
+
+Something on screen is animating forever. The package itself never does this
+by default: the looping icon pulse is **off** unless you ask for it with
+`enablePulse: true` (per call) or `SavePointsThemeData(enablePulse: true)`
+(per subtree). If you have turned it on, the frame queue never goes quiet and
+`pumpAndSettle` times out by design.
+
+In tests either leave the pulse off, or drive the clock yourself:
+
+```dart
+await tester.pump();
+await tester.pump(const Duration(milliseconds: 600));
+```
+
+</details>
+
+<details>
+<summary><b>How do I set one design style for my whole app?</b></summary>
+
+Three levels, highest priority first:
+
+1. **Per call** — `designStyle: ContentDesignStyle.glass`
+2. **Per subtree** — wrap it in `SavePointsTheme`; it rebuilds descendants
+   when it changes and covers all three components at once
+3. **Process-wide** — `SnackDiaBottomConfig().snackbar.defaultDesignStyle`,
+   set once in `main()`
+
+```dart
+SavePointsTheme(
+  data: const SavePointsThemeData(designStyle: ContentDesignStyle.glass),
+  child: const MyApp(),
+);
+```
+
+Prefer `SavePointsTheme`. The config singleton notifies nothing that is
+already on screen.
+
+</details>
+
+<details>
+<summary><b>How do I show a spinner while an async action runs?</b></summary>
+
+For a dialog's confirm button, return a `Future<bool>` from `onConfirmAsync`
+— the button swaps itself for a spinner until it completes, and the dialog
+closes only if you return `true`:
+
+```dart
+SavePointsDialog.show(
+  context,
+  title: 'Delete file',
+  message: 'This cannot be undone.',
+  showCancelButton: true,
+  onConfirmAsync: () async {
+    await api.delete(id);
+    return true; // false keeps the dialog open
+  },
+);
+```
+
+To drive the spinner from outside, pass a `loadingNotifier` and flip its
+value. Its current value is honoured from the first frame, and an unrelated
+rebuild will not cancel it.
+
+</details>
+
+<details>
+<summary><b>How do I close a snackbar before it expires?</b></summary>
+
+Keep the controller that every show method returns — including the
+`BuildContext` extensions:
+
+```dart
+final controller = context.showInfoSnackbar(title: 'Uploading…');
+await upload();
+controller.close();            // or: await controller.closed;
+```
+
+`context.dismissAllSnackbars()` clears everything at once, top toasts
+included.
+
+</details>
+
+<details>
+<summary><b>Why is my <code>glass</code> snackbar not blurred?</b></summary>
+
+Blur defaults differ on purpose. Dialogs and bottom sheets have a barrier to
+blur, so they blur it by default (`blur: 0` opts out). A snackbar has no
+barrier, so it applies no blur unless you ask:
+
+```dart
+SavePointsSnackbar.show(
+  context,
+  title: 'Frosted',
+  designStyle: ContentDesignStyle.glass,
+  blur: 18, // required for snackbars
+);
+```
+
+</details>
+
+<details>
+<summary><b>Can I style my own widgets to match?</b></summary>
+
+Yes — `SpStyles.of` is the same resolver the package uses internally, and it
+is exported. See
+[Building on the same styles](#-building-on-the-same-styles).
+
+</details>
+
+<details>
+<summary><b>Does it support RTL and Arabic layouts?</b></summary>
+
+Yes. Reveal and slide animations resolve against `Directionality.of(context)`
+so directional alignments mirror, and close-button labels come from
+`MaterialLocalizations`, so they are read out in the user's own locale.
+
+</details>
+
+<details>
+<summary><b>Does it work with Flutter 3.50 / <code>package:material_ui</code>?</b></summary>
+
+The 1.2.x line runs fine on Flutter 3.50 as long as your app still uses
+`package:flutter/material.dart`. If your app has migrated to
+`package:material_ui`, this line is not compatible — see
+[Compatibility](#-compatibility).
+
+</details>
 
 ## 📖 Additional Resources
 
-- [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) - Try the components in your browser
 - [Full API Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
 - [Example App](https://github.com/m7hamed-dev/save-points-modern-ui/tree/main/example)
 - [Issue Tracker](https://github.com/m7hamed-dev/save-points-modern-ui/issues)
@@ -1290,7 +1473,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 💬 Support
 
 - **Issues**: [GitHub Issues](https://github.com/m7hamed-dev/save-points-modern-ui/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/m7hamed-dev/save-points-modern-ui/discussions)
 - **Email**: support@savepoints.dev
 
 ---
@@ -1299,6 +1481,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by the SavePoints team**
 
-[⭐ Star us on GitHub](https://github.com/m7hamed-dev/save-points-modern-ui) • [🌐 Live Demo](https://eclectic-dasik-b48e1b.netlify.app/) • [📦 Pub.dev](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet) • [📚 Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
+[⭐ Star us on GitHub](https://github.com/m7hamed-dev/save-points-modern-ui) • [📦 Pub.dev](https://pub.dev/packages/save_points_snackbar_dialog_bottomsheet) • [📚 Documentation](https://pub.dev/documentation/save_points_snackbar_dialog_bottomsheet/latest/)
 
 </div>

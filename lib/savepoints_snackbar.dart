@@ -64,7 +64,16 @@ class SavePointsSnackbar {
     Duration? duration,
     IconData? icon,
     Color? iconColor,
+
+    /// Called when the action button is tapped.
+    ///
+    /// Shown only for [SnackbarPosition.bottom]. A top snackbar is an overlay
+    /// toast with no [SnackBarAction] slot, so this and [actionLabel] are
+    /// ignored there — use `onTap`, or a `child` in a dialog, instead.
     VoidCallback? onActionPressed,
+
+    /// Label of the action button. [SnackbarPosition.bottom] only; see
+    /// [onActionPressed].
     String? actionLabel,
     SnackbarType? type,
     SnackbarPosition? position,
@@ -82,6 +91,12 @@ class SavePointsSnackbar {
     bool? enableHapticFeedback,
     bool? dismissOnTap,
     double? maxWidth,
+
+    /// Outer margin around the snackbar.
+    ///
+    /// Applies to [SnackbarPosition.bottom] only. A top snackbar positions
+    /// itself below the status bar and app bar, so it takes its offset from
+    /// the safe area rather than from this value.
     EdgeInsets? margin,
     BorderRadius? borderRadius,
     Color? borderColor,
@@ -160,6 +175,14 @@ class SavePointsSnackbar {
         config.defaultBorderColor ??
         finalIconColor.withValues(alpha: 0.3);
 
+    // These three were computed twice, once per position branch, and had to
+    // be kept identical by hand. Resolve them once instead.
+    final isOutlined = finalDesignStyle == ContentDesignStyle.outlined;
+    final showCloseButton = isOutlined ||
+        finalDesignStyle == ContentDesignStyle.leftAccent ||
+        finalDesignStyle == ContentDesignStyle.tonal ||
+        finalDismissible;
+
     assert(
       ScaffoldMessenger.maybeOf(context) != null,
       'SavePointsSnackbar.show requires a ScaffoldMessenger ancestor. Wrap '
@@ -227,12 +250,10 @@ class SavePointsSnackbar {
         showProgressIndicator: finalShowProgressIndicator,
         borderRadius: finalBorderRadius,
         maxWidth: finalMaxWidth,
-        borderColor: finalDesignStyle == ContentDesignStyle.outlined
+        borderColor: isOutlined
             ? colorConfig.borderColor
             : (finalBorderWidth > 0 ? finalBorderColor : null),
-        borderWidth: finalDesignStyle == ContentDesignStyle.outlined
-            ? 2
-            : finalBorderWidth,
+        borderWidth: isOutlined ? 2 : finalBorderWidth,
         onTap: onTap,
         hideLikeCircle: hideLikeCircle,
         onDismissed: () {
@@ -251,10 +272,7 @@ class SavePointsSnackbar {
         designStyle: finalDesignStyle,
         titleColor: colorConfig.titleColor,
         subtitleColor: colorConfig.subtitleColor,
-        showCloseButton: finalDesignStyle == ContentDesignStyle.outlined ||
-            finalDesignStyle == ContentDesignStyle.leftAccent ||
-            finalDesignStyle == ContentDesignStyle.tonal ||
-            finalDismissible,
+        showCloseButton: showCloseButton,
       );
 
       // Placeholder retired first — the normal path, since it holds the
@@ -281,8 +299,7 @@ class SavePointsSnackbar {
         margin: finalMargin,
         shape: RoundedRectangleBorder(
           borderRadius: finalBorderRadius,
-          side: finalDesignStyle != ContentDesignStyle.outlined &&
-                  finalBorderWidth > 0
+          side: !isOutlined && finalBorderWidth > 0
               ? BorderSide(color: finalBorderColor, width: finalBorderWidth)
               : BorderSide.none,
         ),
@@ -315,13 +332,8 @@ class SavePointsSnackbar {
             designStyle: finalDesignStyle,
             titleColor: colorConfig.titleColor,
             subtitleColor: colorConfig.subtitleColor,
-            borderColor: finalDesignStyle == ContentDesignStyle.outlined
-                ? colorConfig.borderColor
-                : null,
-            showCloseButton: finalDesignStyle == ContentDesignStyle.outlined ||
-                finalDesignStyle == ContentDesignStyle.leftAccent ||
-                finalDesignStyle == ContentDesignStyle.tonal ||
-                finalDismissible,
+            borderColor: isOutlined ? colorConfig.borderColor : null,
+            showCloseButton: showCloseButton,
           ),
         ),
         action: onActionPressed != null && actionLabel != null
@@ -426,6 +438,40 @@ class SavePointsSnackbar {
       title: title,
       subtitle: subtitle,
       type: SnackbarType.warning,
+      duration: duration,
+      onActionPressed: onActionPressed,
+      actionLabel: actionLabel,
+      position: position,
+      showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
+      blur: blur,
+      backdropFilter: backdropFilter,
+    );
+  }
+
+  /// Quick method to show info snackbar
+  ///
+  /// The counterpart of [showSuccess], [showError] and [showWarning] for
+  /// [SnackbarType.info] — which is also the type [show] falls back to when
+  /// none is given.
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showInfo(
+    BuildContext context, {
+    required String title,
+    String? subtitle,
+    Duration? duration,
+    VoidCallback? onActionPressed,
+    String? actionLabel,
+    SnackbarPosition? position,
+    bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
+    double? blur,
+    ImageFilter? backdropFilter,
+  }) {
+    return show(
+      context,
+      title: title,
+      subtitle: subtitle,
+      type: SnackbarType.info,
       duration: duration,
       onActionPressed: onActionPressed,
       actionLabel: actionLabel,

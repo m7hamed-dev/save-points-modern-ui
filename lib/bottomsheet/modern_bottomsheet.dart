@@ -12,6 +12,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dar
 import 'package:save_points_snackbar_dialog_bottomsheet/design/color_header_band.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/shared/loading_state_mixin.dart';
 
 /// Modern bottom sheet widget
 class ModernBottomsheet extends StatefulWidget {
@@ -62,9 +63,14 @@ class ModernBottomsheet extends StatefulWidget {
   State<ModernBottomsheet> createState() => _ModernBottomsheetState();
 }
 
-class _ModernBottomsheetState extends State<ModernBottomsheet> {
-  late bool _isLoading;
-  late ValueNotifier<bool>? _loadingNotifier;
+class _ModernBottomsheetState extends State<ModernBottomsheet>
+    with LoadingStateMixin<ModernBottomsheet> {
+  @override
+  bool get widgetIsLoading => widget.isLoading;
+
+  @override
+  ValueNotifier<bool>? get widgetLoadingNotifier => widget.loadingNotifier;
+
   BottomsheetColorConfig? _cachedColorConfig;
   double? _cachedMaxHeight;
   ImageFilter? _cachedBackdropFilter;
@@ -72,25 +78,12 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
   ImageFilter? _lastBackdropFilterParam;
 
   @override
-  void initState() {
-    super.initState();
-    _isLoading = widget.isLoading;
-    _loadingNotifier = widget.loadingNotifier;
-
-    if (_loadingNotifier != null) {
-      _loadingNotifier!.addListener(_onLoadingChanged);
-    }
-  }
-
-  @override
   void didUpdateWidget(ModernBottomsheet oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.loadingNotifier != widget.loadingNotifier) {
-      oldWidget.loadingNotifier?.removeListener(_onLoadingChanged);
-      _loadingNotifier = widget.loadingNotifier;
-      _loadingNotifier?.addListener(_onLoadingChanged);
-    }
-    _isLoading = widget.isLoading;
+    updateLoadingState(
+      oldIsLoading: oldWidget.isLoading,
+      oldNotifier: oldWidget.loadingNotifier,
+    );
   }
 
   @override
@@ -111,22 +104,6 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
       _cachedMaxHeight = screenHeight * BottomsheetConstants.maxHeight;
     } else {
       _cachedMaxHeight = widget.maxHeight;
-    }
-  }
-
-  @override
-  void dispose() {
-    if (_loadingNotifier != null) {
-      _loadingNotifier!.removeListener(_onLoadingChanged);
-    }
-    super.dispose();
-  }
-
-  void _onLoadingChanged() {
-    if (_loadingNotifier != null && mounted) {
-      setState(() {
-        _isLoading = _loadingNotifier!.value;
-      });
     }
   }
 
@@ -234,7 +211,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                       const SizedBox(height: BottomsheetConstants.titleSpacing),
                     ],
                     // Main content: loading indicator or scrollable child
-                    if (_isLoading)
+                    if (isLoading)
                       RepaintBoundary(
                         child: BottomsheetLoadingIndicator(
                           color: colorConfig.iconColor,
@@ -355,7 +332,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                             const SizedBox(height: 18),
                           ],
                           // Main content: loading indicator or scrollable child
-                          if (_isLoading)
+                          if (isLoading)
                             RepaintBoundary(
                               child: BottomsheetLoadingIndicator(
                                 color: colorConfig.iconColor,

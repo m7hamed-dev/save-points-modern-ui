@@ -1,6 +1,6 @@
 name: save_points_snackbar_dialog_bottomsheet
 description: A package providing modern, customizable UI components including dialogs, snackbars, and bottom sheets with glassmorphism effects, animations, and extensive customization options.
-version: 1.2.1
+version: 1.2.2
 homepage: https://github.com/m7hamed-dev/save-points-modern-ui
 repository: https://github.com/m7hamed-dev/save-points-modern-ui
 issue_tracker: https://github.com/m7hamed-dev/save-points-modern-ui/issues
@@ -22,7 +22,7 @@ platforms:
 
 screenshots:
   - description: >-
-      Dialogs, snackbars and bottom sheets rendered in the eight built-in
+      Dialogs, snackbars and bottom sheets rendered in the twelve built-in
       design styles.
     path: banner.webp
 

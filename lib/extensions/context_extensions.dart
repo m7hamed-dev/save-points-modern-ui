@@ -7,7 +7,10 @@ import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart
 
 /// Extension methods on [BuildContext] for easier access to SavePoints components
 extension SavePointsContextExtension on BuildContext {
-  /// Shows a success snackbar
+  /// Shows a success snackbar.
+  ///
+  /// Returns the snackbar's [ScaffoldFeatureController], so it can be closed
+  /// early or awaited via `closed`. Ignore it if you don't need either.
   ///
   /// Example:
   /// ```dart
@@ -16,7 +19,7 @@ extension SavePointsContextExtension on BuildContext {
   ///   subtitle: 'Operation completed',
   /// );
   /// ```
-  void showSuccessSnackbar({
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSuccessSnackbar({
     required String title,
     String? subtitle,
     Duration? duration,
@@ -25,7 +28,7 @@ extension SavePointsContextExtension on BuildContext {
     double? blur,
     ImageFilter? backdropFilter,
   }) {
-    SavePointsSnackbar.showSuccess(
+    return SavePointsSnackbar.showSuccess(
       this,
       title: title,
       subtitle: subtitle,
@@ -46,7 +49,7 @@ extension SavePointsContextExtension on BuildContext {
   ///   subtitle: 'Something went wrong',
   /// );
   /// ```
-  void showErrorSnackbar({
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showErrorSnackbar({
     required String title,
     String? subtitle,
     Duration? duration,
@@ -55,7 +58,7 @@ extension SavePointsContextExtension on BuildContext {
     double? blur,
     ImageFilter? backdropFilter,
   }) {
-    SavePointsSnackbar.showError(
+    return SavePointsSnackbar.showError(
       this,
       title: title,
       subtitle: subtitle,
@@ -76,7 +79,7 @@ extension SavePointsContextExtension on BuildContext {
   ///   subtitle: 'Please check your input',
   /// );
   /// ```
-  void showWarningSnackbar({
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showWarningSnackbar({
     required String title,
     String? subtitle,
     Duration? duration,
@@ -85,7 +88,7 @@ extension SavePointsContextExtension on BuildContext {
     double? blur,
     ImageFilter? backdropFilter,
   }) {
-    SavePointsSnackbar.showWarning(
+    return SavePointsSnackbar.showWarning(
       this,
       title: title,
       subtitle: subtitle,
@@ -106,7 +109,7 @@ extension SavePointsContextExtension on BuildContext {
   ///   subtitle: 'New update available',
   /// );
   /// ```
-  void showInfoSnackbar({
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showInfoSnackbar({
     required String title,
     String? subtitle,
     Duration? duration,
@@ -115,11 +118,10 @@ extension SavePointsContextExtension on BuildContext {
     double? blur,
     ImageFilter? backdropFilter,
   }) {
-    SavePointsSnackbar.show(
+    return SavePointsSnackbar.showInfo(
       this,
       title: title,
       subtitle: subtitle,
-      type: SnackbarType.info,
       duration: duration,
       showProgressIndicator: showProgressIndicator,
       designStyle: designStyle,

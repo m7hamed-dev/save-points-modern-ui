@@ -26,7 +26,12 @@ class SnackDiaBottomConfig {
   /// Dialog configuration
   DialogConfig dialog = DialogConfig();
 
-  /// Apply theme-aware settings based on Brightness
+  /// Reserved hook for brightness-aware defaults.
+  ///
+  /// Currently a no-op: every built-in default already resolves brightness at
+  /// paint time from the ambient [Theme], so there is nothing to pre-compute.
+  /// Kept so existing calls keep compiling, and so the hook is there if a
+  /// future default genuinely needs to vary by [Brightness].
   void applyTheme(Brightness brightness) {
     snackbar.applyTheme(brightness);
     dialog.applyTheme(brightness);

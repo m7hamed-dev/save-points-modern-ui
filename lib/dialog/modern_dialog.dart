@@ -15,6 +15,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_icon.dart'
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_loading_indicator.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_message.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_title.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/shared/loading_state_mixin.dart';
 
 /// Modern dialog widget with loading support
 class ModernDialog extends StatefulWidget {
@@ -67,9 +68,14 @@ class ModernDialog extends StatefulWidget {
   State<ModernDialog> createState() => _ModernDialogState();
 }
 
-class _ModernDialogState extends State<ModernDialog> {
-  late bool _isLoading;
-  late ValueNotifier<bool>? _loadingNotifier;
+class _ModernDialogState extends State<ModernDialog>
+    with LoadingStateMixin<ModernDialog> {
+  @override
+  bool get widgetIsLoading => widget.isLoading;
+
+  @override
+  ValueNotifier<bool>? get widgetLoadingNotifier => widget.loadingNotifier;
+
   DialogColorConfig? _cachedColorConfig;
   ThemeData? _cachedTheme;
   ImageFilter? _cachedBackdropFilter;
@@ -77,25 +83,12 @@ class _ModernDialogState extends State<ModernDialog> {
   ImageFilter? _lastBackdropFilterParam;
 
   @override
-  void initState() {
-    super.initState();
-    _isLoading = widget.isLoading;
-    _loadingNotifier = widget.loadingNotifier;
-
-    if (_loadingNotifier != null) {
-      _loadingNotifier!.addListener(_onLoadingChanged);
-    }
-  }
-
-  @override
   void didUpdateWidget(ModernDialog oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.loadingNotifier != widget.loadingNotifier) {
-      oldWidget.loadingNotifier?.removeListener(_onLoadingChanged);
-      _loadingNotifier = widget.loadingNotifier;
-      _loadingNotifier?.addListener(_onLoadingChanged);
-    }
-    _isLoading = widget.isLoading;
+    updateLoadingState(
+      oldIsLoading: oldWidget.isLoading,
+      oldNotifier: oldWidget.loadingNotifier,
+    );
   }
 
   @override
@@ -112,22 +105,6 @@ class _ModernDialogState extends State<ModernDialog> {
       cancelButtonColor: widget.cancelButtonColor,
       designStyle: widget.designStyle,
     );
-  }
-
-  @override
-  void dispose() {
-    if (_loadingNotifier != null) {
-      _loadingNotifier!.removeListener(_onLoadingChanged);
-    }
-    super.dispose();
-  }
-
-  void _onLoadingChanged() {
-    if (_loadingNotifier != null && mounted) {
-      setState(() {
-        _isLoading = _loadingNotifier!.value;
-      });
-    }
   }
 
   @override
@@ -216,7 +193,7 @@ class _ModernDialogState extends State<ModernDialog> {
                         const SizedBox(height: 16),
                       ],
                       // Main content: loading indicator or action buttons
-                      if (_isLoading)
+                      if (isLoading)
                         RepaintBoundary(
                           child: DialogLoadingIndicator(
                             color: colorConfig.confirmColor,
@@ -347,7 +324,7 @@ class _ModernDialogState extends State<ModernDialog> {
                             const SizedBox(height: 20),
                           ],
                           // Action button(s) with enhanced styling
-                          if (_isLoading)
+                          if (isLoading)
                             RepaintBoundary(
                               child: DialogLoadingIndicator(
                                 color: colorConfig.confirmColor,
@@ -474,15 +451,13 @@ class _ModernDialogState extends State<ModernDialog> {
   }
 
   Future<void> _handleConfirm(BuildContext context) async {
-    if (_isLoading) return;
+    if (isLoading) return;
 
     HapticFeedback.lightImpact();
 
     // Handle async confirm callback
     if (widget.onConfirmAsync != null) {
-      setState(() {
-        _isLoading = true;
-      });
+      setLoading(true);
 
       try {
         final onConfirmAsync = widget.onConfirmAsync;
@@ -492,18 +467,12 @@ class _ModernDialogState extends State<ModernDialog> {
             if (context.mounted) {
               Navigator.of(context).pop(true);
             }
-          } else if (mounted) {
-            setState(() {
-              _isLoading = false;
-            });
+          } else {
+            setLoading(false);
           }
         }
-      } catch (e) {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
+      } catch (_) {
+        setLoading(false);
         rethrow;
       }
     } else {
@@ -514,7 +483,7 @@ class _ModernDialogState extends State<ModernDialog> {
   }
 
   void _handleCancel(BuildContext context) {
-    if (_isLoading) return;
+    if (isLoading) return;
 
     HapticFeedback.lightImpact();
     Navigator.of(context).pop(false);

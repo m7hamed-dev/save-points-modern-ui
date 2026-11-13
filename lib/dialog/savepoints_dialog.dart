@@ -45,7 +45,8 @@ class SavePointsDialog {
   /// Returns `true` if the dialog was confirmed, `false` if cancelled,
   /// or `null` if dismissed without action.
   ///
-  /// Throws an [AssertionError] if [title] or [message] is empty.
+  /// Throws an [AssertionError] in debug builds if [title] is empty.
+  /// [message] may be empty — pass a [child] instead to supply the body.
   ///
   /// Example:
   /// ```dart

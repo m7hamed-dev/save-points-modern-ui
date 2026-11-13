@@ -553,6 +553,226 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 6));
     });
   });
+
+  group('loadingNotifier survives a rebuild', () {
+    // Was: didUpdateWidget assigned `_isLoading = widget.isLoading` on every
+    // rebuild, so a notifier-driven spinner was cancelled the moment anything
+    // above rebuilt the surface — and the route's transition builder rebuilds
+    // it once per frame.
+    testWidgets('ModernDialog keeps the notifier value', (tester) async {
+      final notifier = ValueNotifier<bool>(false);
+      addTearDown(notifier.dispose);
+      late StateSetter rebuild;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                rebuild = setState;
+                return ModernDialog(
+                  title: 'T',
+                  message: 'M',
+                  confirmText: 'OK',
+                  cancelText: 'Cancel',
+                  showCancelButton: false,
+                  isDark: false,
+                  loadingNotifier: notifier,
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      notifier.value = true;
+      await tester.pump();
+      expect(find.byType(DialogLoadingIndicator), findsOneWidget);
+
+      rebuild(() {});
+      await tester.pump();
+      expect(
+        find.byType(DialogLoadingIndicator),
+        findsOneWidget,
+        reason: 'an unrelated rebuild must not cancel loading',
+      );
+    });
+
+    testWidgets('ModernBottomsheet keeps the notifier value', (tester) async {
+      final notifier = ValueNotifier<bool>(false);
+      addTearDown(notifier.dispose);
+      late StateSetter rebuild;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                rebuild = setState;
+                return ModernBottomsheet(
+                  title: 'T',
+                  isDark: false,
+                  blur: 0,
+                  loadingNotifier: notifier,
+                  child: const Text('body'),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      notifier.value = true;
+      await tester.pump();
+      expect(find.byType(BottomsheetLoadingIndicator), findsOneWidget);
+
+      rebuild(() {});
+      await tester.pump();
+      expect(
+        find.byType(BottomsheetLoadingIndicator),
+        findsOneWidget,
+        reason: 'an unrelated rebuild must not cancel loading',
+      );
+    });
+
+    testWidgets('the initial notifier value is honoured at mount', (
+      tester,
+    ) async {
+      // Was: initState seeded from `widget.isLoading` and ignored the
+      // notifier, so a surface opened mid-flight showed no spinner until the
+      // notifier next changed.
+      final notifier = ValueNotifier<bool>(true);
+      addTearDown(notifier.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ModernDialog(
+              title: 'T',
+              message: 'M',
+              confirmText: 'OK',
+              cancelText: 'Cancel',
+              showCancelButton: false,
+              isDark: false,
+              loadingNotifier: notifier,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(DialogLoadingIndicator), findsOneWidget);
+    });
+
+    testWidgets('an async confirm spinner survives a rebuild', (tester) async {
+      // The same clobber hit the dialog's own spinner: onConfirmAsync set it,
+      // and the next rebuild from above reset it to widget.isLoading.
+      final gate = Completer<bool>();
+      addTearDown(() {
+        if (!gate.isCompleted) gate.complete(false);
+      });
+      late StateSetter rebuild;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                rebuild = setState;
+                return ModernDialog(
+                  title: 'T',
+                  message: 'M',
+                  confirmText: 'OK',
+                  cancelText: 'Cancel',
+                  showCancelButton: false,
+                  isDark: false,
+                  onConfirmAsync: () => gate.future,
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('OK'));
+      await tester.pump();
+      expect(find.byType(DialogLoadingIndicator), findsOneWidget);
+
+      rebuild(() {});
+      await tester.pump();
+      expect(
+        find.byType(DialogLoadingIndicator),
+        findsOneWidget,
+        reason: 'the async action is still in flight',
+      );
+
+      gate.complete(false);
+      await tester.pumpAndSettle();
+      expect(find.byType(DialogLoadingIndicator), findsNothing);
+    });
+
+    testWidgets('a swapped notifier takes over immediately', (tester) async {
+      final first = ValueNotifier<bool>(true);
+      final second = ValueNotifier<bool>(false);
+      addTearDown(first.dispose);
+      addTearDown(second.dispose);
+      var useSecond = false;
+      late StateSetter rebuild;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                rebuild = setState;
+                return ModernDialog(
+                  title: 'T',
+                  message: 'M',
+                  confirmText: 'OK',
+                  cancelText: 'Cancel',
+                  showCancelButton: false,
+                  isDark: false,
+                  loadingNotifier: useSecond ? second : first,
+                );
+              },
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(DialogLoadingIndicator), findsOneWidget);
+
+      rebuild(() => useSecond = true);
+      await tester.pump();
+      expect(
+        find.byType(DialogLoadingIndicator),
+        findsNothing,
+        reason: 'the new notifier says not loading',
+      );
+    });
+  });
+
+  group('dismissAllSnackbars', () {
+    testWidgets('also takes down an overlay-based top toast', (tester) async {
+      final ctx = await pumpHost(tester);
+
+      SavePointsSnackbar.show(
+        ctx,
+        title: 'top toast',
+        position: SnackbarPosition.top,
+        duration: const Duration(seconds: 10),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('top toast'), findsOneWidget);
+
+      ctx.dismissAllSnackbars();
+      await tester.pumpAndSettle();
+      expect(
+        find.text('top toast'),
+        findsNothing,
+        reason: 'the doc promises every visible snackbar goes away',
+      );
+    });
+  });
 }
 
 /// A pushed route that raises a long-lived top toast, so a test can pop the
