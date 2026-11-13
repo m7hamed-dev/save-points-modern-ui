@@ -1,7 +1,7 @@
 /// Example widgets for the SavePoints UI demo application
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Section container widget for organizing example buttons
 ///

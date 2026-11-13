@@ -108,7 +108,7 @@ Or add it to `pubspec.yaml` yourself:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.3.0
+  save_points_snackbar_dialog_bottomsheet: ^2.0.0
 ```
 
 Then one import gives you the whole API:
@@ -119,17 +119,18 @@ import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar_dia
 
 > [!NOTE]
 > There is nothing else to set up — no initialization call, no wrapper widget,
-> no platform configuration. The only requirement is that a `MaterialApp` (or
-> any `ScaffoldMessenger`) sits above the context you pass in, which is already
-> true in a standard Flutter app.
+> no platform configuration. The only requirement is that a `ScaffoldMessenger`
+> sits above the context you pass in, which `material_ui`'s `MaterialApp`
+> already provides. It must be **`material_ui`'s**: see
+> [Compatibility](#-compatibility).
 
 ## ✅ Compatibility
 
 | Requirement | Version |
 |---|---|
-| Dart SDK | `^3.6.0` |
-| Flutter | 3.27 or newer |
-| Dependencies | none beyond the Flutter SDK |
+| Dart SDK | `^3.13.0` |
+| Flutter | 3.47 or newer |
+| Dependencies | [`material_ui`](https://pub.dev/packages/material_ui) `^1.11.0` |
 
 | Platform | Status |
 |---|---|
@@ -137,16 +138,20 @@ import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar_dia
 | Web | ✅ Supported |
 | macOS · Windows · Linux | ✅ Supported |
 
-Pure Dart and Flutter: no platform channels, no native code, no transitive
-packages. That is why the package works unchanged on every target above.
+Pure Dart and Flutter: no platform channels and no native code, which is why
+the package works unchanged on every target above.
 
 > [!IMPORTANT]
-> The 1.2.x line is built on `package:flutter/material.dart`. If your app has
-> already migrated to `package:material_ui` (Flutter 3.47+), the two
-> `ScaffoldMessenger` implementations are not interchangeable and this line
-> will not work for you — a `material_ui` build is being prepared as `2.0.0`
-> on [GitHub](https://github.com/m7hamed-dev/save-points-modern-ui) and is not
-> on pub.dev yet.
+> **2.0.0 requires that your app has migrated to `package:material_ui`.**
+> Flutter 3.47 deprecated `package:flutter/material.dart` in favour of the
+> standalone [`material_ui`](https://pub.dev/packages/material_ui) package,
+> and 2.0.0 follows it. The two `ScaffoldMessenger` implementations are not
+> interchangeable: under the legacy `MaterialApp` every snackbar fails with
+> *"requires a ScaffoldMessenger ancestor"*.
+>
+> Migrate your app first — `dart fix --apply --code=migrate_design_widgets` —
+> or stay on `^1.3.0`, which is the same package built on
+> `package:flutter/material.dart` and carries every fix 2.0.0 has.
 
 ## 🚀 Quick Start
 
@@ -1457,10 +1462,10 @@ so directional alignments mirror, and close-button labels come from
 <details>
 <summary><b>Does it work with Flutter 3.50 / <code>package:material_ui</code>?</b></summary>
 
-The 1.2.x line runs fine on Flutter 3.50 as long as your app still uses
-`package:flutter/material.dart`. If your app has migrated to
-`package:material_ui`, this line is not compatible — see
-[Compatibility](#-compatibility).
+That is exactly what 2.0.0 is for: it is built on `package:material_ui`, so
+your app must be too. If your app still imports
+`package:flutter/material.dart`, stay on `^1.3.0` — same package, same fixes,
+built on the legacy import. See [Compatibility](#-compatibility).
 
 </details>
 

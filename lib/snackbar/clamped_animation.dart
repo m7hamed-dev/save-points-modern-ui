@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A clamped animation that ensures values stay within [0, 1] range
 /// This is needed for curves like elasticOut, easeOutBack, and bounceOut

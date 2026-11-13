@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/animated_barrier.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
@@ -149,7 +149,7 @@ class SavePointsDialog {
       barrierLabel: config.barrierLabel,
       barrierColor: useBarrierBlur ? Colors.transparent : config.barrierColor,
       transitionDuration: config.transitionDuration,
-      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return pulseScope(
           spTheme,
@@ -276,7 +276,7 @@ class SavePointsDialog {
       barrierLabel: 'Close dialog',
       barrierColor: useBarrierBlur ? Colors.transparent : Colors.black54,
       transitionDuration: const Duration(milliseconds: 350),
-      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, _) {
         final dialog = HeaderDialog(
           headerTitle: headerTitle,

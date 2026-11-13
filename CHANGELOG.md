@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-11-13
+
+> **Breaking: the package now uses `package:material_ui`.** Flutter 3.50
+> deprecates `package:flutter/material.dart` in favour of the standalone
+> `material_ui` package, and this release follows it. Upgrade only once your
+> app has migrated too (`dart fix --apply --code=migrate_design_widgets`).
+> Apps that still import `package:flutter/material.dart` should stay on
+> `^1.3.0`.
+
+This release is 1.3.0 plus the `material_ui` migration: every fix and
+addition listed under [1.3.0](#130---2026-11-13) below is in here too.
+
+### Changed
+
+- Every library, the example and the tests import
+  `package:material_ui/material_ui.dart` instead of
+  `package:flutter/material.dart`.
+- Types in the public API now come from `material_ui`: for example
+  `SavePointsSnackbar.show` returns its `ScaffoldFeatureController<SnackBar,
+  SnackBarClosedReason>`, and the color configs take its `ThemeData`.
+- Snackbars look up `material_ui`'s `ScaffoldMessenger`, so they need a
+  `MaterialApp` from `material_ui` above them. With the legacy `MaterialApp`,
+  `show` failed with "requires a ScaffoldMessenger ancestor".
+- Minimum SDK raised to Dart 3.13 and Flutter 3.47, the minimum
+  `material_ui` supports.
+- `dart fix` cleanups the new SDK floor allows: wildcard `_` parameters and a
+  null-aware list element. No change in behaviour.
+
 ## [1.3.0] - 2026-11-13
 
 > **One behaviour changes in every app.** Tapping outside a dialog now

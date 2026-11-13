@@ -50,15 +50,11 @@ analyzer:
   errors:
     invalid_annotation_target: ignore
     avoid_dynamic_calls: error
-    # Deliberately an info, not an error, on the 1.2.x line.
-    #
-    # Flutter 3.47 deprecated `package:flutter/material.dart` itself in favour
-    # of `package:material_ui`. This line is built on the former on purpose —
-    # migrating is a breaking change for every consumer, and is what 2.0.0 is
-    # for — so every file reports this one deprecation and nothing here can
-    # act on it. Escalated to `error` it buried the deprecations that *can*
-    # be acted on, and made `dart analyze` report 51 errors to pub.dev for a
-    # package that has none.
-    deprecated_member_use: info
+    # Back to an error on this line. It was downgraded on 1.2.x because the
+    # package deliberately stayed on the deprecated
+    # `package:flutter/material.dart`, so every file reported a deprecation
+    # nothing could act on. This branch has migrated to `material_ui`, so a
+    # deprecation here is real again and worth stopping for.
+    deprecated_member_use: error
     use_build_context_synchronously: error
     avoid_print: error
