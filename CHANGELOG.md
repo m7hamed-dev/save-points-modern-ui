@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.2] - 2026-11-13
+## [1.3.0] - 2026-11-13
 
 > **One behaviour changes in every app.** Tapping outside a dialog now
 > dismisses it. That is what `barrierDismissible` has promised since 1.0 and
@@ -14,9 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > `barrierDismissible: false` (or set it on a `SavePointsTheme`) before
 > upgrading. Bottom sheets and snackbars are unaffected.
 
-A quality and documentation pass. Source-compatible throughout: no public
-name was removed or renamed, every existing call still compiles, and
-`^1.2.1` resolves to this release.
+A quality and documentation pass, released as a **minor** rather than a patch
+because it adds public API (`SavePointsSnackbar.showInfo`) and changes a
+user-visible behaviour. Source-compatible throughout: no public name was
+removed or renamed and every existing call still compiles, so `^1.2.1`
+resolves to this release.
 
 ### Fixed
 

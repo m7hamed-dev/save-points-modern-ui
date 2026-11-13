@@ -108,7 +108,7 @@ Or add it to `pubspec.yaml` yourself:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.2.2
+  save_points_snackbar_dialog_bottomsheet: ^1.3.0
 ```
 
 Then one import gives you the whole API:
@@ -1261,7 +1261,7 @@ verified to work, not just to compile.
 ## ❓ FAQ
 
 <details>
-<summary><b>Since 1.2.2 tapping outside my dialog closes it. How do I stop that?</b></summary>
+<summary><b>Since 1.3.0 tapping outside my dialog closes it. How do I stop that?</b></summary>
 
 Pass `barrierDismissible: false`, per call or for a whole subtree:
 
@@ -1280,7 +1280,7 @@ SavePointsTheme(
 );
 ```
 
-Before 1.2.2 the flag did nothing: the dialog's transparent backing layer
+Before 1.3.0 the flag did nothing: the dialog's transparent backing layer
 covered the whole screen and absorbed the tap before it reached the barrier,
 so dialogs never closed on an outside tap regardless of what you passed. The
 layer is now sized to the card, so `barrierDismissible` finally behaves as

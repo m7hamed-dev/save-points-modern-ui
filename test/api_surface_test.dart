@@ -62,7 +62,7 @@ void main() {
         () => SavePointsSnackbar.showSuccess(ctx, title: 's'),
         () => SavePointsSnackbar.showError(ctx, title: 'e'),
         () => SavePointsSnackbar.showWarning(ctx, title: 'w'),
-        // Added in 1.2.2 to match the other three.
+        // Added in 1.3.0 to match the other three.
         () => SavePointsSnackbar.showInfo(ctx, title: 'i'),
       ]) {
         expect(show(), isNotNull);
