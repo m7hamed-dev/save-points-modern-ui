@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Widget that applies a circular reveal/hide animation for snackbars
 class SnackbarCircularRevealClip extends StatelessWidget {

@@ -1,7 +1,7 @@
 // Not a test: a type-check for the code snippets in README.md's FAQ.
 // `flutter analyze` compiles it; `flutter test` ignores it (no _test suffix).
 // Delete it only together with the snippets it mirrors.
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar_dialog_bottomsheet.dart';
 
 class _Api {

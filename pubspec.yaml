@@ -1,6 +1,6 @@
 name: save_points_snackbar_dialog_bottomsheet
 description: A package providing modern, customizable UI components including dialogs, snackbars, and bottom sheets with glassmorphism effects, animations, and extensive customization options.
-version: 1.4.0
+version: 2.1.0
 homepage: https://github.com/m7hamed-dev/save-points-modern-ui
 repository: https://github.com/m7hamed-dev/save-points-modern-ui
 issue_tracker: https://github.com/m7hamed-dev/save-points-modern-ui/issues
@@ -27,11 +27,13 @@ screenshots:
     path: banner.webp
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  material_ui: ^1.11.0
 
 dev_dependencies:
   flutter_test:

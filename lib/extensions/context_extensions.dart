@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';

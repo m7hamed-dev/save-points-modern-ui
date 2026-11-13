@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/config/dialog_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/config/snackbar_config.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart' hide AnimatedIcon;
+import 'package:material_ui/material_ui.dart' hide AnimatedIcon;
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/color_header_band.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
