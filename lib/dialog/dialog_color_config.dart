@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 
 /// Professional dialog color configuration with enhanced palettes
 class DialogColorConfig {
@@ -29,82 +30,63 @@ class DialogColorConfig {
     Color? confirmButtonColor,
     Color? cancelButtonColor,
     ContentDesignStyle? designStyle,
-  }) : designStyle = designStyle ?? ContentDesignStyle.solid,
-       iconColor =
-           iconColor ??
-           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       backgroundColor = _computeBackgroundColor(
-         backgroundColor: backgroundColor,
-         designStyle: designStyle ?? ContentDesignStyle.solid,
-         isDark: isDark,
-         iconColor: iconColor ??
-             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       ),
-       confirmColor =
-           confirmButtonColor ??
-           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       cancelColor =
-           cancelButtonColor ??
-           (isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
-       borderColor = _computeBorderColor(
-         designStyle: designStyle ?? ContentDesignStyle.solid,
-         iconColor: iconColor,
-         theme: theme,
-         isDark: isDark,
-       ),
-       borderWidth = _computeBorderWidth(designStyle ?? ContentDesignStyle.solid),
-       titleColor = _computeTitleColor(
-         designStyle: designStyle ?? ContentDesignStyle.solid,
-         isDark: isDark,
-       ),
-       messageColor = _computeMessageColor(
-         designStyle: designStyle ?? ContentDesignStyle.solid,
-         isDark: isDark,
-       ),
-       headerColor = _computeHeaderColor(
-         iconColor:
-             iconColor ??
-             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-         isDark: isDark,
-       ),
-       headerColorEnd = _computeHeaderColorEnd(
-         iconColor:
-             iconColor ??
-             (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-         isDark: isDark,
-       ),
-       buttonColor =
-           iconColor ??
-           (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
-       buttonTextColor = Colors.white,
-       iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
+  })  : designStyle = designStyle ?? ContentDesignStyle.solid,
+        iconColor = iconColor ??
+            (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        backgroundColor = _computeBackgroundColor(
+          backgroundColor: backgroundColor,
+          designStyle: designStyle ?? ContentDesignStyle.solid,
+          isDark: isDark,
+          iconColor: iconColor ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        ),
+        confirmColor = confirmButtonColor ??
+            (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        cancelColor = cancelButtonColor ??
+            (isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
+        borderColor = _computeBorderColor(
+          designStyle: designStyle ?? ContentDesignStyle.solid,
+          iconColor: iconColor,
+          theme: theme,
+          isDark: isDark,
+        ),
+        borderWidth =
+            _computeBorderWidth(designStyle ?? ContentDesignStyle.solid),
+        titleColor = _computeTitleColor(
+          designStyle: designStyle ?? ContentDesignStyle.solid,
+          isDark: isDark,
+        ),
+        messageColor = _computeMessageColor(
+          designStyle: designStyle ?? ContentDesignStyle.solid,
+          isDark: isDark,
+        ),
+        headerColor = _computeHeaderColor(
+          iconColor: iconColor ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+          isDark: isDark,
+        ),
+        headerColorEnd = _computeHeaderColorEnd(
+          iconColor: iconColor ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+          isDark: isDark,
+        ),
+        buttonColor = iconColor ??
+            (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        buttonTextColor = SpContrast.onColor(
+          confirmButtonColor ??
+              (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary),
+        ),
+        iconBackgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
 
   static Color _computeBackgroundColor({
     required Color? backgroundColor,
     required ContentDesignStyle designStyle,
     required bool isDark,
     Color? iconColor,
-  }) {
-    if (backgroundColor != null) return backgroundColor;
-
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.leftAccent:
-      case ContentDesignStyle.solid:
-      case ContentDesignStyle.minimal:
-        return SpSurface.background(isDark);
-      case ContentDesignStyle.colorHeader:
-        return SpSurface.elevated(isDark);
-      case ContentDesignStyle.glass:
-        return SpSurface.glassFill(isDark);
-      case ContentDesignStyle.neon:
-        return SpSurface.neonSurface(isDark);
-      case ContentDesignStyle.tonal:
-        return iconColor != null
-            ? SpPalette.tonalFrom(iconColor, isDark)
-            : SpSurface.background(isDark);
-    }
-  }
+  }) =>
+      backgroundColor ??
+      SpStyles.of(designStyle, iconColor ?? const Color(0xFF6366F1), isDark)
+          .fill;
 
   static Color? _computeBorderColor({
     required ContentDesignStyle designStyle,
@@ -112,59 +94,29 @@ class DialogColorConfig {
     required ThemeData theme,
     required bool isDark,
   }) {
-    final baseColor =
-        iconColor ??
+    final accent = iconColor ??
         (isDark ? const Color(0xFF60A5FA) : theme.colorScheme.primary);
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
-        return baseColor.withValues(alpha: isDark ? 0.5 : 0.3);
-      case ContentDesignStyle.neon:
-        return baseColor;
-      case ContentDesignStyle.glass:
-        return SpSurface.glassBorder(isDark);
-      case ContentDesignStyle.minimal:
-        return SpSurface.hairline(isDark);
-      case ContentDesignStyle.solid:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-        // leftAccent uses a left bar; tonal/solid/colorHeader have no border.
-        return null;
-    }
+    final spec = SpStyles.of(designStyle, accent, isDark);
+    return spec.hasBorder ? spec.borderColor : null;
   }
 
   static double? _computeBorderWidth(ContentDesignStyle designStyle) {
-    switch (designStyle) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.neon:
-        return 2.0;
-      case ContentDesignStyle.glass:
-        return 1.5;
-      case ContentDesignStyle.minimal:
-        return 1.0;
-      case ContentDesignStyle.solid:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-        return null;
-    }
+    // Resolved against a placeholder accent: width never depends on colour.
+    final spec = SpStyles.of(designStyle, const Color(0xFF6366F1), false);
+    return spec.borderWidth > 0 ? spec.borderWidth : null;
   }
 
   static Color _computeTitleColor({
     required ContentDesignStyle designStyle,
     required bool isDark,
   }) =>
-      designStyle == ContentDesignStyle.neon
-          ? SpSurface.neonText
-          : SpSurface.onSurface(isDark);
+      SpStyles.of(designStyle, const Color(0xFF6366F1), isDark).onSurface;
 
   static Color _computeMessageColor({
     required ContentDesignStyle designStyle,
     required bool isDark,
   }) =>
-      designStyle == ContentDesignStyle.neon
-          ? Colors.white.withValues(alpha: 0.7)
-          : SpSurface.onSurfaceMuted(isDark);
+      SpStyles.of(designStyle, const Color(0xFF6366F1), isDark).onSurfaceMuted;
 
   /// Bold gradient header band — the vivid accent gradient derived from the
   /// icon color. White header content sits on top of this.

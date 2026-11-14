@@ -87,9 +87,11 @@ class SnackbarConfig {
     ),
   };
 
-  /// Apply theme settings
+  /// Reserved hook for brightness-aware defaults; currently a no-op.
+  ///
+  /// See `SnackDiaBottomConfig.applyTheme` for why.
   void applyTheme(Brightness brightness) {
-    // Can be extended for theme-specific overrides
+    // Intentionally empty: defaults resolve brightness at paint time.
   }
 
   /// Get background color for a type

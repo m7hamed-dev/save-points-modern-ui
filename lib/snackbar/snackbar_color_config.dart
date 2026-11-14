@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/snackbar_enums.dart';
 
@@ -35,14 +36,13 @@ class SnackbarColorConfig {
   }) {
     final style = designStyle ?? config.defaultDesignStyle;
     final accent = SpPalette.of(_intentOf(type), isDark);
-    final resolvedIcon =
-        iconColor ?? config.getIconColor(type) ?? accent.base;
+    final resolvedIcon = iconColor ?? config.getIconColor(type) ?? accent.base;
     final isSolid = style == ContentDesignStyle.solid;
     final isNeon = style == ContentDesignStyle.neon;
 
     // The vivid gradient is the signature of the bold default.
-    final Gradient? resolvedGradient = gradient ??
-        (isSolid && background == null ? accent.gradient : null);
+    final Gradient? resolvedGradient =
+        gradient ?? (isSolid && background == null ? accent.gradient : null);
 
     return SnackbarColorConfig._(
       designStyle: style,
@@ -102,25 +102,13 @@ class SnackbarColorConfig {
     required SpAccent accent,
   }) {
     if (background != null) return background;
+    // A gradient fill is painted by the content widget, so the box behind it
+    // must not also paint a colour.
     if (gradient != null) return Colors.transparent;
-
-    switch (style) {
-      case ContentDesignStyle.outlined:
-      case ContentDesignStyle.leftAccent:
-      case ContentDesignStyle.minimal:
-        return SpSurface.background(isDark);
-      case ContentDesignStyle.colorHeader:
-        return SpSurface.elevated(isDark);
-      case ContentDesignStyle.tonal:
-        return accent.tonalFill;
-      case ContentDesignStyle.glass:
-        return SpSurface.glassFill(isDark);
-      case ContentDesignStyle.neon:
-        return SpSurface.neonSurface(isDark);
-      case ContentDesignStyle.solid:
-        // Solid without a gradient (caller forced a flat look).
-        return accent.base;
-    }
+    // `solid` on a snackbar means the accent itself, not a neutral surface:
+    // it is the one place the fill *is* the intent colour.
+    if (style == ContentDesignStyle.solid) return accent.base;
+    return SpStyles.of(style, accent.base, isDark).fill;
   }
 
   /// Modern Material 3 rounded icons for a softer, contemporary look.

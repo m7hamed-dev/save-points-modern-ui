@@ -51,6 +51,7 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
           clipper: _BottomsheetCircularRevealClipper(
             radius: radius,
             alignment: Alignment.bottomCenter,
+            textDirection: Directionality.of(context),
           ),
           child: child ?? const SizedBox(),
         );
@@ -71,8 +72,7 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
     final startDir = startAnimation ?? BottomsheetAnimationDirection.fromBottom;
     final endDir = endAnimation ?? BottomsheetAnimationDirection.fromBottom;
 
-    final isForward =
-        animation.status == AnimationStatus.forward ||
+    final isForward = animation.status == AnimationStatus.forward ||
         animation.status == AnimationStatus.completed;
 
     if (isForward) {
@@ -212,15 +212,20 @@ class BottomsheetTransitionBuilder extends StatelessWidget {
 class _BottomsheetCircularRevealClipper extends CustomClipper<Path> {
   final double radius;
   final AlignmentGeometry alignment;
+  final TextDirection textDirection;
 
   _BottomsheetCircularRevealClipper({
     required this.radius,
     required this.alignment,
+    required this.textDirection,
   });
 
   @override
   Path getClip(Size size) {
-    final align = alignment.resolve(TextDirection.ltr);
+    // Resolved against the ambient direction rather than a hard-coded
+    // TextDirection.ltr, so a directional alignment (centerStart, topEnd, ...)
+    // mirrors correctly in an RTL app instead of revealing from the wrong side.
+    final align = alignment.resolve(textDirection);
     final center = align.inscribe(Size.zero, Offset.zero & size).center;
 
     final path = Path();
@@ -230,6 +235,8 @@ class _BottomsheetCircularRevealClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(_BottomsheetCircularRevealClipper oldClipper) {
-    return oldClipper.radius != radius || oldClipper.alignment != alignment;
+    return oldClipper.radius != radius ||
+        oldClipper.alignment != alignment ||
+        oldClipper.textDirection != textDirection;
   }
 }

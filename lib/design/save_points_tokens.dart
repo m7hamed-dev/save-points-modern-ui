@@ -8,6 +8,8 @@
 /// like one design system rather than three.
 library;
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// Semantic intent shared across all components.
@@ -105,8 +107,21 @@ abstract final class SpSurface {
   static Color onSurface(bool isDark) =>
       isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A);
 
+  /// Secondary/body text.
+  ///
+  /// The light value is deliberately darker than a typical "muted grey": at
+  /// slate-500 it measured 3.93:1 on the `tonal` surface, under the 4.5:1
+  /// WCAG AA floor for body copy.
   static Color onSurfaceMuted(bool isDark) =>
-      isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
+      isDark ? const Color(0xFF94A3B8) : const Color(0xFF475569);
+
+  /// Body text for the translucent `glass` surface.
+  ///
+  /// Glass composites over whatever is behind the barrier, so it cannot rely
+  /// on the usual muted tone — that measured 2.50:1. This trades a little of
+  /// the muting for a readable floor.
+  static Color onSurfaceMutedOnGlass(bool isDark) =>
+      isDark ? const Color(0xFFCBD5E1) : const Color(0xFF1E293B);
 
   static Color hairline(bool isDark) => isDark
       ? Colors.white.withValues(alpha: 0.08)
@@ -119,14 +134,18 @@ abstract final class SpSurface {
   // ---- glass (frosted) variant ----------------------------------------
 
   /// Translucent fill that sits in front of a [BackdropFilter] blur.
+  ///
+  /// Deliberately thin. At the alpha this used to carry the fill was opaque
+  /// enough to hide its own blur, so `glass` rendered as a plain white card
+  /// and was indistinguishable from `solid` and `minimal`.
   static Color glassFill(bool isDark) => isDark
-      ? const Color(0xFF151B26).withValues(alpha: 0.55)
-      : Colors.white.withValues(alpha: 0.58);
+      ? const Color(0xFF151B26).withValues(alpha: 0.46)
+      : Colors.white.withValues(alpha: 0.42);
 
   /// Hairline highlight border that gives frosted glass its edge.
   static Color glassBorder(bool isDark) => isDark
-      ? Colors.white.withValues(alpha: 0.18)
-      : Colors.white.withValues(alpha: 0.65);
+      ? Colors.white.withValues(alpha: 0.28)
+      : Colors.white.withValues(alpha: 0.90);
 
   /// Blur strength for the glass variant's backdrop.
   static const double glassBlur = 22.0;
@@ -168,10 +187,10 @@ class SpAccent {
 
   /// Diagonal bold gradient (top-left → bottom-right).
   LinearGradient get gradient => LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [gradientStart, gradientEnd],
-  );
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [gradientStart, gradientEnd],
+      );
 }
 
 /// Vivid, expressive palette per intent for light and dark themes.
@@ -268,8 +287,8 @@ abstract final class SpPalette {
         .withSaturation((hsl.saturation + 0.08).clamp(0.0, 1.0))
         .toColor();
     return LinearGradient(
-      begin: .topLeft,
-      end: .bottomRight,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
       colors: [start, end],
     );
   }
@@ -280,6 +299,38 @@ abstract final class SpPalette {
     return isDark
         ? hsl.withSaturation(0.45).withLightness(0.16).toColor()
         : hsl.withSaturation(0.55).withLightness(0.94).toColor();
+  }
+}
+
+/// Foreground colours chosen by measured contrast rather than by assumption.
+abstract final class SpContrast {
+  /// Relative luminance per WCAG 2.1.
+  static double luminance(Color c) {
+    double channel(double v) => v <= 0.03928
+        ? v / 12.92
+        : math.pow((v + 0.055) / 1.055, 2.4).toDouble();
+    return 0.2126 * channel(c.r) +
+        0.7152 * channel(c.g) +
+        0.0722 * channel(c.b);
+  }
+
+  /// Contrast ratio between two opaque colours.
+  static double ratio(Color a, Color b) {
+    final la = luminance(a), lb = luminance(b);
+    return (math.max(la, lb) + 0.05) / (math.min(la, lb) + 0.05);
+  }
+
+  /// The label colour that reads best on [background].
+  ///
+  /// White-on-accent is the usual house style, but it fails outright on the
+  /// lighter accents this package uses in dark mode — white on the dark-theme
+  /// blue measured 2.54:1. Picking by measurement also keeps caller-supplied
+  /// button colours legible.
+  static Color onColor(Color background) {
+    const dark = Color(0xFF0B1220);
+    return ratio(Colors.white, background) >= ratio(dark, background)
+        ? Colors.white
+        : dark;
   }
 }
 
@@ -296,8 +347,10 @@ abstract final class SpShadows {
     double level = 1.0,
     Offset direction = const Offset(0, 1),
   }) {
-    final ambient = isDark ? 0.45 : 0.16;
-    final glowAlpha = isDark ? 0.30 : 0.22;
+    final ambient = isDark ? 0.45 : 0.18;
+    // The halo is the whole point of this elevation; at 0.22 over a light
+    // background it was invisible, which flattened `solid` into `minimal`.
+    final glowAlpha = isDark ? 0.34 : 0.34;
     final dy = direction.dy;
     final dx = direction.dx;
     return [
@@ -356,16 +409,17 @@ abstract final class SpShadows {
     final dy = direction.dy;
     final dx = direction.dx;
     return [
+      // Tight inner ring, right up against the border.
       BoxShadow(
-        color: color.withValues(alpha: 0.55),
-        blurRadius: 12,
-        spreadRadius: -2,
+        color: color.withValues(alpha: 0.75),
+        blurRadius: 14,
       ),
+      // Wide diffuse bloom — this is what reads as "neon" from a distance.
       BoxShadow(
-        color: color.withValues(alpha: 0.35),
-        offset: Offset(dx * 4, dy * 10),
-        blurRadius: 32,
-        spreadRadius: -6,
+        color: color.withValues(alpha: 0.45),
+        offset: Offset(dx * 2, dy * 8),
+        blurRadius: 48,
+        spreadRadius: 2,
       ),
       BoxShadow(
         color: Colors.black.withValues(alpha: 0.4),

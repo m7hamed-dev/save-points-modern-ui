@@ -7,6 +7,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
@@ -39,8 +40,9 @@ export 'snackbar/snackbar_enums.dart';
 class SavePointsSnackbar {
   /// Shows a modern floating snackbar with enhanced features.
   ///
-  /// Returns a [ScaffoldFeatureController] that can be used to programmatically
-  /// dismiss the snackbar.
+  /// Returns a [ScaffoldFeatureController] whose `close()` dismisses the
+  /// snackbar and whose `closed` future completes when it goes away — for
+  /// both [SnackbarPosition.bottom] and [SnackbarPosition.top].
   ///
   /// Throws an [AssertionError] if [title] is empty.
   ///
@@ -62,7 +64,16 @@ class SavePointsSnackbar {
     Duration? duration,
     IconData? icon,
     Color? iconColor,
+
+    /// Called when the action button is tapped.
+    ///
+    /// Shown only for [SnackbarPosition.bottom]. A top snackbar is an overlay
+    /// toast with no [SnackBarAction] slot, so this and [actionLabel] are
+    /// ignored there — use `onTap`, or a `child` in a dialog, instead.
     VoidCallback? onActionPressed,
+
+    /// Label of the action button. [SnackbarPosition.bottom] only; see
+    /// [onActionPressed].
     String? actionLabel,
     SnackbarType? type,
     SnackbarPosition? position,
@@ -70,11 +81,22 @@ class SavePointsSnackbar {
     SnackbarAnimationDirection? startAnimation,
     SnackbarAnimationDirection? endAnimation,
     bool? showProgressIndicator,
+
+    /// Reveals and hides the snackbar with an expanding circular clip.
+    /// Only honoured for [SnackbarPosition.top], which is overlay-based;
+    /// bottom snackbars are laid out by Flutter's [ScaffoldMessenger] and
+    /// cannot be clipped this way.
     bool hideLikeCircle = false,
     bool? dismissible,
     bool? enableHapticFeedback,
     bool? dismissOnTap,
     double? maxWidth,
+
+    /// Outer margin around the snackbar.
+    ///
+    /// Applies to [SnackbarPosition.bottom] only. A top snackbar positions
+    /// itself below the status bar and app bar, so it takes its offset from
+    /// the safe area rather than from this value.
     EdgeInsets? margin,
     BorderRadius? borderRadius,
     Color? borderColor,
@@ -85,11 +107,22 @@ class SavePointsSnackbar {
     /// Design style: [ContentDesignStyle.solid] (filled) or [ContentDesignStyle.outlined] (light bg + border).
     ContentDesignStyle? designStyle,
 
-    /// Optional blur sigma for glassmorphism behind the snackbar. When null, no blur is applied.
+    /// Backdrop blur sigma for glassmorphism behind the snackbar.
+    ///
+    /// When null, the value falls back to the enclosing [SavePointsTheme];
+    /// if that is null too, no blur is applied. Pass `0` to force blur off
+    /// under a theme that enables it.
     double? blur,
 
     /// Optional custom [ImageFilter] for the backdrop. When set, overrides [blur].
     ImageFilter? backdropFilter,
+
+    /// Loops a subtle scale + glow pulse on the icon.
+    ///
+    /// Off by default: the pulse never ends, so it costs a repaint every frame
+    /// for as long as the snackbar is up and makes `pumpAndSettle()` hang in
+    /// tests. Set it here for one call, or via [SavePointsTheme] for a subtree.
+    bool? enablePulse,
   }) {
     // Validate required parameters
     assert(title.isNotEmpty, 'Title cannot be empty');
@@ -124,12 +157,10 @@ class SavePointsSnackbar {
         : null;
     final finalDuration =
         duration ?? spTheme?.snackbarDuration ?? config.defaultDuration;
-    final finalMargin =
-        margin ?? config.defaultMargin ?? _getMargin(context, finalPosition);
-    final finalBorderRadius =
-        borderRadius ??
+    final finalMargin = margin ?? config.defaultMargin ?? _bottomMargin();
+    final finalBorderRadius = borderRadius ??
         config.defaultBorderRadius ??
-        .circular(SnackbarConstants.borderRadius);
+        BorderRadius.circular(SnackbarConstants.borderRadius);
     final finalMaxWidth =
         maxWidth ?? config.maxWidth ?? SnackbarConstants.maxWidth;
     final finalShowProgressIndicator =
@@ -140,10 +171,23 @@ class SavePointsSnackbar {
         config.defaultEnableHapticFeedback;
     final finalDismissOnTap = dismissOnTap ?? config.defaultDismissOnTap;
     final finalBorderWidth = borderWidth ?? config.defaultBorderWidth;
-    final finalBorderColor =
-        borderColor ??
+    final finalBorderColor = borderColor ??
         config.defaultBorderColor ??
         finalIconColor.withValues(alpha: 0.3);
+
+    // These three were computed twice, once per position branch, and had to
+    // be kept identical by hand. Resolve them once instead.
+    final isOutlined = finalDesignStyle == ContentDesignStyle.outlined;
+    final showCloseButton = isOutlined ||
+        finalDesignStyle == ContentDesignStyle.leftAccent ||
+        finalDesignStyle == ContentDesignStyle.tonal ||
+        finalDismissible;
+
+    assert(
+      ScaffoldMessenger.maybeOf(context) != null,
+      'SavePointsSnackbar.show requires a ScaffoldMessenger ancestor. Wrap '
+      'your app in a MaterialApp, or the calling subtree in a Scaffold.',
+    );
 
     if (finalEnableHapticFeedback) {
       HapticFeedback.lightImpact();
@@ -151,8 +195,45 @@ class SavePointsSnackbar {
 
     // Use overlay for top position (SnackBar doesn't support top positioning well)
     if (finalPosition == SnackbarPosition.top) {
-      TopSnackbarOverlay.show(
+      final messenger = ScaffoldMessenger.of(context);
+
+      // Retire the previous toast, then let the messenger retire its
+      // placeholder. Silently, because the outgoing toast must not close that
+      // placeholder itself — `hideCurrentSnackBar` below owns that, and two
+      // parties closing the same snack bar trips an assertion inside
+      // ScaffoldMessenger. The outgoing call's own `onDismissed` still fires,
+      // from the `closed` handler that hideCurrentSnackBar completes.
+      TopSnackbarOverlay.dismissSilently();
+      messenger.hideCurrentSnackBar();
+
+      // The toast itself is an overlay entry, but Flutter still requires a
+      // SnackBar on screen for a floating one not to be "presented off
+      // screen". This transparent, zero-height placeholder holds the
+      // messenger slot for exactly as long as the toast is up, which is what
+      // makes the returned controller's `close()` and `closed` truthful.
+      final controller = messenger.showSnackBar(
+        SnackBar(
+          content: const IgnorePointer(child: SizedBox.shrink()),
+          // This placeholder is the toast's clock: the toast itself runs
+          // with autoDismiss off. Two independent timers would race, and
+          // whichever lost would call close() on a snack bar the messenger
+          // had already dropped — "Bad state: No element".
+          duration: finalDuration,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          padding: EdgeInsets.zero,
+          margin: _bottomMargin(),
+          dismissDirection: DismissDirection.none,
+        ),
+      );
+
+      var settled = false;
+
+      final token = TopSnackbarOverlay.show(
         context,
+        autoDismiss: false,
+        enablePulse: enablePulse,
         title: title,
         subtitle: subtitle,
         icon: finalIcon,
@@ -169,40 +250,41 @@ class SavePointsSnackbar {
         showProgressIndicator: finalShowProgressIndicator,
         borderRadius: finalBorderRadius,
         maxWidth: finalMaxWidth,
-        borderColor: finalDesignStyle == ContentDesignStyle.outlined
+        borderColor: isOutlined
             ? colorConfig.borderColor
             : (finalBorderWidth > 0 ? finalBorderColor : null),
-        borderWidth: finalDesignStyle == ContentDesignStyle.outlined
-            ? 2
-            : finalBorderWidth,
+        borderWidth: isOutlined ? 2 : finalBorderWidth,
         onTap: onTap,
-        onDismissed: onDismissed,
+        hideLikeCircle: hideLikeCircle,
+        onDismissed: () {
+          if (settled) return;
+          settled = true;
+          onDismissed?.call();
+          // User dismissed the toast (swipe / tap / close button): retire the
+          // placeholder so `closed` completes at the right moment. Safe
+          // because this only runs after the toast's exit animation, by which
+          // point a placeholder that had expired on its own would already
+          // have flipped `settled` above.
+          controller.close();
+        },
         blur: finalBlur,
         backdropFilter: backdropFilter,
         designStyle: finalDesignStyle,
         titleColor: colorConfig.titleColor,
         subtitleColor: colorConfig.subtitleColor,
-        showCloseButton:
-            finalDesignStyle == ContentDesignStyle.outlined ||
-            finalDesignStyle == ContentDesignStyle.leftAccent ||
-            finalDesignStyle == ContentDesignStyle.tonal ||
-            finalDismissible,
+        showCloseButton: showCloseButton,
       );
-      // Return a dummy controller for top position. The overlay shows the real
-      // toast at top; we show a minimal SnackBar on-screen (required by Flutter
-      // to avoid "Floating SnackBar presented off screen") with 1ms duration
-      // so it dismisses immediately and is barely visible.
-      final dummyMargin = _getMargin(context, SnackbarPosition.bottom);
-      return ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const SizedBox.shrink(),
-          duration: const Duration(milliseconds: 1),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          margin: dummyMargin,
-        ),
-      );
+
+      // Placeholder retired first — the normal path, since it holds the
+      // clock — or the caller invoked `close()`. Take the toast down with it.
+      controller.closed.then((_) {
+        if (settled) return;
+        settled = true;
+        TopSnackbarOverlay.hide(token);
+        onDismissed?.call();
+      });
+
+      return controller;
     }
 
     // Remove any existing snackbar before showing a new one
@@ -212,14 +294,12 @@ class SavePointsSnackbar {
     // Use standard SnackBar for bottom position
     final controller = scaffoldMessenger.showSnackBar(
       SnackBar(
-        behavior: .floating,
+        behavior: SnackBarBehavior.floating,
         duration: finalDuration,
         margin: finalMargin,
         shape: RoundedRectangleBorder(
           borderRadius: finalBorderRadius,
-          side:
-              finalDesignStyle != ContentDesignStyle.outlined &&
-                  finalBorderWidth > 0
+          side: !isOutlined && finalBorderWidth > 0
               ? BorderSide(color: finalBorderColor, width: finalBorderWidth)
               : BorderSide.none,
         ),
@@ -228,35 +308,33 @@ class SavePointsSnackbar {
         dismissDirection: finalDismissible
             ? DismissDirection.horizontal
             : DismissDirection.none,
-        content: ModernSnackbarContent(
-          title: title,
-          subtitle: subtitle,
-          icon: finalIcon,
-          iconColor: finalIconColor,
-          backgroundColor: colorConfig.backgroundColor,
-          gradient: colorConfig.gradient,
-          showProgressIndicator: finalShowProgressIndicator,
-          duration: finalDuration,
-          type: finalType,
-          position: finalPosition,
-          animation: finalAnimation ?? SnackbarAnimation.fadeSlide,
-          borderRadius: finalBorderRadius,
-          maxWidth: finalMaxWidth,
-          dismissOnTap: finalDismissOnTap,
-          onTap: onTap,
-          blur: finalBlur,
-          backdropFilter: backdropFilter,
-          designStyle: finalDesignStyle,
-          titleColor: colorConfig.titleColor,
-          subtitleColor: colorConfig.subtitleColor,
-          borderColor: finalDesignStyle == ContentDesignStyle.outlined
-              ? colorConfig.borderColor
-              : null,
-          showCloseButton:
-              finalDesignStyle == ContentDesignStyle.outlined ||
-              finalDesignStyle == ContentDesignStyle.leftAccent ||
-              finalDesignStyle == ContentDesignStyle.tonal ||
-              finalDismissible,
+        content: pulseScope(
+          spTheme,
+          enablePulse,
+          ModernSnackbarContent(
+            title: title,
+            subtitle: subtitle,
+            icon: finalIcon,
+            iconColor: finalIconColor,
+            backgroundColor: colorConfig.backgroundColor,
+            gradient: colorConfig.gradient,
+            showProgressIndicator: finalShowProgressIndicator,
+            duration: finalDuration,
+            type: finalType,
+            position: finalPosition,
+            animation: finalAnimation ?? SnackbarAnimation.fadeSlide,
+            borderRadius: finalBorderRadius,
+            maxWidth: finalMaxWidth,
+            dismissOnTap: finalDismissOnTap,
+            onTap: onTap,
+            blur: finalBlur,
+            backdropFilter: backdropFilter,
+            designStyle: finalDesignStyle,
+            titleColor: colorConfig.titleColor,
+            subtitleColor: colorConfig.subtitleColor,
+            borderColor: isOutlined ? colorConfig.borderColor : null,
+            showCloseButton: showCloseButton,
+          ),
         ),
         action: onActionPressed != null && actionLabel != null
             ? SnackBarAction(
@@ -371,65 +449,48 @@ class SavePointsSnackbar {
     );
   }
 
-  /// Calculates appropriate margin based on snackbar position
+  /// Quick method to show info snackbar
   ///
-  /// Takes into account safe areas, AppBar height, and potential FAB placement
-  /// to ensure the snackbar is always visible and properly positioned.
-  static EdgeInsets _getMargin(
-    BuildContext context,
-    SnackbarPosition position,
-  ) {
-    final mediaQuery = MediaQuery.of(context);
-    final topPadding = mediaQuery.padding.top;
-    final bottomPadding = mediaQuery.padding.bottom;
-
-    switch (position) {
-      case SnackbarPosition.top:
-        return _calculateTopMargin(topPadding);
-      case SnackbarPosition.bottom:
-        return _calculateBottomMargin(mediaQuery, bottomPadding);
-    }
-  }
-
-  /// Calculates margin for top-positioned snackbars
-  static EdgeInsets _calculateTopMargin(double topPadding) {
-    const appBarHeight = 56.0; // Standard AppBar height (kToolbarHeight)
-    const horizontalPadding = 16.0;
-    const extraPadding = 12.0;
-    const minTopMargin = 70.0;
-
-    final topMargin = topPadding + appBarHeight + extraPadding;
-    return EdgeInsets.only(
-      left: horizontalPadding,
-      top: topMargin.clamp(minTopMargin, double.infinity),
-      right: horizontalPadding,
+  /// The counterpart of [showSuccess], [showError] and [showWarning] for
+  /// [SnackbarType.info] — which is also the type [show] falls back to when
+  /// none is given.
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showInfo(
+    BuildContext context, {
+    required String title,
+    String? subtitle,
+    Duration? duration,
+    VoidCallback? onActionPressed,
+    String? actionLabel,
+    SnackbarPosition? position,
+    bool showProgressIndicator = false,
+    ContentDesignStyle? designStyle,
+    double? blur,
+    ImageFilter? backdropFilter,
+  }) {
+    return show(
+      context,
+      title: title,
+      subtitle: subtitle,
+      type: SnackbarType.info,
+      duration: duration,
+      onActionPressed: onActionPressed,
+      actionLabel: actionLabel,
+      position: position,
+      showProgressIndicator: showProgressIndicator,
+      designStyle: designStyle,
+      blur: blur,
+      backdropFilter: backdropFilter,
     );
   }
 
-  /// Calculates margin for bottom-positioned snackbars
-  static EdgeInsets _calculateBottomMargin(
-    MediaQueryData mediaQuery,
-    double bottomPadding,
-  ) {
-    const horizontalPadding = 16.0;
-    const baseMargin = 16.0;
-    const fabSpaceThreshold = 700.0;
-    const fabSpace = 80.0;
-    const maxBottomMargin = 120.0;
-
-    final screenHeight = mediaQuery.size.height;
-    final baseBottomMargin = baseMargin + bottomPadding;
-    final fabSpaceToAdd = screenHeight > fabSpaceThreshold ? fabSpace : 0.0;
-    final bottomMargin = (baseBottomMargin + fabSpaceToAdd).clamp(
-      baseMargin,
-      maxBottomMargin,
-    );
-
-    return EdgeInsets.fromLTRB(
-      horizontalPadding,
-      baseMargin,
-      horizontalPadding,
-      bottomMargin,
-    );
-  }
+  /// Margin for a bottom-positioned snackbar.
+  ///
+  /// Deliberately does *not* try to reserve room for a
+  /// [FloatingActionButton] or for the bottom safe area: [Scaffold] already
+  /// lifts a [SnackBarBehavior.floating] snackbar clear of both. Adding our
+  /// own offset on top double-counted that space — measurably so, since
+  /// Scaffold's own FAB lift is 72dp — which pushed the snackbar too high on
+  /// screens with a FAB and left a dead gap on screens without one.
+  static EdgeInsets _bottomMargin() =>
+      const EdgeInsets.symmetric(horizontal: 16, vertical: 16);
 }

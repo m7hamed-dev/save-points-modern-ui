@@ -19,7 +19,7 @@ class DialogTitle extends StatelessWidget {
     final effectiveColor = color ?? SpSurface.onSurface(isDark);
     return Text(
       title,
-      textAlign: .center,
+      textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: SpType.displaySize,
         fontWeight: SpType.displayWeight,

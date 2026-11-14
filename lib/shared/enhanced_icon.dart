@@ -17,7 +17,7 @@ class EnhancedIcon extends StatefulWidget {
     this.containerSize = 60,
     this.backgroundColor,
     this.enableAnimation = true,
-    this.enablePulse = true,
+    this.enablePulse = false,
     this.showShadow = true,
   });
 
@@ -27,6 +27,13 @@ class EnhancedIcon extends StatefulWidget {
   final double containerSize;
   final Color? backgroundColor;
   final bool enableAnimation;
+
+  /// Loops a subtle scale + glow pulse for as long as the surface is on
+  /// screen.
+  ///
+  /// Off by default: a never-ending animation keeps the whole app repainting
+  /// for the lifetime of the dialog or snackbar, and it makes
+  /// `pumpAndSettle()` hang in the tests of anyone using this package.
   final bool enablePulse;
   final bool showShadow;
 
@@ -111,8 +118,7 @@ class _EnhancedIconState extends State<EnhancedIcon>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        widget.backgroundColor ??
+    final bgColor = widget.backgroundColor ??
         (isDark ? const Color(0xFF1F2937) : Colors.white);
 
     return AnimatedBuilder(
@@ -194,85 +200,6 @@ class _EnhancedIconState extends State<EnhancedIcon>
       },
       blendMode: BlendMode.srcIn,
       child: Icon(widget.icon, size: widget.size, color: Colors.white),
-    );
-  }
-
-  Color _adjustLightness(Color color, double amount) {
-    final hsl = HSLColor.fromColor(color);
-    return hsl
-        .withLightness((hsl.lightness + amount).clamp(0.0, 1.0))
-        .toColor();
-  }
-}
-
-/// A simpler version without animations for static contexts
-class StaticEnhancedIcon extends StatelessWidget {
-  const StaticEnhancedIcon({
-    super.key,
-    required this.icon,
-    required this.color,
-    this.size = 28,
-    this.containerSize = 60,
-    this.backgroundColor,
-    this.showShadow = true,
-    this.glowIntensity = 0.25,
-  });
-
-  final IconData icon;
-  final Color color;
-  final double size;
-  final double containerSize;
-  final Color? backgroundColor;
-  final bool showShadow;
-  final double glowIntensity;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        backgroundColor ?? (isDark ? const Color(0xFF1F2937) : Colors.white);
-
-    return Container(
-      width: containerSize,
-      height: containerSize,
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-        boxShadow: showShadow
-            ? [
-                BoxShadow(
-                  color: color.withValues(alpha: glowIntensity),
-                  blurRadius: 20,
-                  spreadRadius: -2,
-                ),
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.1),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ]
-            : null,
-      ),
-      child: Center(child: _buildGradientIcon(isDark)),
-    );
-  }
-
-  Widget _buildGradientIcon(bool isDark) {
-    final baseColor = color;
-    final lighterColor = _adjustLightness(baseColor, 0.15);
-    final darkerColor = _adjustLightness(baseColor, -0.1);
-
-    return ShaderMask(
-      shaderCallback: (Rect bounds) {
-        return LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [lighterColor, baseColor, darkerColor],
-          stops: const [0.0, 0.45, 1.0],
-        ).createShader(bounds);
-      },
-      blendMode: BlendMode.srcIn,
-      child: Icon(icon, size: size, color: Colors.white),
     );
   }
 

@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/animated_barrier.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_animation_type.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition_builder.dart';
@@ -9,6 +11,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_transition
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/header_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/utils/keyboard_utils.dart';
 
 /// A modern, customizable dialog with glassmorphism design.
 ///
@@ -31,12 +34,19 @@ import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
 /// );
 /// ```
 class SavePointsDialog {
+  /// Barrier blur sigma used when no `blur` is given by the call, the
+  /// enclosing [SavePointsTheme], or the config.
+  ///
+  /// Dialogs blur their barrier by default; `blur: 0` opts out.
+  static const double defaultBarrierBlurSigma = 20.0;
+
   /// Shows a modern dialog with optional icon and buttons.
   ///
   /// Returns `true` if the dialog was confirmed, `false` if cancelled,
   /// or `null` if dismissed without action.
   ///
-  /// Throws an [AssertionError] if [title] or [message] is empty.
+  /// Throws an [AssertionError] in debug builds if [title] is empty.
+  /// [message] may be empty — pass a [child] instead to supply the body.
   ///
   /// Example:
   /// ```dart
@@ -73,7 +83,24 @@ class SavePointsDialog {
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
     ContentDesignStyle? designStyle,
+
+    /// Backdrop blur sigma for the barrier behind the dialog.
+    ///
+    /// Falls back to the enclosing [SavePointsTheme], then to
+    /// [SavePointsDialog.defaultBarrierBlurSigma]. The barrier is blurred by
+    /// default — pass `blur: 0` to turn it off and get a plain dim barrier.
+    ///
+    /// Note this differs from [SavePointsSnackbar.show]'s `blur`, which has
+    /// no barrier to blur and so applies no blur when left unset.
     double? blur,
+
+    /// Loops a subtle scale + glow pulse on the icon.
+    ///
+    /// Off by default: the pulse never ends, so it costs a repaint every frame
+    /// for as long as the dialog is up and makes `pumpAndSettle()` hang in
+    /// tests. Set it here for one call, or via [SavePointsTheme] for a
+    /// subtree.
+    bool? enablePulse,
     ImageFilter? backdropFilter,
     Widget? child,
   }) {
@@ -82,7 +109,7 @@ class SavePointsDialog {
     // Message can be empty if a custom child is provided
 
     // Dismiss keyboard when showing dialog to prevent UI overlap
-    _dismissKeyboard(context);
+    KeyboardUtils.dismissIfFocused(context);
 
     final config = SnackDiaBottomConfig().dialog;
     final spTheme = SavePointsTheme.maybeOf(context);
@@ -104,58 +131,64 @@ class SavePointsDialog {
     final finalCancelButtonColor =
         cancelButtonColor ?? config.defaultCancelButtonColor;
 
-    final ImageFilter? barrierFilter =
-        backdropFilter ??
-        (finalBlur != null && finalBlur <= 0
+    final barrierSigma = finalBlur ?? defaultBarrierBlurSigma;
+    final ImageFilter? barrierFilter = backdropFilter ??
+        (barrierSigma <= 0
             ? null
-            : ImageFilter.blur(
-                sigmaX: finalBlur ?? 20.0, sigmaY: finalBlur ?? 20.0));
+            : ImageFilter.blur(sigmaX: barrierSigma, sigmaY: barrierSigma));
     final useBarrierBlur = barrierFilter != null;
     final finalDesignStyle =
         designStyle ?? spTheme?.designStyle ?? config.defaultDesignStyle;
 
     // Capture child parameter before it's shadowed by transitionBuilder
     final customChild = child;
-    
+
     return showGeneralDialog<bool>(
       context: context,
       barrierDismissible: finalBarrierDismissible,
       barrierLabel: config.barrierLabel,
       barrierColor: useBarrierBlur ? Colors.transparent : config.barrierColor,
       transitionDuration: config.transitionDuration,
-      pageBuilder: (_, _, _) => const SizedBox.shrink(),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return DialogTransitionScope(
-          animation: animation,
-          animationType: (startAnimation == null && endAnimation == null)
-              ? (animationType ?? config.defaultAnimation)
-              : null,
-          startAnimation: startAnimation,
-          endAnimation: endAnimation,
-          hideLikeCircle: hideLikeCircle,
-          useBarrierBlur: useBarrierBlur,
-          barrierFilter: barrierFilter,
-          barrierDismissible: finalBarrierDismissible,
-          title: title,
-          message: message,
-          confirmText: finalConfirmText,
-          cancelText: finalCancelText,
-          icon: icon,
-          iconColor: iconColor,
-          backgroundColor: finalBackgroundColor,
-          confirmButtonColor: finalConfirmButtonColor,
-          cancelButtonColor: finalCancelButtonColor,
-          showCancelButton: finalShowCancelButton,
-          onConfirm: onConfirm,
-          onConfirmAsync: onConfirmAsync,
-          onCancel: onCancel,
-          isDark: isDark,
-          isLoading: isLoading,
-          loadingNotifier: loadingNotifier,
-          designStyle: finalDesignStyle,
-          blur: finalBlur,
-          backdropFilter: backdropFilter,
-          child: customChild,
+        return pulseScope(
+          spTheme,
+          enablePulse,
+          DialogTransitionScope(
+            animation: animation,
+            animationType: (startAnimation == null && endAnimation == null)
+                ? (animationType ?? config.defaultAnimation)
+                : null,
+            startAnimation: startAnimation,
+            endAnimation: endAnimation,
+            hideLikeCircle: hideLikeCircle,
+            useBarrierBlur: useBarrierBlur,
+            barrierFilter: barrierFilter,
+            // A caller-supplied filter cannot be interpolated, so only our
+            // own blur gets ramped; theirs is held constant.
+            barrierSigma: backdropFilter == null ? barrierSigma : null,
+            barrierDismissible: finalBarrierDismissible,
+            title: title,
+            message: message,
+            confirmText: finalConfirmText,
+            cancelText: finalCancelText,
+            icon: icon,
+            iconColor: iconColor,
+            backgroundColor: finalBackgroundColor,
+            confirmButtonColor: finalConfirmButtonColor,
+            cancelButtonColor: finalCancelButtonColor,
+            showCancelButton: finalShowCancelButton,
+            onConfirm: onConfirm,
+            onConfirmAsync: onConfirmAsync,
+            onCancel: onCancel,
+            isDark: isDark,
+            isLoading: isLoading,
+            loadingNotifier: loadingNotifier,
+            designStyle: finalDesignStyle,
+            blur: finalBlur,
+            backdropFilter: backdropFilter,
+            child: customChild,
+          ),
         );
       },
     );
@@ -168,6 +201,10 @@ class SavePointsDialog {
   /// - A colored header with title
   /// - Custom content area (your widget)
   /// - Primary and optional secondary action buttons
+  ///
+  /// Like [show], `blur` and `barrierDismissible` resolve in the order
+  /// explicit argument → nearest [SavePointsTheme] → built-in default, so a
+  /// theme declared once for a subtree reaches this dialog too.
   ///
   /// Example:
   /// ```dart
@@ -194,32 +231,52 @@ class SavePointsDialog {
     Color? secondaryButtonColor,
     bool showCloseButton = true,
     VoidCallback? onClose,
-    bool barrierDismissible = true,
+
+    /// Whether tapping the barrier dismisses the dialog.
+    ///
+    /// Falls back to the enclosing [SavePointsTheme], then to `true`.
+    bool? barrierDismissible,
     DialogAnimationDirection? startAnimation,
     DialogAnimationDirection? endAnimation,
+
+    /// Backdrop blur sigma for the barrier behind the dialog, and for the
+    /// dialog's own surface.
+    ///
+    /// Falls back to the enclosing [SavePointsTheme], then to
+    /// [SavePointsDialog.defaultBarrierBlurSigma]. Pass `blur: 0` for a plain
+    /// dim barrier.
     double? blur,
     ImageFilter? backdropFilter,
   }) {
     // Dismiss keyboard when showing dialog
-    _dismissKeyboard(context);
+    KeyboardUtils.dismissIfFocused(context);
 
+    final spTheme = SavePointsTheme.maybeOf(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final ImageFilter? barrierFilter =
-        backdropFilter ??
-        (blur != null && blur <= 0
+    // Same resolution order as [show]: explicit argument, then the nearest
+    // SavePointsTheme, then the built-in default. This used to read neither,
+    // so a theme that set `blur` or `barrierDismissible` was silently ignored
+    // by showCustom while applying to every other surface in the subtree.
+    final finalBarrierDismissible =
+        barrierDismissible ?? spTheme?.barrierDismissible ?? true;
+    final finalBlur = blur ?? spTheme?.blur;
+
+    final barrierSigma = finalBlur ?? defaultBarrierBlurSigma;
+    final ImageFilter? barrierFilter = backdropFilter ??
+        (barrierSigma <= 0
             ? null
-            : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));
+            : ImageFilter.blur(sigmaX: barrierSigma, sigmaY: barrierSigma));
     final useBarrierBlur = barrierFilter != null;
 
     return showGeneralDialog<T>(
       context: context,
-      barrierDismissible: barrierDismissible,
+      barrierDismissible: finalBarrierDismissible,
       barrierLabel: 'Close dialog',
       barrierColor: useBarrierBlur ? Colors.transparent : Colors.black54,
       transitionDuration: const Duration(milliseconds: 350),
-      pageBuilder: (_, _, _) => const SizedBox.shrink(),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, _) {
         final dialog = HeaderDialog(
           headerTitle: headerTitle,
@@ -234,7 +291,7 @@ class SavePointsDialog {
           showCloseButton: showCloseButton,
           onClose: onClose,
           isDark: isDark,
-          blur: blur,
+          blur: finalBlur,
           backdropFilter: backdropFilter,
           child: child,
         );
@@ -250,24 +307,14 @@ class SavePointsDialog {
           return Stack(
             fit: StackFit.expand,
             children: [
-              RepaintBoundary(
-                child: AnimatedBuilder(
-                  animation: animation,
-                  builder: (context, child) {
-                    return Opacity(opacity: animation.value, child: child);
-                  },
-                  child: GestureDetector(
-                    onTap: barrierDismissible
-                        ? () => Navigator.of(context).pop()
-                        : null,
-                    child: ClipRect(
-                      child: BackdropFilter(
-                        filter: barrierFilter,
-                        child: Container(color: const Color(0x40000000)),
-                      ),
-                    ),
-                  ),
-                ),
+              AnimatedBarrier(
+                animation: animation,
+                dimColor: const Color(0x40000000),
+                sigma: backdropFilter == null ? barrierSigma : null,
+                filter: backdropFilter == null ? null : barrierFilter,
+                onTap: finalBarrierDismissible
+                    ? () => Navigator.of(context).pop()
+                    : null,
               ),
               Center(child: transitionedDialog),
             ],
@@ -277,13 +324,5 @@ class SavePointsDialog {
         return Center(child: transitionedDialog);
       },
     );
-  }
-
-  /// Dismisses the keyboard if currently focused
-  static void _dismissKeyboard(BuildContext context) {
-    final focusNode = FocusScope.of(context);
-    if (focusNode.hasFocus) {
-      focusNode.unfocus();
-    }
   }
 }

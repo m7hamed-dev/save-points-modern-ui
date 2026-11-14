@@ -1,10 +1,26 @@
 /// Design style for dialog, bottom sheet, and snackbar content.
 ///
-/// - [ContentDesignStyle.solid]: Filled background with shadow (current default).
-/// - [ContentDesignStyle.outlined]: Light background with colored border and dark text.
-/// - [ContentDesignStyle.colorHeader]: Card with colored header area, icon in circle, and dark button.
-/// - [ContentDesignStyle.leftAccent]: Light/dark surface with a colored vertical bar on the left.
-/// - [ContentDesignStyle.tonal]: Material 3 filled tonal — light tinted background, dark text.
+/// Twelve styles share one resolver, `SpStyles.of`, so a surface looks the
+/// same whether it is a dialog, a bottom sheet or a snackbar.
+///
+/// | Style | Looks like |
+/// |---|---|
+/// | [solid] | Filled background, light text, soft shadow |
+/// | [outlined] | Light surface, coloured border, dark text |
+/// | [colorHeader] | Card with a coloured header band and a circled icon |
+/// | [leftAccent] | Plain surface with a coloured bar down the left edge |
+/// | [tonal] | Material 3 filled tonal — tinted surface, dark text |
+/// | [glass] | Frosted translucency over a backdrop blur |
+/// | [neon] | Near-black surface, glowing accent border and bloom |
+/// | [minimal] | Opaque surface, hairline border, no shadow |
+/// | [brutalist] | Flat fill, thick hard border, offset un-blurred shadow |
+/// | [gradientBorder] | Neutral surface ringed by a vivid gradient stroke |
+/// | [aurora] | Soft multi-stop wash of the accent across the surface |
+/// | [soft] | Pastel claymorphic fill with light-from-above shadows |
+///
+/// Defaults differ per component: snackbars default to [solid], dialogs and
+/// bottom sheets to [colorHeader]. Override per call with `designStyle:`, per
+/// subtree with `SavePointsTheme`, or process-wide via `SnackDiaBottomConfig`.
 enum ContentDesignStyle {
   /// Solid colored background, light text, with shadow (toast/snackbar style).
   solid,
@@ -36,4 +52,20 @@ enum ContentDesignStyle {
   /// Minimal: opaque surface, single hairline border, flat (no shadow).
   /// Clean and understated.
   minimal,
+
+  /// Neo-brutalist: flat punchy fill, a thick hard-edged border and an
+  /// offset shadow with no blur. Loud, graphic, deliberately un-soft.
+  brutalist,
+
+  /// A neutral surface ringed by a vivid gradient stroke. Reads as premium
+  /// without tinting the content area.
+  gradientBorder,
+
+  /// Aurora: a soft multi-stop wash of the accent across the surface, like
+  /// light bleeding through frosted colour.
+  aurora,
+
+  /// Claymorphic: pastel fill, generous rounding and a light-from-above pair
+  /// of shadows. Friendly and tactile.
+  soft,
 }

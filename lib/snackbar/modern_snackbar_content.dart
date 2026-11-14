@@ -1,10 +1,11 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart' hide AnimatedIcon;
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/color_header_band.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_icon.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/animated_wrapper.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/snackbar/progress_indicator_bar.dart';
@@ -73,7 +74,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     with TickerProviderStateMixin {
   late AnimationController _progressController;
   late AnimationController _entranceController;
-  Timer? _timer;
   ImageFilter? _cachedBackdropFilter;
   double? _lastBlur;
   ImageFilter? _lastBackdropFilterParam;
@@ -125,7 +125,6 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
   void dispose() {
     _progressController.dispose();
     _entranceController.dispose();
-    _timer?.cancel();
     super.dispose();
   }
 
@@ -187,8 +186,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     _lastBlur = b;
     _lastBackdropFilterParam = backdropFilter;
     // Optional blur: only apply when blur or backdropFilter is explicitly set.
-    _cachedBackdropFilter =
-        backdropFilter ??
+    _cachedBackdropFilter = backdropFilter ??
         (b != null && b > 0 ? ImageFilter.blur(sigmaX: b, sigmaY: b) : null);
     return _cachedBackdropFilter;
   }
@@ -233,43 +231,65 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     return Colors.white.withValues(alpha: 0.8);
   }
 
-  /// Get the header gradient color for colorHeader style
-  Color get _headerGradientColor {
-    // Create a light pastel version based on icon color
-    final hsl = HSLColor.fromColor(widget.iconColor);
-    return hsl.withSaturation(0.3).withLightness(0.92).toColor();
-  }
-
   @override
   Widget build(BuildContext context) {
     final isColorHeader = widget.designStyle == ContentDesignStyle.colorHeader;
 
-    if (isColorHeader) {
-      return _buildColorHeaderLayout();
-    }
+    final content =
+        isColorHeader ? _buildColorHeaderLayout() : _buildDefaultLayout();
 
-    return _buildDefaultLayout();
+    // A snackbar appears without the user asking for it, so it has to be
+    // announced rather than merely readable: `liveRegion` makes TalkBack and
+    // VoiceOver speak it as soon as it lands.
+    //
+    // `explicitChildNodes` rather than wrapping the content in
+    // `ExcludeSemantics`: excluding the subtree does silence the duplicate
+    // reading of the title, but it also swallows the close button, leaving no
+    // way to dismiss the snackbar with a screen reader on.
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      label: widget.subtitle == null
+          ? widget.title
+          : '${widget.title}. ${widget.subtitle}',
+      explicitChildNodes: true,
+      child: content,
+    );
   }
 
-  /// Per-variant border for the default layout.
+  SpStyleSpec get _spec =>
+      SpStyles.of(widget.designStyle, widget.iconColor, _isDark);
+
+  /// The component's radius, scaled by whatever the style asks for.
+  BorderRadius get _radius => BorderRadius.only(
+        topLeft: widget.borderRadius.topLeft * _spec.radiusScale,
+        topRight: widget.borderRadius.topRight * _spec.radiusScale,
+        bottomLeft: widget.borderRadius.bottomLeft * _spec.radiusScale,
+        bottomRight: widget.borderRadius.bottomRight * _spec.radiusScale,
+      );
+
+  /// Wraps [child] in a gradient stroke when the style calls for one; a
+  /// gradient cannot be expressed as a [Border].
+  Widget _withGradientStroke(Widget child) {
+    final g = _spec.borderGradient;
+    if (g == null) return child;
+    return Container(
+      padding: EdgeInsets.all(_spec.borderWidth),
+      decoration: BoxDecoration(gradient: g, borderRadius: _radius),
+      child: child,
+    );
+  }
+
+  /// Per-variant border, resolved from the shared style spec.
   BoxBorder? _variantBorder() {
-    switch (widget.designStyle) {
-      case ContentDesignStyle.outlined:
-        return widget.borderColor != null
-            ? Border.all(color: widget.borderColor!, width: 2)
-            : null;
-      case ContentDesignStyle.neon:
-        return Border.all(color: widget.iconColor, width: 2);
-      case ContentDesignStyle.glass:
-        return Border.all(color: SpSurface.glassBorder(_isDark), width: 1.5);
-      case ContentDesignStyle.minimal:
-        return Border.all(color: SpSurface.hairline(_isDark));
-      case ContentDesignStyle.solid:
-      case ContentDesignStyle.tonal:
-      case ContentDesignStyle.colorHeader:
-      case ContentDesignStyle.leftAccent:
-        return null;
-    }
+    final spec = SpStyles.of(widget.designStyle, widget.iconColor, _isDark);
+    if (!spec.hasBorder) return null;
+    // An explicit borderColor still wins for the outlined variant, which is
+    // the one style callers routinely recolour.
+    final color = widget.designStyle == ContentDesignStyle.outlined
+        ? (widget.borderColor ?? spec.borderColor!)
+        : spec.borderColor!;
+    return Border.all(color: color, width: spec.borderWidth);
   }
 
   Widget _buildDefaultLayout() {
@@ -284,13 +304,17 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     final showLeftAccent = widget.designStyle == ContentDesignStyle.leftAccent;
 
     Widget content = RepaintBoundary(
-      child: Container(
+      child: _withGradientStroke(Container(
         constraints: constraints,
         decoration: BoxDecoration(
-          color: widget.gradient == null ? widget.backgroundColor : null,
-          gradient: widget.gradient,
-          borderRadius: widget.borderRadius,
-          border: border,
+          // A caller-supplied gradient wins; otherwise the style may paint
+          // its own wash across the surface.
+          color: (widget.gradient ?? _spec.fillGradient) == null
+              ? widget.backgroundColor
+              : null,
+          gradient: widget.gradient ?? _spec.fillGradient,
+          borderRadius: _radius,
+          border: _spec.borderGradient != null ? null : border,
           boxShadow: SnackbarShadows.getShadows(
             widget.designStyle,
             widget.iconColor,
@@ -299,8 +323,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         ),
         child: showLeftAccent
             ? Row(
-                mainAxisSize: .min,
-                crossAxisAlignment: .stretch,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
                     width: 5,
@@ -327,7 +351,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                 borderRadius: widget.borderRadius,
                 child: _buildDefaultLayoutContent(),
               ),
-      ),
+      )),
     );
     if (isGlass) {
       content = ClipRRect(
@@ -361,12 +385,11 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
 
   Widget _buildDefaultLayoutContent() {
     return Column(
-      mainAxisSize: .min,
+      mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
-          onTap: widget.dismissOnTap || widget.onTap != null
-              ? _handleTap
-              : null,
+          onTap:
+              widget.dismissOnTap || widget.onTap != null ? _handleTap : null,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: SnackbarConstants.horizontalPadding,
@@ -390,7 +413,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                     child: RepaintBoundary(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: .min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             widget.title,
@@ -425,6 +448,9 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                 ),
                 if (widget.showCloseButton)
                   IconButton(
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).closeButtonTooltip,
                     icon: Icon(
                       Icons.close,
                       size: 20,
@@ -437,7 +463,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                         _animateDismiss();
                       }
                     },
-                    padding: const .all(12),
+                    padding: const EdgeInsets.all(12),
                     constraints: const BoxConstraints(
                       minWidth: SnackbarConstants.minTouchTargetSize,
                       minHeight: SnackbarConstants.minTouchTargetSize,
@@ -445,7 +471,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                     style: IconButton.styleFrom(
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       shape: RoundedRectangleBorder(
-                        borderRadius: .circular(12),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
@@ -494,9 +520,8 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
     );
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final buttonColor = isDark
-        ? const Color(0xFF374151)
-        : const Color(0xFF1F2937);
+    final buttonColor =
+        isDark ? const Color(0xFF374151) : const Color(0xFF1F2937);
     final iconBgColor = isDark ? const Color(0xFF1F2937) : Colors.white;
 
     Widget content = RepaintBoundary(
@@ -514,104 +539,23 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
         child: ClipRRect(
           borderRadius: widget.borderRadius,
           child: GestureDetector(
-            onTap: widget.dismissOnTap || widget.onTap != null
-                ? _handleTap
-                : null,
+            onTap:
+                widget.dismissOnTap || widget.onTap != null ? _handleTap : null,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 // Colored header with icon - enhanced gradient
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    // Header gradient background with smooth transition
-                    Container(
-                      width: double.infinity,
-                      height: 90,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            _headerGradientColor,
-                            _headerGradientColor.withValues(
-                              alpha: isDark ? 0.4 : 0.2,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Subtle radial overlay for depth
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                            center: Alignment.topRight,
-                            radius: 1.5,
-                            colors: [
-                              Colors.white.withValues(
-                                alpha: isDark ? 0.05 : 0.15,
-                              ),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Close button with enhanced styling
-                    if (widget.showCloseButton)
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              if (widget.onCloseButtonPressed != null) {
-                                widget.onCloseButtonPressed!();
-                              } else {
-                                _animateDismiss();
-                              }
-                            },
-                            borderRadius: .circular(12),
-                            child: Container(
-                              width: 26,
-                              height: 26,
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.1)
-                                    : Colors.black.withValues(alpha: 0.06),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.close_rounded,
-                                size: 14,
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.7)
-                                    : const Color(0xFF6B7280),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    // Centered icon with enhanced animations
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: -26,
-                      child: Center(
-                        child: RepaintBoundary(
-                          child: EnhancedIcon(
-                            icon: widget.icon,
-                            color: widget.iconColor,
-                            size: 26,
-                            containerSize: 52,
-                            backgroundColor: iconBgColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                ColorHeaderBand(
+                  startColor:
+                      SpPalette.gradientFrom(widget.iconColor).colors.first,
+                  endColor:
+                      SpPalette.gradientFrom(widget.iconColor).colors.last,
+                  isDark: isDark,
+                  icon: widget.icon,
+                  iconColor: widget.iconColor,
+                  iconBackgroundColor: iconBgColor,
+                  enablePulse: resolvePulse(context),
+                  onClose: widget.showCloseButton ? _animateDismiss : null,
                 ),
                 // Content area with enhanced typography
                 Padding(
@@ -624,12 +568,12 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                   child: DefaultTextStyle(
                     style: const TextStyle(decoration: TextDecoration.none),
                     child: Column(
-                      mainAxisSize: .min,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         // Title with enhanced typography
                         Text(
                           widget.title,
-                          textAlign: .center,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
                             color: _effectiveTitleColor,
@@ -644,7 +588,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           const SizedBox(height: 8),
                           Text(
                             widget.subtitle!,
-                            textAlign: .center,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 14,
                               color: _effectiveSubtitleColor,
@@ -662,7 +606,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                           height: 48,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              borderRadius: .circular(24),
+                              borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
                                   color: buttonColor.withValues(alpha: 0.25),
@@ -686,7 +630,7 @@ class ModernSnackbarContentState extends State<ModernSnackbarContent>
                                   horizontal: 28,
                                 ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: .circular(24),
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
                                 elevation: 0,
                               ),

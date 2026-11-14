@@ -37,8 +37,9 @@ class DialogButtons extends StatelessWidget {
               child: ModernButton(
                 text: cancelText,
                 onPressed: onCancel,
-                backgroundColor:
-                    isOutlined ? Colors.transparent : cancelColor.withValues(alpha: 0.1),
+                backgroundColor: isOutlined
+                    ? Colors.transparent
+                    : cancelColor.withValues(alpha: 0.1),
                 foregroundColor: cancelColor,
                 isDark: isDark,
                 isOutlined: isOutlined,

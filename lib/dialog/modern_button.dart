@@ -63,7 +63,7 @@ class ModernButtonState extends State<ModernButton>
         color: _isPressed
             ? widget.foregroundColor.withValues(alpha: 0.08)
             : Colors.transparent,
-        borderRadius: .circular(DialogConstants.buttonBorderRadius),
+        borderRadius: BorderRadius.circular(DialogConstants.buttonBorderRadius),
         border: Border.all(
           color: widget.foregroundColor.withValues(
             alpha: widget.isDark ? 0.6 : 0.4,
@@ -87,14 +87,14 @@ class ModernButtonState extends State<ModernButton>
                 .toColor(),
           ],
         ),
-        borderRadius: .circular(DialogConstants.buttonBorderRadius),
+        borderRadius: BorderRadius.circular(DialogConstants.buttonBorderRadius),
         boxShadow: ButtonShadows.getPrimaryShadow(widget.backgroundColor),
       );
     } else {
       // Secondary button with subtle styling
       decoration = BoxDecoration(
         color: widget.backgroundColor,
-        borderRadius: .circular(DialogConstants.buttonBorderRadius),
+        borderRadius: BorderRadius.circular(DialogConstants.buttonBorderRadius),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),

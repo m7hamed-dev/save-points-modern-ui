@@ -14,7 +14,13 @@ export 'config/config.dart';
 export 'content_design_style.dart';
 // Export the shared design-token layer (radius, spacing, type, motion,
 // palette) so consumers can theme against the same source of truth.
+// The shared header band, so a caller can build a matching surface.
+export 'design/color_header_band.dart';
+export 'design/pulse_scope.dart';
 export 'design/save_points_tokens.dart';
+// One resolver for every design style; see README, "Building on the
+// same styles".
+export 'design/sp_style.dart';
 // Export dialog components
 export 'dialog/dialog.dart';
 // Export extensions

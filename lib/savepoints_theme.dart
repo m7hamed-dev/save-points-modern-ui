@@ -41,6 +41,7 @@ class SavePointsThemeData {
     this.snackbarDuration,
     this.enableHapticFeedback,
     this.barrierDismissible,
+    this.enablePulse,
   });
 
   /// Default visual style shared by dialogs, snackbars and bottom sheets.
@@ -61,6 +62,13 @@ class SavePointsThemeData {
   /// Default barrier-dismiss behaviour for dialogs.
   final bool? barrierDismissible;
 
+  /// Whether component icons loop a subtle scale + glow pulse.
+  ///
+  /// Defaults to off. The pulse never ends, so it keeps the app repainting
+  /// for as long as the surface is up and makes `pumpAndSettle()` hang in
+  /// tests — turn it on deliberately, for a subtree or a single call.
+  final bool? enablePulse;
+
   /// Returns a copy with the given fields replaced.
   SavePointsThemeData copyWith({
     ContentDesignStyle? designStyle,
@@ -69,6 +77,7 @@ class SavePointsThemeData {
     Duration? snackbarDuration,
     bool? enableHapticFeedback,
     bool? barrierDismissible,
+    bool? enablePulse,
   }) {
     return SavePointsThemeData(
       designStyle: designStyle ?? this.designStyle,
@@ -77,6 +86,7 @@ class SavePointsThemeData {
       snackbarDuration: snackbarDuration ?? this.snackbarDuration,
       enableHapticFeedback: enableHapticFeedback ?? this.enableHapticFeedback,
       barrierDismissible: barrierDismissible ?? this.barrierDismissible,
+      enablePulse: enablePulse ?? this.enablePulse,
     );
   }
 
@@ -88,7 +98,8 @@ class SavePointsThemeData {
         other.snackbarPosition == snackbarPosition &&
         other.snackbarDuration == snackbarDuration &&
         other.enableHapticFeedback == enableHapticFeedback &&
-        other.barrierDismissible == barrierDismissible;
+        other.barrierDismissible == barrierDismissible &&
+        other.enablePulse == enablePulse;
   }
 
   @override
@@ -122,9 +133,7 @@ class SavePointsTheme extends InheritedWidget {
   /// Components use this so that having no [SavePointsTheme] simply means
   /// "use built-in defaults".
   static SavePointsThemeData? maybeOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<SavePointsTheme>()
-        ?.data;
+    return context.dependOnInheritedWidgetOfExactType<SavePointsTheme>()?.data;
   }
 
   /// Returns the nearest [SavePointsThemeData]; throws if none is in scope.

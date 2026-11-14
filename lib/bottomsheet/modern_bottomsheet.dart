@@ -9,8 +9,10 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_loading_indicator.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/color_header_band.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
-import 'package:save_points_snackbar_dialog_bottomsheet/shared/enhanced_icon.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/shared/loading_state_mixin.dart';
 
 /// Modern bottom sheet widget
 class ModernBottomsheet extends StatefulWidget {
@@ -61,9 +63,14 @@ class ModernBottomsheet extends StatefulWidget {
   State<ModernBottomsheet> createState() => _ModernBottomsheetState();
 }
 
-class _ModernBottomsheetState extends State<ModernBottomsheet> {
-  late bool _isLoading;
-  late ValueNotifier<bool>? _loadingNotifier;
+class _ModernBottomsheetState extends State<ModernBottomsheet>
+    with LoadingStateMixin<ModernBottomsheet> {
+  @override
+  bool get widgetIsLoading => widget.isLoading;
+
+  @override
+  ValueNotifier<bool>? get widgetLoadingNotifier => widget.loadingNotifier;
+
   BottomsheetColorConfig? _cachedColorConfig;
   double? _cachedMaxHeight;
   ImageFilter? _cachedBackdropFilter;
@@ -71,25 +78,12 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
   ImageFilter? _lastBackdropFilterParam;
 
   @override
-  void initState() {
-    super.initState();
-    _isLoading = widget.isLoading;
-    _loadingNotifier = widget.loadingNotifier;
-
-    if (_loadingNotifier != null) {
-      _loadingNotifier!.addListener(_onLoadingChanged);
-    }
-  }
-
-  @override
   void didUpdateWidget(ModernBottomsheet oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.loadingNotifier != widget.loadingNotifier) {
-      oldWidget.loadingNotifier?.removeListener(_onLoadingChanged);
-      _loadingNotifier = widget.loadingNotifier;
-      _loadingNotifier?.addListener(_onLoadingChanged);
-    }
-    _isLoading = widget.isLoading;
+    updateLoadingState(
+      oldIsLoading: oldWidget.isLoading,
+      oldNotifier: oldWidget.loadingNotifier,
+    );
   }
 
   @override
@@ -114,25 +108,8 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
   }
 
   @override
-  void dispose() {
-    if (_loadingNotifier != null) {
-      _loadingNotifier!.removeListener(_onLoadingChanged);
-    }
-    super.dispose();
-  }
-
-  void _onLoadingChanged() {
-    if (_loadingNotifier != null && mounted) {
-      setState(() {
-        _isLoading = _loadingNotifier!.value;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final colorConfig =
-        _cachedColorConfig ??
+    final colorConfig = _cachedColorConfig ??
         BottomsheetColorConfig(
           theme: Theme.of(context),
           isDark: widget.isDark,
@@ -164,8 +141,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     final availableHeight = screenHeight - keyboardHeight;
 
     // Use the smaller of: configured maxHeight or available height (with some margin)
-    final configuredMaxHeight =
-        _cachedMaxHeight ??
+    final configuredMaxHeight = _cachedMaxHeight ??
         (widget.maxHeight ?? screenHeight * BottomsheetConstants.maxHeight);
 
     // When keyboard is visible, limit max height to available space minus safe margin
@@ -196,7 +172,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                 colorConfig: colorConfig,
                 showTopRadius: false,
                 child: Column(
-                  mainAxisSize: .min,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     if (widget.showHandle)
                       RepaintBoundary(
@@ -235,7 +211,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                       const SizedBox(height: BottomsheetConstants.titleSpacing),
                     ],
                     // Main content: loading indicator or scrollable child
-                    if (_isLoading)
+                    if (isLoading)
                       RepaintBoundary(
                         child: BottomsheetLoadingIndicator(
                           color: colorConfig.iconColor,
@@ -273,8 +249,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     final availableHeight = screenHeight - keyboardHeight;
 
     // Use the smaller of: configured maxHeight or available height (with some margin)
-    final configuredMaxHeight =
-        _cachedMaxHeight ??
+    final configuredMaxHeight = _cachedMaxHeight ??
         (widget.maxHeight ?? screenHeight * BottomsheetConstants.maxHeight);
 
     // When keyboard is visible, limit max height to available space minus safe margin
@@ -314,108 +289,18 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
               blur: widget.blur,
               backdropFilter: widget.backdropFilter,
               child: Column(
-                mainAxisSize: .min,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   // Colored header with icon - enhanced gradient
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      // Header gradient background with smooth transition
-                      Container(
-                        width: double.infinity,
-                        height: 110,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              colorConfig.headerColor,
-                              colorConfig.headerColorEnd,
-                            ],
-                            stops: const [0.0, 1.0],
-                          ),
-                        ),
-                      ),
-                      // Subtle radial overlay for depth
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: RadialGradient(
-                              center: Alignment.topRight,
-                              radius: 1.5,
-                              colors: [
-                                Colors.white.withValues(
-                                  alpha: widget.isDark ? 0.05 : 0.12,
-                                ),
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Handle with enhanced styling
-                      if (widget.showHandle)
-                        Positioned(
-                          top: 12,
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: Container(
-                              width: 44,
-                              height: 5,
-                              decoration: BoxDecoration(
-                                // On the vivid header band the handle is white.
-                                color: Colors.white.withValues(alpha: 0.55),
-                                borderRadius: .circular(2.5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      // Close button with enhanced styling
-                      if (widget.isDismissible)
-                        Positioned(
-                          top: 12,
-                          right: 12,
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => Navigator.of(context).pop(),
-                              borderRadius: .circular(14),
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                  // Frosted chip on the vivid header band.
-                                  color: Colors.white.withValues(alpha: 0.22),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.close_rounded,
-                                  size: 16,
-                                  color: Colors.white.withValues(alpha: 0.95),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      // Centered icon with enhanced animations
-                      if (widget.icon != null)
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: -30,
-                          child: Center(
-                            child: RepaintBoundary(
-                              child: EnhancedIcon(
-                                icon: widget.icon!,
-                                color: colorConfig.iconColor,
-                                backgroundColor:
-                                    colorConfig.iconBackgroundColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
+                  ColorHeaderBand(
+                    startColor: colorConfig.headerColor,
+                    endColor: colorConfig.headerColorEnd,
+                    isDark: widget.isDark,
+                    icon: widget.icon,
+                    iconColor: colorConfig.iconColor,
+                    iconBackgroundColor: colorConfig.iconBackgroundColor,
+                    enablePulse: resolvePulse(context),
+                    onClose: () => Navigator.of(context).pop(),
                   ),
                   // Content area with enhanced spacing
                   Flexible(
@@ -427,14 +312,14 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                         bottom: 28,
                       ),
                       child: Column(
-                        mainAxisSize: .min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           // Title with enhanced typography
                           if (widget.title != null) ...[
                             RepaintBoundary(
                               child: Text(
                                 widget.title!,
-                                textAlign: .center,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: SpType.displaySize,
                                   fontWeight: SpType.displayWeight,
@@ -447,7 +332,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
                             const SizedBox(height: 18),
                           ],
                           // Main content: loading indicator or scrollable child
-                          if (_isLoading)
+                          if (isLoading)
                             RepaintBoundary(
                               child: BottomsheetLoadingIndicator(
                                 color: colorConfig.iconColor,
@@ -481,8 +366,7 @@ class _ModernBottomsheetState extends State<ModernBottomsheet> {
     }
     _lastBlur = blur;
     _lastBackdropFilterParam = backdropFilter;
-    _cachedBackdropFilter =
-        backdropFilter ??
+    _cachedBackdropFilter = backdropFilter ??
         (blur != null && blur <= 0
             ? null
             : ImageFilter.blur(sigmaX: blur ?? 20.0, sigmaY: blur ?? 20.0));

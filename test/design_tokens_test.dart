@@ -6,31 +6,39 @@ import 'package:save_points_snackbar_dialog_bottomsheet/save_points_snackbar_dia
 /// components speak one visual language.
 void main() {
   group('ContentDesignStyle', () {
-    test('exposes all eight documented styles', () {
-      expect(ContentDesignStyle.values, hasLength(8));
-      expect(ContentDesignStyle.values, containsAll(<ContentDesignStyle>[
-        ContentDesignStyle.solid,
-        ContentDesignStyle.outlined,
-        ContentDesignStyle.tonal,
-        ContentDesignStyle.colorHeader,
-        ContentDesignStyle.leftAccent,
-        ContentDesignStyle.glass,
-        ContentDesignStyle.neon,
-        ContentDesignStyle.minimal,
-      ]));
+    test('exposes every documented style', () {
+      expect(ContentDesignStyle.values, hasLength(12));
+      expect(
+          ContentDesignStyle.values,
+          containsAll(<ContentDesignStyle>[
+            ContentDesignStyle.solid,
+            ContentDesignStyle.outlined,
+            ContentDesignStyle.tonal,
+            ContentDesignStyle.colorHeader,
+            ContentDesignStyle.leftAccent,
+            ContentDesignStyle.glass,
+            ContentDesignStyle.neon,
+            ContentDesignStyle.minimal,
+            ContentDesignStyle.brutalist,
+            ContentDesignStyle.gradientBorder,
+            ContentDesignStyle.aurora,
+            ContentDesignStyle.soft,
+          ]));
     });
   });
 
   group('SpIntent', () {
     test('covers the five semantic intents', () {
       expect(SpIntent.values, hasLength(5));
-      expect(SpIntent.values, containsAll(<SpIntent>[
-        SpIntent.success,
-        SpIntent.error,
-        SpIntent.warning,
-        SpIntent.info,
-        SpIntent.neutral,
-      ]));
+      expect(
+          SpIntent.values,
+          containsAll(<SpIntent>[
+            SpIntent.success,
+            SpIntent.error,
+            SpIntent.warning,
+            SpIntent.info,
+            SpIntent.neutral,
+          ]));
     });
   });
 

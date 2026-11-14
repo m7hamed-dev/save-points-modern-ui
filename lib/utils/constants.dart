@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 
-/// Shared constants used across the package
+/// Shared constants used across the package.
+///
+/// Superseded by the design-token layer in `design/save_points_tokens.dart`,
+/// which every component actually reads from: [SpSpacing] for spacing,
+/// [SpRadius] for corner radii, [SpMotion] for durations. The values here
+/// duplicate those one-for-one and are no longer used internally.
+@Deprecated(
+  'Use the SpSpacing / SpRadius / SpMotion design tokens instead. '
+  'Will be removed in a future major release.',
+)
 class SavePointsConstants {
   // Animation durations
   static const Duration defaultAnimationDuration = Duration(milliseconds: 300);
@@ -60,4 +69,3 @@ class SavePointsConstants {
   // Private constructor to prevent instantiation
   SavePointsConstants._();
 }
-

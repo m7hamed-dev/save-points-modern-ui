@@ -10,7 +10,7 @@ class BottomsheetConstants {
   static const double handleHeight = 5.0;
   static const double handleWidth = 44.0;
   static const double handleBorderRadius = 2.5;
-  static const EdgeInsets padding = .all(SpSpacing.xxl);
+  static const EdgeInsets padding = EdgeInsets.all(SpSpacing.xxl);
   static const EdgeInsets contentPadding = EdgeInsets.symmetric(
     horizontal: SpSpacing.xxl,
   );

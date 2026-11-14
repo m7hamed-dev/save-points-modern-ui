@@ -9,6 +9,7 @@ import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_shadows.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/sp_style.dart';
 
 /// Bottom sheet container with decoration
 class BottomsheetContainer extends StatelessWidget {
@@ -25,9 +26,10 @@ class BottomsheetContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == .dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOutlined = colorConfig.borderColor != null;
-    final isLeftAccent = colorConfig.designStyle == .leftAccent;
+    final isLeftAccent =
+        colorConfig.designStyle == ContentDesignStyle.leftAccent;
     const topRadius = BottomsheetConstants.topBorderRadius;
 
     final borderRadius = BorderRadius.only(
@@ -37,10 +39,17 @@ class BottomsheetContainer extends StatelessWidget {
       bottomRight: const Radius.circular(BottomsheetConstants.borderRadius),
     );
 
+    final spec = SpStyles.of(
+      colorConfig.designStyle,
+      colorConfig.iconColor,
+      isDark,
+    );
+
     Widget content = Container(
       padding: BottomsheetConstants.padding,
       decoration: BoxDecoration(
-        color: colorConfig.backgroundColor,
+        color: spec.fillGradient == null ? colorConfig.backgroundColor : null,
+        gradient: spec.fillGradient,
         borderRadius: isLeftAccent
             ? BorderRadius.only(
                 topRight: borderRadius.topRight,
@@ -71,7 +80,7 @@ class BottomsheetContainer extends StatelessWidget {
         ),
       ),
       child: Material(
-        type: .transparency,
+        type: MaterialType.transparency,
         child: SafeArea(top: false, child: child),
       ),
     );
@@ -92,13 +101,34 @@ class BottomsheetContainer extends StatelessWidget {
     if (isLeftAccent) {
       content = ClipRRect(
         borderRadius: borderRadius,
-        child: Row(
-          crossAxisAlignment: .stretch,
-          children: [
-            Container(width: 5, color: colorConfig.iconColor),
-            Expanded(child: content),
-          ],
+        // IntrinsicHeight so `stretch` sizes the accent bar to the content.
+        // Without it the Row takes every pixel of an unbounded height — which
+        // is what turned the leftAccent dialog into a full-screen-tall card.
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: SpPalette.gradientFrom(colorConfig.iconColor),
+                ),
+                child: const SizedBox(width: 6),
+              ),
+              Expanded(child: content),
+            ],
+          ),
         ),
+      );
+    }
+
+    // A neon sheet paints a near-black surface, but the `child` belongs to the
+    // caller and is styled by *their* ThemeData — on a light theme that means
+    // dark text on a near-black card, i.e. unreadable. Hand the subtree a
+    // matching brightness so consumer content inherits legible colours.
+    if (colorConfig.designStyle == ContentDesignStyle.neon && !isDark) {
+      content = Theme(
+        data: ThemeData.dark(useMaterial3: Theme.of(context).useMaterial3),
+        child: content,
       );
     }
 

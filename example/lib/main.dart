@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
       useMaterial3: true,
       cardTheme: CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: .circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }
@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
       useMaterial3: true,
       cardTheme: CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: .circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }
@@ -128,15 +128,6 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     super.initState();
     _initializeAnimationControllers();
     _startStaggeredAnimations();
-    _applyVariant(_variant);
-  }
-
-  /// Makes [variant] the global default for snackbars, dialogs and bottom
-  /// sheets so the feature demos follow the AppBar switcher.
-  void _applyVariant(ContentDesignStyle variant) {
-    SnackDiaBottomConfig().snackbar.defaultDesignStyle = variant;
-    SnackDiaBottomConfig().dialog.defaultDesignStyle = variant;
-    SavePointsBottomsheet.defaultDesignStyle = variant;
   }
 
   /// Initializes all animation controllers
@@ -165,8 +156,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     for (int i = 0; i < _sectionControllers.length; i++) {
       Future.delayed(
         Duration(
-          milliseconds:
-              _AnimationConstants.initialDelay +
+          milliseconds: _AnimationConstants.initialDelay +
               (i * _AnimationConstants.staggerDelay),
         ),
         () {
@@ -194,95 +184,103 @@ class _ExampleHomePageState extends State<ExampleHomePage>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'SavePoints Modern UI',
-          style: TextStyle(fontWeight: .bold),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        actions: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) {
-              return RotationTransition(
-                turns: animation,
-                child: ScaleTransition(scale: animation, child: child),
-              );
-            },
-            child: IconButton(
-              key: ValueKey(_variant),
-              icon: Icon(_variantIcon(_variant)),
-              tooltip: '${_variantLabel(_variant)} — tap to switch variant',
-              onPressed: _cycleVariant,
-            ),
+    // One scoped declaration drives snackbars, dialogs and bottom sheets for
+    // everything below it — no process-wide globals, and flipping the variant
+    // rebuilds the subtree on its own.
+    return SavePointsTheme(
+      data: SavePointsThemeData(designStyle: _variant),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'SavePoints Modern UI',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) {
-              return RotationTransition(
-                turns: animation,
-                child: ScaleTransition(scale: animation, child: child),
-              );
-            },
-            child: IconButton(
-              key: ValueKey(isDark),
-              icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-              tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-              onPressed: () {
-                widget.onThemeChanged(
-                  isDark ? ThemeMode.light : ThemeMode.dark,
+          centerTitle: true,
+          elevation: 0,
+          actions: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: animation,
+                  child: ScaleTransition(scale: animation, child: child),
                 );
               },
-            ),
-          ),
-        ],
-      ),
-      body: AnimatedBuilder(
-        animation: _gradientController,
-        builder: (context, child) {
-          final angle = _gradientController.value * 2 * math.pi;
-          return Container(
-            decoration: BoxDecoration(
-              gradient: SweepGradient(
-                startAngle: angle,
-                endAngle: angle + math.pi * 2,
-                colors: isDark
-                    ? [
-                        Colors.grey[900]!,
-                        Colors.grey[800]!,
-                        Colors.grey[900]!,
-                        Colors.grey[800]!,
-                      ]
-                    : [
-                        Colors.blue[50]!,
-                        Colors.indigo[50]!,
-                        Colors.purple[50]!,
-                        Colors.blue[50]!,
-                      ],
+              child: IconButton(
+                key: ValueKey(_variant),
+                icon: Icon(_variantIcon(_variant)),
+                tooltip: '${_variantLabel(_variant)} — tap to switch variant',
+                onPressed: _cycleVariant,
               ),
             ),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const .all(_SpacingConstants.contentPadding),
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    _buildHeader(),
-                    const SizedBox(
-                      height: _SpacingConstants.headerBottomSpacing,
-                    ),
-                    ..._buildAllSections(context),
-                    const SizedBox(height: _SpacingConstants.bottomSpacing),
-                  ],
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: animation,
+                  child: ScaleTransition(scale: animation, child: child),
+                );
+              },
+              child: IconButton(
+                key: ValueKey(isDark),
+                icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+                tooltip:
+                    isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+                onPressed: () {
+                  widget.onThemeChanged(
+                    isDark ? ThemeMode.light : ThemeMode.dark,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+        body: AnimatedBuilder(
+          animation: _gradientController,
+          builder: (context, child) {
+            final angle = _gradientController.value * 2 * math.pi;
+            return Container(
+              decoration: BoxDecoration(
+                gradient: SweepGradient(
+                  startAngle: angle,
+                  endAngle: angle + math.pi * 2,
+                  colors: isDark
+                      ? [
+                          Colors.grey[900]!,
+                          Colors.grey[800]!,
+                          Colors.grey[900]!,
+                          Colors.grey[800]!,
+                        ]
+                      : [
+                          Colors.blue[50]!,
+                          Colors.indigo[50]!,
+                          Colors.purple[50]!,
+                          Colors.blue[50]!,
+                        ],
                 ),
               ),
-            ),
-          );
-        },
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.all(_SpacingConstants.contentPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildHeader(),
+                      const SizedBox(
+                        height: _SpacingConstants.headerBottomSpacing,
+                      ),
+                      ..._buildAllSections(context),
+                      const SizedBox(height: _SpacingConstants.bottomSpacing),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+        bottomNavigationBar: _buildBottomNavigationBar(),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -368,6 +366,14 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       case ContentDesignStyle.leftAccent:
       case ContentDesignStyle.tonal:
         return Icons.style;
+      case ContentDesignStyle.brutalist:
+        return Icons.check_box_outline_blank;
+      case ContentDesignStyle.gradientBorder:
+        return Icons.filter_frames;
+      case ContentDesignStyle.aurora:
+        return Icons.gradient;
+      case ContentDesignStyle.soft:
+        return Icons.bubble_chart;
     }
   }
 
@@ -380,6 +386,14 @@ class _ExampleHomePageState extends State<ExampleHomePage>
         return 'Neon';
       case ContentDesignStyle.minimal:
         return 'Minimal';
+      case ContentDesignStyle.brutalist:
+        return 'Brutalist';
+      case ContentDesignStyle.gradientBorder:
+        return 'Gradient border';
+      case ContentDesignStyle.aurora:
+        return 'Aurora';
+      case ContentDesignStyle.soft:
+        return 'Soft';
       case ContentDesignStyle.solid:
       case ContentDesignStyle.outlined:
       case ContentDesignStyle.colorHeader:
@@ -392,11 +406,10 @@ class _ExampleHomePageState extends State<ExampleHomePage>
   /// Cycles glass → neon → minimal, updates the global default, and previews
   /// the newly selected variant.
   void _cycleVariant() {
-    final next =
-        _switchableVariants[(_switchableVariants.indexOf(_variant) + 1) %
+    final next = _switchableVariants[
+        (_switchableVariants.indexOf(_variant) + 1) %
             _switchableVariants.length];
     setState(() => _variant = next);
-    _applyVariant(next);
     SavePointsSnackbar.show(
       context,
       title: '${_variantLabel(next)} variant',
@@ -454,11 +467,11 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       child: SlideTransition(
         position: Tween<Offset>(begin: const Offset(0, -0.3), end: Offset.zero)
             .animate(
-              CurvedAnimation(
-                parent: _headerController,
-                curve: Curves.easeOutCubic,
-              ),
-            ),
+          CurvedAnimation(
+            parent: _headerController,
+            curve: Curves.easeOutCubic,
+          ),
+        ),
         child: const ExampleHeader(),
       ),
     );
@@ -478,8 +491,8 @@ class _ExampleHomePageState extends State<ExampleHomePage>
       child: SlideTransition(
         position: Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
             .animate(
-              CurvedAnimation(parent: controller, curve: Curves.easeOutCubic),
-            ),
+          CurvedAnimation(parent: controller, curve: Curves.easeOutCubic),
+        ),
         child: ExampleSection(title: title, icon: icon, children: children),
       ),
     );
@@ -713,14 +726,15 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             cancelText: 'Cancel',
             showCancelButton: true,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Name',
                     hintText: 'Enter your name',
                     prefixIcon: const Icon(Icons.person),
-                    border: OutlineInputBorder(borderRadius: .circular(12)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
                     filled: true,
                   ),
                 ),
@@ -730,7 +744,8 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                     labelText: 'Email',
                     hintText: 'Enter your email',
                     prefixIcon: const Icon(Icons.email),
-                    border: OutlineInputBorder(borderRadius: .circular(12)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
                     filled: true,
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -763,7 +778,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                 '🎉 CHILD IS VISIBLE! 🎉',
                 style: TextStyle(
                   fontSize: 20,
-                  fontWeight: .bold,
+                  fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
@@ -1049,7 +1064,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
               children: [
                 const Text(
                   '4 Installments',
-                  style: TextStyle(fontSize: 18, fontWeight: .bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 const _PaymentItem(
@@ -1069,7 +1084,8 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                       children: [
                         const Text(
                           'Total Amount',
-                          style: TextStyle(fontWeight: .bold, fontSize: 16),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         Text(
                           'Including \$2.47 fees',
@@ -1082,7 +1098,8 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                     ),
                     const Text(
                       '\$216.07',
-                      style: TextStyle(fontSize: 20, fontWeight: .bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -1441,7 +1458,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             subtitle: 'With custom border styling',
             borderColor: Colors.orange,
             borderWidth: 2,
-            borderRadius: .circular(12),
+            borderRadius: BorderRadius.circular(12),
             type: SnackbarType.warning,
           );
         },
@@ -1650,7 +1667,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Solid Style',
             designStyle: ContentDesignStyle.solid,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Classic filled background with shadow. '
                 'The default bottom sheet style.',
@@ -1671,7 +1688,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Outlined Style',
             designStyle: ContentDesignStyle.outlined,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Light background with colored border and dark text. '
                 'Clean, minimal look.',
@@ -1694,7 +1711,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.green,
             designStyle: ContentDesignStyle.colorHeader,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Card style with colored header gradient, centered icon in circle, '
                 'and modern design. Perfect for success states and confirmations.',
@@ -1717,7 +1734,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.blue,
             designStyle: ContentDesignStyle.colorHeader,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.description),
@@ -1750,7 +1767,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.teal,
             designStyle: ContentDesignStyle.leftAccent,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Bottom sheet with a colored vertical bar on the left.',
                 style: TextStyle(fontSize: 16),
@@ -1772,7 +1789,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.indigo,
             designStyle: ContentDesignStyle.tonal,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Material 3 tonal style — light tinted surface.',
                 style: TextStyle(fontSize: 16),
@@ -1794,7 +1811,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.cyan,
             designStyle: ContentDesignStyle.glass,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Translucent surface over a backdrop blur with a hairline '
                 'highlight border.',
@@ -1817,7 +1834,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.purpleAccent,
             designStyle: ContentDesignStyle.neon,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Deep near-black surface with a glowing accent border and an '
                 'intense colored bloom.',
@@ -1840,7 +1857,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             iconColor: Colors.blueGrey,
             designStyle: ContentDesignStyle.minimal,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Opaque surface, single hairline border, perfectly flat.',
                 style: TextStyle(fontSize: 16),
@@ -1859,7 +1876,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context: context,
             title: 'Bottom Sheet',
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'This is a modern bottom sheet with glassmorphism design. '
                 'It features beautiful backdrop blur effects and smooth animations.',
@@ -1881,7 +1898,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Options',
             icon: Icons.more_vert,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.edit),
@@ -1923,7 +1940,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             startAnimation: BottomsheetAnimationDirection.fromLeft,
             endAnimation: BottomsheetAnimationDirection.fromRight,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'This bottom sheet slides in from the left and exits to the right.',
                 style: TextStyle(fontSize: 16),
@@ -1975,7 +1992,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             icon: Icons.swap_vert,
             isScrollControlled: true,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: List.generate(
                 15,
                 (index) => ListTile(
@@ -2000,7 +2017,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             title: 'Settings',
             icon: Icons.settings,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SwitchListTile(
                   title: const Text('Enable Notifications'),
@@ -2043,7 +2060,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             startAnimation: BottomsheetAnimationDirection.fromBottom,
             endAnimation: BottomsheetAnimationDirection.fade,
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'Backdrop blur with slide animation. Frosted glass effect behind the sheet!',
                 style: TextStyle(fontSize: 16),
@@ -2164,7 +2181,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context: context,
             title: 'Choose Action',
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.delete),
@@ -2297,7 +2314,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context: context,
             title: 'Final Step',
             child: const Padding(
-              padding: .all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Text(
                 'This completes the story flow!',
                 style: TextStyle(fontSize: 16),
@@ -2316,7 +2333,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
             context: context,
             title: 'Quick Actions',
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.add_circle),
@@ -2423,7 +2440,8 @@ class _PaymentItem extends StatelessWidget {
           ),
           Text(
             amount,
-            style: TextStyle(fontWeight: isActive ? .bold : FontWeight.normal),
+            style: TextStyle(
+                fontWeight: isActive ? FontWeight.bold : FontWeight.normal),
           ),
         ],
       ),

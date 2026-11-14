@@ -95,89 +95,102 @@ class HeaderDialog extends StatelessWidget {
     final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
 
     return RepaintBoundary(
-      child: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            margin: DialogConstants.dialogMargin,
-            constraints: const BoxConstraints(
-              maxWidth: DialogConstants.maxDialogWidth,
-            ),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // Main dialog content
-                ClipRRect(
-                  borderRadius: .circular(effectiveBorderRadius),
-                  child: _buildContent(
-                    blur: blur,
-                    backdropFilter: backdropFilter,
-                    child: Column(
-                      mainAxisSize: .min,
-                      children: [
-                        // Header bar
-                        _buildHeader(
-                          effectiveHeaderColor,
-                          effectiveHeaderTextColor,
-                        ),
-                        // Content area
-                        Container(
-                          width: double.infinity,
-                          color: backgroundColor,
-                          child: Column(
-                            mainAxisSize: .min,
-                            children: [
-                              // Custom content
-                              Padding(padding: const .all(20), child: child),
-                              // Action buttons
-                              if (primaryButtonText != null ||
-                                  secondaryButtonText != null)
-                                _buildButtons(
-                                  context,
-                                  effectivePrimaryColor,
-                                  effectiveSecondaryColor,
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+      // Center first, Material second. The other way round the transparent
+      // Material filled the whole screen and hit-tested opaque, so it
+      // swallowed every tap aimed at the barrier behind it and
+      // barrierDismissible — true by default — did nothing. Center does not
+      // hit-test itself, so a tap outside the card now falls through to the
+      // barrier while the card still absorbs its own taps.
+      child: Center(
+        child: Padding(
+            // The inset lives outside the Material, the way Flutter's own
+            // Dialog places insetPadding: a tap in this band is a tap outside
+            // the card, so it dismisses rather than being absorbed.
+            padding: DialogConstants.dialogMargin,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: DialogConstants.maxDialogWidth,
                 ),
-                // Close button outside the dialog (top-left)
-                if (showCloseButton)
-                  Positioned(
-                    top: -16,
-                    left: 0,
-                    child: _OutsideCloseButton(
-                      iconColor: effectiveHeaderTextColor,
-                      backgroundColor: effectiveHeaderColor,
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                        if (onClose != null) {
-                          onClose!();
-                        } else {
-                          Navigator.of(context).pop();
-                        }
-                      },
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Main dialog content
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(effectiveBorderRadius),
+                      child: _buildContent(
+                        blur: blur,
+                        backdropFilter: backdropFilter,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Header bar
+                            _buildHeader(
+                              effectiveHeaderColor,
+                              effectiveHeaderTextColor,
+                            ),
+                            // Content area
+                            Container(
+                              width: double.infinity,
+                              color: backgroundColor,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Custom content
+                                  Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: child),
+                                  // Action buttons
+                                  if (primaryButtonText != null ||
+                                      secondaryButtonText != null)
+                                    _buildButtons(
+                                      context,
+                                      effectivePrimaryColor,
+                                      effectiveSecondaryColor,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-              ],
-            ),
-          ),
-        ),
+                    // Close button outside the dialog (top-left)
+                    if (showCloseButton)
+                      Positioned(
+                        top: -16,
+                        left: 0,
+                        child: _OutsideCloseButton(
+                          iconColor: effectiveHeaderTextColor,
+                          backgroundColor: effectiveHeaderColor,
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            if (onClose != null) {
+                              onClose!();
+                            } else {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            )),
       ),
     );
   }
 
   Widget _buildHeader(Color headerColor, Color textColor) {
     return Container(
-      width: .infinity,
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       decoration: BoxDecoration(color: headerColor),
       child: Text(
         headerTitle,
-        textAlign: .center,
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: textColor,
           fontSize: 20,
@@ -214,7 +227,8 @@ class HeaderDialog extends StatelessWidget {
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: .circular(DialogConstants.buttonBorderRadius),
+                    borderRadius: BorderRadius.circular(
+                        DialogConstants.buttonBorderRadius),
                   ),
                   minimumSize: const Size(
                     double.infinity,
@@ -251,7 +265,8 @@ class HeaderDialog extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: .circular(DialogConstants.buttonBorderRadius),
+                    borderRadius: BorderRadius.circular(
+                        DialogConstants.buttonBorderRadius),
                   ),
                   minimumSize: const Size(
                     double.infinity,
@@ -260,7 +275,8 @@ class HeaderDialog extends StatelessWidget {
                 ),
                 child: Text(
                   secondaryButtonText!,
-                  style: const TextStyle(fontSize: 16, fontWeight: .w500),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
@@ -274,8 +290,7 @@ class HeaderDialog extends StatelessWidget {
     required ImageFilter? backdropFilter,
     required Widget child,
   }) {
-    final filter =
-        backdropFilter ??
+    final filter = backdropFilter ??
         (blur != null && blur > 0
             ? ImageFilter.blur(sigmaX: blur, sigmaY: blur)
             : null);
@@ -313,8 +328,13 @@ class _OutsideCloseButton extends StatelessWidget {
         child: Container(
           width: 44,
           height: 44,
-          alignment: .center,
-          child: Icon(Icons.close, color: iconColor, size: 22),
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.close,
+            color: iconColor,
+            size: 22,
+            semanticLabel: MaterialLocalizations.of(context).closeButtonTooltip,
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/dialog/dialog_constants.dart';
 
 /// Professional dialog icon widget with enhanced animations and styling.
@@ -14,6 +15,13 @@ class DialogIcon extends StatefulWidget {
   final Color color;
   final ContentDesignStyle? designStyle;
   final bool enableAnimation;
+
+  /// Loops a subtle scale + glow pulse for as long as the surface is on
+  /// screen.
+  ///
+  /// Off by default: a never-ending animation keeps the whole app repainting
+  /// for the lifetime of the dialog or snackbar, and it makes
+  /// `pumpAndSettle()` hang in the tests of anyone using this package.
   final bool enablePulse;
 
   const DialogIcon({
@@ -22,7 +30,7 @@ class DialogIcon extends StatefulWidget {
     required this.color,
     this.designStyle,
     this.enableAnimation = true,
-    this.enablePulse = true,
+    this.enablePulse = false,
   });
 
   @override
@@ -90,8 +98,7 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOutlined =
-        widget.designStyle == ContentDesignStyle.outlined ||
+    final isOutlined = widget.designStyle == ContentDesignStyle.outlined ||
         widget.designStyle == ContentDesignStyle.leftAccent ||
         widget.designStyle == ContentDesignStyle.tonal ||
         widget.designStyle == ContentDesignStyle.glass ||
@@ -105,9 +112,8 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
           animation: Listenable.merge([_scaleAnimation, _pulseAnimation]),
           builder: (context, child) {
             final pulseScale = widget.enablePulse ? _pulseAnimation.value : 1.0;
-            final glowIntensity = widget.enablePulse
-                ? _glowAnimation.value
-                : 0.25;
+            final glowIntensity =
+                widget.enablePulse ? _glowAnimation.value : 0.25;
 
             return Transform.scale(
               scale: _scaleAnimation.value * pulseScale,
@@ -138,12 +144,12 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
 
   Widget _buildOutlinedIcon(bool isDark, double glowIntensity) {
     return Container(
-      padding: const .all(DialogConstants.iconPadding),
+      padding: const EdgeInsets.all(DialogConstants.iconPadding),
       decoration: BoxDecoration(
-        color: widget.color.withValues(alpha: isDark ? 0.1 : 0.05),
+        color: widget.color.withValues(alpha: isDark ? 0.16 : 0.10),
         shape: BoxShape.circle,
         border: Border.all(
-          color: widget.color.withValues(alpha: isDark ? 0.5 : 0.35),
+          color: widget.color.withValues(alpha: isDark ? 0.65 : 0.55),
           width: 2,
         ),
         boxShadow: [
@@ -165,18 +171,17 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
     );
   }
 
+  /// The filled variant's chip: the accent gradient at full strength with a
+  /// white glyph on top.
+  ///
+  /// It used to paint the same gradient at 22%/12% alpha, which on a white
+  /// surface came out as a pale wash — the single weakest element in the
+  /// family, and the reason `solid` did not read as bolder than `minimal`.
   Widget _buildSolidIcon(bool isDark, double glowIntensity) {
     return Container(
-      padding: const .all(DialogConstants.iconPadding),
+      padding: const EdgeInsets.all(DialogConstants.iconPadding),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            widget.color.withValues(alpha: 0.22),
-            widget.color.withValues(alpha: 0.12),
-          ],
-        ),
+        gradient: SpPalette.gradientFrom(widget.color),
         shape: BoxShape.circle,
         boxShadow: [
           // Colored glow
@@ -193,7 +198,11 @@ class _DialogIconState extends State<DialogIcon> with TickerProviderStateMixin {
           ),
         ],
       ),
-      child: _buildGradientIcon(),
+      child: Icon(
+        widget.icon,
+        size: DialogConstants.iconSize,
+        color: Colors.white,
+      ),
     );
   }
 

@@ -33,20 +33,24 @@ void main() {
   group('Snackbar enums', () {
     test('SnackbarType has the four documented variants', () {
       expect(SnackbarType.values, hasLength(4));
-      expect(SnackbarType.values, containsAll(<SnackbarType>[
-        SnackbarType.info,
-        SnackbarType.success,
-        SnackbarType.error,
-        SnackbarType.warning,
-      ]));
+      expect(
+          SnackbarType.values,
+          containsAll(<SnackbarType>[
+            SnackbarType.info,
+            SnackbarType.success,
+            SnackbarType.error,
+            SnackbarType.warning,
+          ]));
     });
 
     test('SnackbarPosition has top and bottom', () {
       expect(SnackbarPosition.values, hasLength(2));
-      expect(SnackbarPosition.values, containsAll(<SnackbarPosition>[
-        SnackbarPosition.top,
-        SnackbarPosition.bottom,
-      ]));
+      expect(
+          SnackbarPosition.values,
+          containsAll(<SnackbarPosition>[
+            SnackbarPosition.top,
+            SnackbarPosition.bottom,
+          ]));
     });
   });
 }

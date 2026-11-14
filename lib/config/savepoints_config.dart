@@ -2,7 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/config/dialog_config.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/config/snackbar_config.dart';
 
-/// Global configuration for SavePoints snackbars and dialogs
+/// Process-wide default configuration for SavePoints snackbars and dialogs.
+///
+/// This is the lowest-priority source of defaults. Resolution order for every
+/// component is:
+///
+/// 1. the value passed to the `show()` call,
+/// 2. the nearest [SavePointsTheme] in the widget tree,
+/// 3. this config.
+///
+/// Prefer [SavePointsTheme] where you can: it is scoped to a subtree, a
+/// subtree can override it, and changing it rebuilds descendants. Mutating
+/// this singleton affects the whole process and notifies nothing already on
+/// screen. It remains useful for one-off setup in `main()`.
 class SnackDiaBottomConfig {
   static final _instance = SnackDiaBottomConfig._internal();
   factory SnackDiaBottomConfig() => _instance;
@@ -14,7 +26,12 @@ class SnackDiaBottomConfig {
   /// Dialog configuration
   DialogConfig dialog = DialogConfig();
 
-  /// Apply theme-aware settings based on Brightness
+  /// Reserved hook for brightness-aware defaults.
+  ///
+  /// Currently a no-op: every built-in default already resolves brightness at
+  /// paint time from the ambient [Theme], so there is nothing to pre-compute.
+  /// Kept so existing calls keep compiling, and so the hook is there if a
+  /// future default genuinely needs to vary by [Brightness].
   void applyTheme(Brightness brightness) {
     snackbar.applyTheme(brightness);
     dialog.applyTheme(brightness);

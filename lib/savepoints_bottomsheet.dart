@@ -8,8 +8,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_animation_direction.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/bottomsheet/bottomsheet_transition_scope.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/pulse_scope.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/content_design_style.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_theme.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/utils/keyboard_utils.dart';
 
 // Export animation direction for public use
 export 'bottomsheet/bottomsheet_animation_direction.dart';
@@ -33,10 +35,22 @@ export 'bottomsheet/bottomsheet_animation_direction.dart';
 /// );
 /// ```
 class SavePointsBottomsheet {
-  /// Global fallback design style used when a [show] call doesn't pass its own
-  /// `designStyle`. Mirrors `SnackDiaBottomConfig().snackbar.defaultDesignStyle`
-  /// and `.dialog.defaultDesignStyle` so all three surfaces can share one
-  /// default. When null, the bottom sheet's built-in default is used.
+  /// Barrier blur sigma used when no `blur` is given by the call or the
+  /// enclosing [SavePointsTheme].
+  ///
+  /// Bottom sheets blur their barrier by default; `blur: 0` opts out.
+  static const double defaultBarrierBlurSigma = 20.0;
+
+  /// Global fallback design style for [show] calls that don't pass one.
+  ///
+  /// Prefer wrapping your app in a [SavePointsTheme] instead: it scopes the
+  /// default to a subtree, rebuilds descendants when it changes, and sets the
+  /// same default for dialogs and snackbars at the same time. A mutable
+  /// static like this one is process-wide and notifies nothing.
+  @Deprecated(
+    'Use SavePointsTheme(data: SavePointsThemeData(designStyle: ...)) instead. '
+    'This static will be removed in a future major release.',
+  )
   static ContentDesignStyle? defaultDesignStyle;
 
   /// Shows a modern bottom sheet.
@@ -70,11 +84,27 @@ class SavePointsBottomsheet {
     ValueNotifier<bool>? loadingNotifier,
     bool hideLikeCircle = false,
     ContentDesignStyle? designStyle,
+
+    /// Backdrop blur sigma for the barrier behind the sheet.
+    ///
+    /// Falls back to the enclosing [SavePointsTheme], then to
+    /// [SavePointsBottomsheet.defaultBarrierBlurSigma]. The barrier is blurred by
+    /// default — pass `blur: 0` to turn it off and get a plain dim barrier.
+    ///
+    /// Note this differs from [SavePointsSnackbar.show]'s `blur`, which has
+    /// no barrier to blur and so applies no blur when left unset.
     double? blur,
+
+    /// Loops a subtle scale + glow pulse on the icon.
+    ///
+    /// Off by default: the pulse never ends, so it costs a repaint every frame
+    /// for as long as the sheet is up and makes `pumpAndSettle()` hang in
+    /// tests. Set it here for one call, or via [SavePointsTheme] for a subtree.
+    bool? enablePulse,
     ImageFilter? backdropFilter,
   }) {
     // Dismiss keyboard when showing bottom sheet to prevent UI overlap
-    _dismissKeyboard(context);
+    KeyboardUtils.dismissIfFocused(context);
 
     final spTheme = SavePointsTheme.maybeOf(context);
     final theme = Theme.of(context);
@@ -87,12 +117,11 @@ class SavePointsBottomsheet {
 
     // When using blur/backdropFilter, barrier must be transparent so the route
     // is visible and can be blurred; we paint the blur in the transition.
-    final ImageFilter? barrierFilter =
-        backdropFilter ??
-        (finalBlur != null && finalBlur <= 0
+    final barrierSigma = finalBlur ?? defaultBarrierBlurSigma;
+    final ImageFilter? barrierFilter = backdropFilter ??
+        (barrierSigma <= 0
             ? null
-            : ImageFilter.blur(
-                sigmaX: finalBlur ?? 20.0, sigmaY: finalBlur ?? 20.0));
+            : ImageFilter.blur(sigmaX: barrierSigma, sigmaY: barrierSigma));
     final useBarrierBlur = barrierFilter != null;
 
     return showGeneralDialog<T>(
@@ -103,43 +132,40 @@ class SavePointsBottomsheet {
           ? Colors.transparent
           : Colors.black.withValues(alpha: 0.5),
       transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (_, _, _) => const SizedBox.shrink(),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, _) {
-        return BottomsheetTransitionScope(
-          animation: animation,
-          startAnimation: startAnimation,
-          endAnimation: endAnimation,
-          hideLikeCircle: hideLikeCircle,
-          useBarrierBlur: useBarrierBlur,
-          barrierFilter: barrierFilter,
-          barrierDismissible: finalIsDismissible,
-          title: title,
-          icon: icon,
-          iconColor: iconColor,
-          backgroundColor: backgroundColor,
-          isDark: isDark,
-          isLoading: isLoading,
-          loadingNotifier: loadingNotifier,
-          showHandle: finalShowHandle,
-          isDismissible: finalIsDismissible,
-          enableDrag: finalEnableDrag,
-          maxHeight: maxHeight,
-          isScrollControlled: isScrollControlled,
-          designStyle:
-              designStyle ?? spTheme?.designStyle ?? defaultDesignStyle,
-          blur: finalBlur,
-          backdropFilter: backdropFilter,
-          child: child,
+        return pulseScope(
+          spTheme,
+          enablePulse,
+          BottomsheetTransitionScope(
+            animation: animation,
+            startAnimation: startAnimation,
+            endAnimation: endAnimation,
+            hideLikeCircle: hideLikeCircle,
+            useBarrierBlur: useBarrierBlur,
+            barrierFilter: barrierFilter,
+            barrierSigma: backdropFilter == null ? barrierSigma : null,
+            barrierDismissible: finalIsDismissible,
+            title: title,
+            icon: icon,
+            iconColor: iconColor,
+            backgroundColor: backgroundColor,
+            isDark: isDark,
+            isLoading: isLoading,
+            loadingNotifier: loadingNotifier,
+            showHandle: finalShowHandle,
+            isDismissible: finalIsDismissible,
+            enableDrag: finalEnableDrag,
+            maxHeight: maxHeight,
+            isScrollControlled: isScrollControlled,
+            designStyle:
+                designStyle ?? spTheme?.designStyle ?? defaultDesignStyle,
+            blur: finalBlur,
+            backdropFilter: backdropFilter,
+            child: child,
+          ),
         );
       },
     );
-  }
-
-  /// Dismisses the keyboard if currently focused
-  static void _dismissKeyboard(BuildContext context) {
-    final focusNode = FocusScope.of(context);
-    if (focusNode.hasFocus) {
-      focusNode.unfocus();
-    }
   }
 }
