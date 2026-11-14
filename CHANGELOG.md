@@ -5,6 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-11-14
+
+Closes the three issues 1.3.0 listed as known and deliberately left alone,
+because each one changed behaviour or appearance for existing callers. A minor
+release for that reason; nothing public was renamed or removed, so every
+existing call still compiles.
+
+### Fixed
+
+- **The typed snackbar helpers no longer override your config.**
+  `showSuccess`, `showError`, `showWarning`, `showInfo`, their four
+  `BuildContext` counterparts and `SnackbarQueue.enqueue` all declared
+  `bool showProgressIndicator = false`, so setting
+  `SnackDiaBottomConfig().snackbar.defaultShowProgressIndicator = true` in
+  `main()` reached `show` but was silently discarded by every helper. The
+  parameter is now `bool?` and falls through to the config. Passing an
+  explicit value still wins.
+
+### Changed
+
+- **The typed dialog extensions draw from the package palette.**
+  `context.showSuccessDialog`, `showErrorDialog` and `showInfoDialog`
+  hard-coded `Colors.green`, `Colors.red` and `Colors.blue` with the
+  square-cornered Material icons, so a success dialog and a success snackbar
+  disagreed about what "success" looks like. They now resolve their icon and
+  accent from `SpPalette` for the intent — the same source the snackbars use
+  — and for the ambient brightness, so they adapt to dark mode as well
+  (`0xFF34D399` dark against `0xFF10B981` light, for success). `icon` and
+  `iconColor` became nullable to allow it; pass either to override.
+
+  **If you relied on the old colours**, pass them explicitly:
+  `context.showSuccessDialog(..., iconColor: Colors.green, icon: Icons.check_circle)`.
+
+- **The example settles.** Its rotating background gradient looped forever and
+  its header icon breathed forever, which cost a full-screen repaint every
+  frame for as long as the demo was open and made `pumpAndSettle()` unusable
+  against it — so its own smoke tests had to hand-count `pump(duration)`
+  calls. The gradient now turns once; because the sweep's start and end angles
+  are 2π apart it lands exactly where it began, so nothing jumps. The header
+  icon takes one breath and rests. The smoke tests were rewritten to use
+  `pumpAndSettle()` throughout, which is how the fix is verified.
+
+### Documentation
+
+- The snackbar parameter table claimed a default `duration` of 4 seconds;
+  `SnackbarConfig.defaultDuration` is 3.
+- `showProgressIndicator`'s default is listed as coming from the config rather
+  than as a flat `false`.
+- New **`BuildContext` shortcuts** section in the README: the extension was
+  public API with no entry there at all, and its defaults are worth stating
+  now that they come from the palette.
+
+### Tests
+
+- 113 → 120 in the package; the example's four smoke tests now assert the app
+  comes to rest.
+- Reverting either code fix fails five of the new tests, which is how they
+  were checked.
+
 ## [1.3.0] - 2026-11-13
 
 > **One behaviour changes in every app.** Tapping outside a dialog now

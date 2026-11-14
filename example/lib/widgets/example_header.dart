@@ -22,10 +22,18 @@ class _ExampleHeaderState extends State<ExampleHeader>
   @override
   void initState() {
     super.initState();
+    // One breath in, one out, then rest — instead of breathing forever.
+    // The resting value is 0, which is no tilt and no scale, so the icon
+    // settles into its natural state.
     _iconController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
+    )..forward();
+    _iconController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _iconController.reverse();
+      }
+    });
   }
 
   @override

@@ -368,7 +368,12 @@ class SavePointsSnackbar {
     VoidCallback? onActionPressed,
     String? actionLabel,
     SnackbarPosition? position,
-    bool showProgressIndicator = false,
+    /// Whether to show the countdown progress bar.
+    ///
+    /// When null, falls back to `SnackDiaBottomConfig().snackbar
+    /// .defaultShowProgressIndicator`. It used to default to `false` here,
+    /// which silently overrode that config for every caller of this helper.
+    bool? showProgressIndicator,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -398,7 +403,12 @@ class SavePointsSnackbar {
     VoidCallback? onActionPressed,
     String? actionLabel,
     SnackbarPosition? position,
-    bool showProgressIndicator = false,
+    /// Whether to show the countdown progress bar.
+    ///
+    /// When null, falls back to `SnackDiaBottomConfig().snackbar
+    /// .defaultShowProgressIndicator`. It used to default to `false` here,
+    /// which silently overrode that config for every caller of this helper.
+    bool? showProgressIndicator,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -428,7 +438,12 @@ class SavePointsSnackbar {
     VoidCallback? onActionPressed,
     String? actionLabel,
     SnackbarPosition? position,
-    bool showProgressIndicator = false,
+    /// Whether to show the countdown progress bar.
+    ///
+    /// When null, falls back to `SnackDiaBottomConfig().snackbar
+    /// .defaultShowProgressIndicator`. It used to default to `false` here,
+    /// which silently overrode that config for every caller of this helper.
+    bool? showProgressIndicator,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -462,7 +477,12 @@ class SavePointsSnackbar {
     VoidCallback? onActionPressed,
     String? actionLabel,
     SnackbarPosition? position,
-    bool showProgressIndicator = false,
+    /// Whether to show the countdown progress bar.
+    ///
+    /// When null, falls back to `SnackDiaBottomConfig().snackbar
+    /// .defaultShowProgressIndicator`. It used to default to `false` here,
+    /// which silently overrode that config for every caller of this helper.
+    bool? showProgressIndicator,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
