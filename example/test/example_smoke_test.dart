@@ -8,23 +8,15 @@ import 'package:flutter_test/flutter_test.dart';
 /// that it actually works rather than merely that it compiles: these drive
 /// the real buttons and assert on what appears.
 ///
-/// Note the bounded `pump(duration)` calls instead of `pumpAndSettle()`: the
-/// demo deliberately loops a rotating gradient behind the page and a breathing
-/// header icon, so the frame queue never goes quiet and `pumpAndSettle` would
-/// time out. That is the example's own flourish, not the package's — every
-/// surface the package itself puts on screen does settle, which
-/// `test/quality_test.dart` in the package pins.
+/// They use `pumpAndSettle()` throughout, which is the point. The demo used
+/// to loop a rotating gradient behind the page and a breathing header icon
+/// forever, so the frame queue never went quiet: every wait had to be a
+/// hand-counted `pump(duration)` and no test could assert the app had come to
+/// rest at all. Both animations now play once and settle.
 void main() {
-  /// Boots the app and lets the entrance animations play out, without ever
-  /// waiting for the tree to go idle.
-  Future<void> boot(WidgetTester tester) async {
+  testWidgets('the example boots and settles', (tester) async {
     await tester.pumpWidget(const MyApp());
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 2));
-  }
-
-  testWidgets('the example boots and renders its sections', (tester) async {
-    await boot(tester);
+    await tester.pumpAndSettle();
 
     expect(find.text('🎭 Dialogs'), findsOneWidget);
     expect(find.text('🍞 Snackbars'), findsOneWidget);
@@ -33,25 +25,40 @@ void main() {
   });
 
   testWidgets('a dialog example opens and closes', (tester) async {
-    await boot(tester);
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
 
     final button = find.text('Dialog Solid');
     await tester.scrollUntilVisible(button, 200);
     await tester.tap(button);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pumpAndSettle();
 
     expect(find.text('Solid Style'), findsOneWidget);
 
     // Close it the way a user would: the confirm button.
     await tester.tap(find.text('OK'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pumpAndSettle();
     expect(find.text('Solid Style'), findsNothing);
   });
 
-  testWidgets('a snackbar example appears', (tester) async {
-    await boot(tester);
+  testWidgets('a dialog example closes on a tap outside', (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+
+    final button = find.text('Dialog Solid');
+    await tester.scrollUntilVisible(button, 200);
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+    expect(find.text('Solid Style'), findsOneWidget);
+
+    await tester.tapAt(const Offset(5, 5));
+    await tester.pumpAndSettle();
+    expect(find.text('Solid Style'), findsNothing);
+  });
+
+  testWidgets('a snackbar example appears and expires', (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
 
     final button = find.text('Top Position');
     await tester.scrollUntilVisible(button, 200);
@@ -60,10 +67,10 @@ void main() {
     // The top snackbar is an overlay inserted in a post-frame callback.
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
-
     expect(find.byType(SnackBar), findsWidgets);
 
-    // Let it expire so the test ends with nothing pending.
-    await tester.pump(const Duration(seconds: 6));
+    // It goes away on its own, and the tree goes quiet with it.
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+    expect(find.byType(SnackBar), findsNothing);
   });
 }

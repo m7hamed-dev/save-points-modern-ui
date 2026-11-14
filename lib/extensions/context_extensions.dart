@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:save_points_snackbar_dialog_bottomsheet/design/save_points_tokens.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_bottomsheet.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_dialog.dart';
 import 'package:save_points_snackbar_dialog_bottomsheet/savepoints_snackbar.dart';
@@ -23,7 +24,7 @@ extension SavePointsContextExtension on BuildContext {
     required String title,
     String? subtitle,
     Duration? duration,
-    bool showProgressIndicator = false,
+    bool? showProgressIndicator,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -53,7 +54,7 @@ extension SavePointsContextExtension on BuildContext {
     required String title,
     String? subtitle,
     Duration? duration,
-    bool showProgressIndicator = false,
+    bool? showProgressIndicator,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -83,7 +84,7 @@ extension SavePointsContextExtension on BuildContext {
     required String title,
     String? subtitle,
     Duration? duration,
-    bool showProgressIndicator = false,
+    bool? showProgressIndicator,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -113,7 +114,7 @@ extension SavePointsContextExtension on BuildContext {
     required String title,
     String? subtitle,
     Duration? duration,
-    bool showProgressIndicator = false,
+    bool? showProgressIndicator,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -181,8 +182,14 @@ extension SavePointsContextExtension on BuildContext {
     required String title,
     required String message,
     String confirmText = 'OK',
-    IconData icon = Icons.info,
-    Color iconColor = Colors.blue,
+
+    /// Defaults to the package's own info icon.
+    IconData? icon,
+
+    /// Defaults to the package's info accent, resolved for the ambient
+    /// brightness. This was a hard-coded `Colors.blue`, which did not match
+    /// the palette every other surface in the package draws from.
+    Color? iconColor,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -192,8 +199,8 @@ extension SavePointsContextExtension on BuildContext {
       title: title,
       message: message,
       confirmText: confirmText,
-      icon: icon,
-      iconColor: iconColor,
+      icon: icon ?? Icons.info_rounded,
+      iconColor: iconColor ?? _intentAccent(SpIntent.info),
       designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
@@ -213,8 +220,14 @@ extension SavePointsContextExtension on BuildContext {
     required String title,
     required String message,
     String confirmText = 'OK',
-    IconData icon = Icons.check_circle,
-    Color iconColor = Colors.green,
+
+    /// Defaults to the package's own success icon.
+    IconData? icon,
+
+    /// Defaults to the package's success accent, resolved for the ambient
+    /// brightness. This was a hard-coded `Colors.green`, which did not match
+    /// the palette every other surface in the package draws from.
+    Color? iconColor,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -224,8 +237,8 @@ extension SavePointsContextExtension on BuildContext {
       title: title,
       message: message,
       confirmText: confirmText,
-      icon: icon,
-      iconColor: iconColor,
+      icon: icon ?? Icons.check_circle_rounded,
+      iconColor: iconColor ?? _intentAccent(SpIntent.success),
       designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
@@ -245,8 +258,14 @@ extension SavePointsContextExtension on BuildContext {
     required String title,
     required String message,
     String confirmText = 'OK',
-    IconData icon = Icons.error,
-    Color iconColor = Colors.red,
+
+    /// Defaults to the package's own error icon.
+    IconData? icon,
+
+    /// Defaults to the package's error accent, resolved for the ambient
+    /// brightness. This was a hard-coded `Colors.red`, which did not match
+    /// the palette every other surface in the package draws from.
+    Color? iconColor,
     ContentDesignStyle? designStyle,
     double? blur,
     ImageFilter? backdropFilter,
@@ -256,8 +275,8 @@ extension SavePointsContextExtension on BuildContext {
       title: title,
       message: message,
       confirmText: confirmText,
-      icon: icon,
-      iconColor: iconColor,
+      icon: icon ?? Icons.error_rounded,
+      iconColor: iconColor ?? _intentAccent(SpIntent.error),
       designStyle: designStyle,
       blur: blur,
       backdropFilter: backdropFilter,
@@ -300,4 +319,9 @@ extension SavePointsContextExtension on BuildContext {
   void dismissAllSnackbars() {
     ScaffoldMessenger.of(this).clearSnackBars();
   }
+
+  /// The package's own accent for [intent], resolved for the ambient
+  /// brightness — the same colour its snackbars of that intent use.
+  Color _intentAccent(SpIntent intent) =>
+      SpPalette.of(intent, Theme.of(this).brightness == Brightness.dark).base;
 }

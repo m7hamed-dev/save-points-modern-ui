@@ -862,6 +862,114 @@ void main() {
     });
   });
 
+  group('the convenience helpers respect the package defaults', () {
+    tearDown(SnackDiaBottomConfig().reset);
+
+    testWidgets('showSuccess falls through to the configured progress bar', (
+      tester,
+    ) async {
+      // Was: every typed helper declared `bool showProgressIndicator = false`,
+      // so it silently overrode defaultShowProgressIndicator for all of them.
+      SnackDiaBottomConfig().snackbar.defaultShowProgressIndicator = true;
+      final ctx = await pumpHost(tester);
+
+      SavePointsSnackbar.showSuccess(ctx, title: 'configured');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      expect(find.byType(ProgressIndicatorBar), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+    });
+
+    testWidgets('an explicit false still wins over the config', (tester) async {
+      SnackDiaBottomConfig().snackbar.defaultShowProgressIndicator = true;
+      final ctx = await pumpHost(tester);
+
+      SavePointsSnackbar.showSuccess(
+        ctx,
+        title: 'explicit',
+        showProgressIndicator: false,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      expect(find.byType(ProgressIndicatorBar), findsNothing);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+    });
+
+    testWidgets('the context extension follows the config too', (tester) async {
+      SnackDiaBottomConfig().snackbar.defaultShowProgressIndicator = true;
+      final ctx = await pumpHost(tester);
+
+      ctx.showInfoSnackbar(title: 'via extension');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      expect(find.byType(ProgressIndicatorBar), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+    });
+  });
+
+  group('the dialog extensions draw from the package palette', () {
+    // Was: Colors.green / Colors.red / Colors.blue and the square-cornered
+    // Material icons, none of which matched the accents and rounded icons
+    // every other surface in the package uses.
+    for (final (name, open, intent, icon) in <(
+      String,
+      Future<bool?> Function(BuildContext),
+      SpIntent,
+      IconData,
+    )>[
+      (
+        'success',
+        (c) => c.showSuccessDialog(title: 'T', message: 'M'),
+        SpIntent.success,
+        Icons.check_circle_rounded,
+      ),
+      (
+        'error',
+        (c) => c.showErrorDialog(title: 'T', message: 'M'),
+        SpIntent.error,
+        Icons.error_rounded,
+      ),
+      (
+        'info',
+        (c) => c.showInfoDialog(title: 'T', message: 'M'),
+        SpIntent.info,
+        Icons.info_rounded,
+      ),
+    ]) {
+      testWidgets('$name uses the token accent and rounded icon', (
+        tester,
+      ) async {
+        final ctx = await pumpHost(tester);
+        open(ctx);
+        await tester.pumpAndSettle();
+
+        // Assert on what the extension handed down, not on whichever
+        // layout happens to draw it.
+        final dialog = tester.widget<ModernDialog>(find.byType(ModernDialog));
+        expect(dialog.icon, icon);
+        expect(dialog.iconColor, SpPalette.of(intent, false).base);
+      });
+    }
+
+    testWidgets('an explicit colour and icon still win', (tester) async {
+      final ctx = await pumpHost(tester);
+      ctx.showSuccessDialog(
+        title: 'T',
+        message: 'M',
+        icon: Icons.rocket_launch,
+        iconColor: const Color(0xFF123456),
+      );
+      await tester.pumpAndSettle();
+
+      final dialog = tester.widget<ModernDialog>(find.byType(ModernDialog));
+      expect(dialog.icon, Icons.rocket_launch);
+      expect(dialog.iconColor, const Color(0xFF123456));
+    });
+  });
+
   group('dismissAllSnackbars', () {
     testWidgets('also takes down an overlay-based top toast', (tester) async {
       final ctx = await pumpHost(tester);

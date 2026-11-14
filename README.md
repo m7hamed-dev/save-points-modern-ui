@@ -38,6 +38,7 @@
 | [Installation](#-installation) · [Compatibility](#-compatibility) · [Quick start](#-quick-start) | five minutes in |
 | **[Design styles](#design-styles)** | the twelve looks, and when to use each |
 | [Dialog](#-savepointsdialog-1) · [Snackbar](#-savepointssnackbar-1) · [Bottom sheet](#-savepointsbottomsheet-1) | every parameter |
+| **[`BuildContext` shortcuts](#-buildcontext-shortcuts)** | one-liners for the common cases |
 | [Dialog presets](#-dialog-presets) · [Animations](#-animation-types) | ready-made choices |
 | [Configuration](#️-configuration) · [`SavePointsTheme`](#-scoped-defaults-with-savepointstheme) | defaults, app-wide or per subtree |
 | [Building on the same styles](#-building-on-the-same-styles) | `SpStyles` for your own widgets |
@@ -108,7 +109,7 @@ Or add it to `pubspec.yaml` yourself:
 
 ```yaml
 dependencies:
-  save_points_snackbar_dialog_bottomsheet: ^1.3.0
+  save_points_snackbar_dialog_bottomsheet: ^1.4.0
 ```
 
 Then one import gives you the whole API:
@@ -592,8 +593,8 @@ static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
 | `animation` | `SnackbarAnimation?` | No | `fadeSlide` | Animation type (legacy) |
 | `startAnimation` | `SnackbarAnimationDirection?` | No | `null` | Enter animation direction |
 | `endAnimation` | `SnackbarAnimationDirection?` | No | `null` | Exit animation direction |
-| `duration` | `Duration?` | No | `4 seconds` | Display duration |
-| `showProgressIndicator` | `bool?` | No | `false` | Show progress bar |
+| `duration` | `Duration?` | No | `3 seconds` | Display duration |
+| `showProgressIndicator` | `bool?` | No | from config (`false`) | Show the countdown bar |
 | `gradient` | `Gradient?` | No | `null` | Custom gradient background |
 | `borderColor` | `Color?` | No | `null` | Border color |
 | `borderWidth` | `double?` | No | `0` | Border width |
@@ -1003,6 +1004,39 @@ SavePointsBottomsheet.show(
   ),
 );
 ```
+
+## 🧩 `BuildContext` shortcuts
+
+An extension on `BuildContext` wraps the common cases, so you don't have to
+pass `context` or pick a type:
+
+```dart
+context.showSuccessSnackbar(title: 'Saved');
+context.showErrorSnackbar(title: 'Upload failed', subtitle: 'Try again');
+await context.showConfirmDialog(title: 'Delete?', message: 'Cannot be undone.');
+await context.showBottomSheet(title: 'Options', child: const OptionsList());
+context.dismissAllSnackbars();
+```
+
+| Method | Returns | Notes |
+|---|---|---|
+| `showSuccessSnackbar` · `showErrorSnackbar` · `showWarningSnackbar` · `showInfoSnackbar` | `ScaffoldFeatureController` | Close early with `.close()`, or `await .closed` |
+| `showConfirmDialog` | `Future<bool?>` | Cancel button on; `true` confirmed, `false` cancelled, `null` dismissed |
+| `showSuccessDialog` · `showErrorDialog` · `showInfoDialog` | `Future<bool?>` | Icon and accent default to the package palette for that intent |
+| `showBottomSheet<T>` | `Future<T?>` | The value you `pop()` |
+| `dismissAllSnackbars` | `void` | Clears everything, top toasts included |
+
+> [!NOTE]
+> The typed snackbar helpers take `showProgressIndicator` as a `bool?`. Left
+> unset it follows `SnackDiaBottomConfig().snackbar
+> .defaultShowProgressIndicator`, so turning the countdown bar on once in
+> `main()` reaches them too.
+
+> [!TIP]
+> The three typed dialog helpers resolve their icon and accent from
+> [`SpPalette`](#-building-on-the-same-styles) for the ambient brightness —
+> the same colours the matching snackbars use — so a success dialog and a
+> success snackbar agree. Pass `icon:` or `iconColor:` to override either.
 
 ## 🎭 Dialog Presets
 

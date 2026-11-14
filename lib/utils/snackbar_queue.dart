@@ -11,7 +11,7 @@ class _QueuedSnackbar {
     this.subtitle,
     this.type,
     this.duration,
-    this.showProgressIndicator = false,
+    this.showProgressIndicator,
   });
 
   /// Held only until this item is shown; [SnackbarQueue] checks
@@ -22,7 +22,7 @@ class _QueuedSnackbar {
   final String? subtitle;
   final SnackbarType? type;
   final Duration? duration;
-  final bool showProgressIndicator;
+  final bool? showProgressIndicator;
 }
 
 /// Manages a queue of snackbars to show them one at a time.
@@ -56,7 +56,7 @@ class SnackbarQueue {
     String? subtitle,
     SnackbarType? type,
     Duration? duration,
-    bool showProgressIndicator = false,
+    bool? showProgressIndicator,
   }) {
     _queue.add(
       _QueuedSnackbar(

@@ -132,10 +132,15 @@ class _ExampleHomePageState extends State<ExampleHomePage>
 
   /// Initializes all animation controllers
   void _initializeAnimationControllers() {
+    // One full turn, then stop. The sweep's start and end angles are 2pi
+    // apart, so value 1 paints exactly what value 0 did — the rotation lands
+    // back where it began and nothing jumps. Looping it forever cost a
+    // full-screen repaint every frame for as long as the page was open, and
+    // meant no test could ever use pumpAndSettle() against this app.
     _gradientController = AnimationController(
       vsync: this,
       duration: _AnimationConstants.gradientDuration,
-    )..repeat();
+    )..forward();
 
     _headerController = AnimationController(
       vsync: this,
